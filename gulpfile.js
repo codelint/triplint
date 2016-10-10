@@ -6,7 +6,6 @@ var gulp = require('gulp'),
     concat = require('gulp-concat'),
     watch = require('gulp-watch'),
     rename = require('gulp-rename');
-    gulpCopy = require('gulp-file-copy');
 
 
 gulp.task('dist', ['less', 'minify-css', 'copy', 'copy-public'], function(){
