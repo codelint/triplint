@@ -9,7 +9,7 @@ var gulp = require('gulp'),
     gulpCopy = require('gulp-file-copy');
 
 
-gulp.task('dist', ['less', 'minify-css', 'copy'], function(){
+gulp.task('dist', ['less', 'minify-css', 'copy', 'copy-public'], function(){
 });
 // 编译less
 gulp.task('less', function () {
@@ -26,7 +26,12 @@ gulp.task('copy', function () {
     return gulp.src(start)
         .pipe(gulp.dest('dist'));
 });
-
+// copy public
+gulp.task('copy-public', function () {
+    var start = './public/**';
+    return gulp.src(start)
+        .pipe(gulp.dest('dist/public'));
+});
 // 压缩css
 gulp.task('minify-css', ['less'], function () {
     return gulp.src(['!src/css/variable.css', 'src/css/*.css'])
