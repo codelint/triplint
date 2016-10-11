@@ -61,7 +61,7 @@ body {
   overflow: hidden;
   height: 270px;
   text-align: center;
-  background-image: url("../../public/images/member.jpg");
+  background-image: url("../public/images/member.jpg");
   background-size: cover;
   /*
         .member-bg {
