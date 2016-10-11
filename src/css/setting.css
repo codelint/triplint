@@ -25,27 +25,27 @@ body {
   position: fixed;
   top: 0;
   width: 100%;
-  height: 45px;
+  height: 50px;
   background: #49bdca;
   z-index: 10;
 }
 .t-nav .left,
 .t-nav .right {
   width: 50px;
-  height: 45px;
+  height: 50px;
   text-align: center;
   color: #fff;
   font-size: 30px;
-  line-height: 45px;
+  line-height: 50px;
 }
 .t-nav .title {
   display: block;
-  height: 45px;
+  height: 50px;
   text-align: center;
   color: #fff;
   font-size: 15px;
   font-weight: bold;
-  line-height: 45px;
+  line-height: 50px;
   -webkit-box-flex: 1;
   -webkit-flex: 1;
   flex: 1;
@@ -141,7 +141,7 @@ a {
   font-size: 15px;
 }
 .main {
-  margin: 45px 0 50px;
+  margin: 50px 0 50px;
 }
 .main .weui-panel {
   background-color: #faf8ec;
