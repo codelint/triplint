@@ -8,7 +8,7 @@ var gulp = require('gulp'),
     rename = require('gulp-rename');
 
 
-gulp.task('dist', ['less', 'minify-css', 'copy', 'copy-public'], function(){
+gulp.task('dist', ['less', 'minify-css', 'copy', 'copy-public'], function () {
 });
 // 编译less
 gulp.task('less', function () {
@@ -54,8 +54,8 @@ gulp.task('concat', ['minify-css'], function () {
  });*/
 
 // 监视
-gulp.task('watch', ['less', 'minify-css'], function () {
-    gulp.watch('src/less/*.less', ['less', 'minify-css']);
+gulp.task('watch', ['dist'], function () {
+    gulp.watch('src/**/*.*', ['dist']);
 });
 
 // 默认task
