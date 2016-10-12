@@ -3,6 +3,7 @@
 @import "icon";
 @import "t-nav";
 @import "leftMenu";
+
 @photoImg: 35px;
 
 .t-nav {
@@ -14,9 +15,11 @@
         font-size: 15px;
     }
 }
+
 html, body {
     height: 100%;
 }
+
 .main {
     position: absolute;
     width: 100%;
@@ -24,6 +27,7 @@ html, body {
     bottom: 0;
     .feedback-list {
         width: 100%;
+        margin-bottom: 50px;
         .time {
             padding: 15px;
             font-size: 12px;
@@ -42,15 +46,42 @@ html, body {
                 border-radius: 50%;
             }
             .chat {
+                display: inline-block;
                 .msg {
+                    position: relative;
                     display: inline-block;
                     font-size: 13px;
-                    margin: 10px 70px 15px 70px;
+                    margin: 5px 70px 15px 70px;
                     padding: 10px;
-                    box-shadow: 0 0 4px #ddd;
+                    border: 1px solid #ececec;
                     color: @fristColor;
                     background: #fff;
                     float: left;
+                    &:before {
+                        position: absolute;
+                        content: "";
+                        display: block;
+                        top: -24px;
+                        left: -16px;
+                        width: 50px;
+                        height: 23px;
+                        z-index: 1;
+                        background: #faf8ec;
+                        border-bottom: 1px solid #ececec;
+                    }
+                    &:after {
+                        position: absolute;
+                        left: -11px;
+                        top: -10px;
+                        content: " ";
+                        width: 20px;
+                        height: 20px;
+                        background: white;
+                        transform: rotate(45deg);
+                        border: 1px solid #ececec;
+                        border-top: none;
+                        border-right: none;
+                    }
                 }
             }
         }
@@ -66,25 +97,72 @@ html, body {
                 border-radius: 50%;
             }
             .chat {
+                display: inline-block;
+                float: right;
                 .msg {
+                    position: relative;
                     display: inline-block;
                     font-size: 13px;
-                    margin: 10px 70px 15px 70px;
+                    margin: 5px 70px 15px 70px;
                     padding: 10px;
-                    box-shadow: 0 0 4px #ddd;
+                    border: 1px solid @fristColor;
                     color: #fff;
                     background: @fristColor;
                     float: right;
+                    &:before {
+                        position: absolute;
+                        content: "";
+                        display: block;
+                        top: -24px;
+                        right: -16px;
+                        width: 50px;
+                        height: 23px;
+                        z-index: 1;
+                        background: #faf8ec;
+                        border-bottom: 1px solid @fristColor;
+                    }
+                    &:after {
+                        position: absolute;
+                        top: -10px;
+                        right: -11px;
+                        content: " ";
+                        width: 20px;
+                        height: 20px;
+                        background: @fristColor;
+                        transform: rotate(45deg);
+                        border: 1px solid @fristColor;
+                        border-left: none;
+                        border-bottom: none;
+                    }
                 }
             }
         }
     }
-    .btn {
-        position: absolute;
+    .input-sand {
+        position: fixed;
+        display: flex;
         width: 100%;
         height: 50px;
         line-height: 50px;
         bottom: 0;
         text-align: center;
+        background: @fristColor;
+        input {
+            border: none;
+            height: 35px;
+            line-height: 35px;
+            margin: 7.5px 0 0 7.5px;
+            flex: 1;
+            text-indent: 15px;
+            outline: none;
+        }
+        .sand {
+            width: 80px;
+            background: #198f9c;
+            color: #fff;
+            height: 35px;
+            line-height: 35px;
+            margin: 7.5px;
+        }
     }
 }
