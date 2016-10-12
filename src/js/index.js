@@ -14,8 +14,8 @@ jQuery(function ($) {
                     day: 4,
                     browse: 2000,
                     by: '江湖小虾米',
-                    img: '../images/1.jpg',
-                    portrait: '../images/img.jpg'
+                    img: '../images/1.jpg@1024w',
+                    portrait: '../images/img.jpg@1024w'
                 }, {
                     title: '六月在夏天又去了海边',
                     dateTime: '2016-10-03',
