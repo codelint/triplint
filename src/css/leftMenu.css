@@ -1,6 +1,5 @@
 a {
   color: #fff;
-  text-decoration: blink;
 }
 .leftMenu.on .t-mask-visible {
   display: block;

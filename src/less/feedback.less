@@ -1,0 +1,40 @@
+@import "variable";
+@import "base";
+@import "icon";
+@import "t-nav";
+@import "leftMenu";
+
+.t-nav {
+    .title {
+        text-indent: 10px;
+        text-align: left;
+    }
+    .right {
+        font-size: 15px;
+    }
+}
+
+html, body {
+    height: 100%;
+}
+
+.main {
+    position: absolute;
+    width: 100%;
+    top: @navHeight;
+    bottom: 0;
+    .feedback {
+        position: absolute;
+        width: 100%;
+        top: 0;
+        bottom: 50px;
+    }
+    .btn {
+        position: absolute;
+        width: 100%;
+        height: 50px;
+        line-height: 50px;
+        bottom: 0;
+        text-align: center;
+    }
+}

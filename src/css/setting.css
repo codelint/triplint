@@ -2,6 +2,9 @@
   margin: 0;
   padding: 0;
 }
+a {
+  text-decoration: blink;
+}
 html,
 body {
   width: 100%;
@@ -53,7 +56,6 @@ body {
 }
 a {
   color: #fff;
-  text-decoration: blink;
 }
 .leftMenu.on .t-mask-visible {
   display: block;
