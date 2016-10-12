@@ -38,10 +38,10 @@
             <i v-cloak>{{ list.place }}</i>
         </div>
         <div class="user">
-            <img v-cloak src="{{ list.portrait }}" alt="{{ list.by }}">
+            <img v-cloak :src="list.portrait" :alt="list.by">
             <p v-cloak>by {{ list.by }}</p>
         </div>
-        <img v-cloak src="{{ list.img }}" alt="{{ list.title }}">
+        <img v-cloak :src="list.img" :alt="list.title">
     </div>
 </div>
 
@@ -66,7 +66,7 @@
 </div>
 <script src="../public/js/jquery-2.1.4.js"></script>
 <script src="../public/js/swiper-3.3.1.jquery.min.js"></script>
-<script src="../public/js/vue.js"></script>
+<script src="../public/js/vue.min.js"></script>
 <script src="../js/index.js"></script>
 </body>
 </html>
