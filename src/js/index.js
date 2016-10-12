@@ -23,8 +23,8 @@ jQuery(function ($) {
                     day: 4,
                     browse: 2000,
                     by: '江湖小虾米',
-                    img: '../images/img.jpg',
-                    portrait: '../images/1.jpg'
+                    img: '../images/img.jpg?oss_image_style=1024w',
+                    portrait: '../images/1.jpg?oss_image_style=1024w'
                 }, {
                     title: '六月在夏天又去了海边',
                     dateTime: '2016-10-03',
@@ -32,8 +32,8 @@ jQuery(function ($) {
                     day: 4,
                     browse: 2000,
                     by: '江湖小虾米',
-                    img: '../images/1.jpg',
-                    portrait: '../images/img.jpg'
+                    img: '../images/1.jpg?oss_image_style=1024w',
+                    portrait: '../images/img.jpg?oss_image_style=1024w'
                 }, {
                     title: '六月在夏天又去了海边',
                     dateTime: '2016-10-03',
@@ -41,8 +41,8 @@ jQuery(function ($) {
                     day: 4,
                     browse: 2000,
                     by: '江湖小虾米',
-                    img: '../images/img.jpg',
-                    portrait: '../images/1.jpg'
+                    img: '../images/img.jpg?oss_image_style=1024w',
+                    portrait: '../images/1.jpg?oss_image_style=1024w'
                 }, {
                     title: '六月在夏天又去了海边',
                     dateTime: '2016-10-03',
@@ -50,8 +50,8 @@ jQuery(function ($) {
                     day: 4,
                     browse: 2000,
                     by: '江湖小虾米',
-                    img: '../images/1.jpg',
-                    portrait: '../images/img.jpg'
+                    img: '../images/1.jpg?oss_image_style=1024w',
+                    portrait: '../images/img.jpg?oss_image_style=1024w'
                 }, {
                     title: '六月在夏天又去了海边',
                     dateTime: '2016-10-03',
@@ -59,8 +59,8 @@ jQuery(function ($) {
                     day: 4,
                     browse: 2000,
                     by: '江湖小虾米',
-                    img: '../images/img.jpg',
-                    portrait: '../images/1.jpg'
+                    img: '../images/img.jpg?oss_image_style=1024w',
+                    portrait: '../images/1.jpg?oss_image_style=1024w'
                 }
             ]
         }
