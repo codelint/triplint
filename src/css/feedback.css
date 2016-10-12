@@ -12,9 +12,9 @@ body {
 }
 @font-face {
   font-family: 'iconfont';
-  src: url('//at.alicdn.com/t/font_1476029239_3525143.eot');
+  src: url('//at.alicdn.com/t/font_1476267368_2597415.eot');
   /* IE9*/
-  src: url('//at.alicdn.com/t/font_1476029239_3525143.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */ url('//at.alicdn.com/t/font_1476029239_3525143.woff') format('woff'), /* chrome、firefox */ url('//at.alicdn.com/t/font_1476029239_3525143.ttf') format('truetype'), /* chrome、firefox、opera、Safari, Android, iOS 4.2+*/ url('//at.alicdn.com/t/font_1476029239_3525143.svg#iconfont') format('svg');
+  src: url('//at.alicdn.com/t/font_1476267368_2597415.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */ url('//at.alicdn.com/t/font_1476267368_2597415.woff') format('woff'), /* chrome、firefox */ url('//at.alicdn.com/t/font_1476267368_2597415.ttf') format('truetype'), /* chrome、firefox、opera、Safari, Android, iOS 4.2+*/ url('//at.alicdn.com/t/font_1476267368_2597415.svg#iconfont') format('svg');
   /* iOS 4.1- */
 }
 .iconfont {
@@ -152,11 +152,58 @@ body {
   top: 50px;
   bottom: 0;
 }
-.main .feedback {
-  position: absolute;
+.main .feedback-list {
   width: 100%;
-  top: 0;
-  bottom: 50px;
+}
+.main .feedback-list .time {
+  padding: 15px;
+  font-size: 12px;
+  color: #797979;
+  text-align: center;
+}
+.main .feedback-list .system {
+  display: inline-table;
+  width: 100%;
+  position: relative;
+}
+.main .feedback-list .system .sys-img {
+  position: absolute;
+  left: 15px;
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+}
+.main .feedback-list .system .chat .msg {
+  display: inline-block;
+  font-size: 13px;
+  margin: 10px 70px 15px 70px;
+  padding: 10px;
+  box-shadow: 0 0 4px #ddd;
+  color: #49bdca;
+  background: #fff;
+  float: left;
+}
+.main .feedback-list .user {
+  display: inline-table;
+  width: 100%;
+  position: relative;
+}
+.main .feedback-list .user .sys-img {
+  position: absolute;
+  right: 15px;
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+}
+.main .feedback-list .user .chat .msg {
+  display: inline-block;
+  font-size: 13px;
+  margin: 10px 70px 15px 70px;
+  padding: 10px;
+  box-shadow: 0 0 4px #ddd;
+  color: #fff;
+  background: #49bdca;
+  float: right;
 }
 .main .btn {
   position: absolute;

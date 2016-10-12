@@ -3,6 +3,7 @@
 @import "icon";
 @import "t-nav";
 @import "leftMenu";
+@photoImg: 35px;
 
 .t-nav {
     .title {
@@ -13,21 +14,70 @@
         font-size: 15px;
     }
 }
-
 html, body {
     height: 100%;
 }
-
 .main {
     position: absolute;
     width: 100%;
     top: @navHeight;
     bottom: 0;
-    .feedback {
-        position: absolute;
+    .feedback-list {
         width: 100%;
-        top: 0;
-        bottom: 50px;
+        .time {
+            padding: 15px;
+            font-size: 12px;
+            color: #797979;
+            text-align: center;
+        }
+        .system {
+            display: inline-table;
+            width: 100%;
+            position: relative;
+            .sys-img {
+                position: absolute;
+                left: 15px;
+                width: @photoImg;
+                height: @photoImg;
+                border-radius: 50%;
+            }
+            .chat {
+                .msg {
+                    display: inline-block;
+                    font-size: 13px;
+                    margin: 10px 70px 15px 70px;
+                    padding: 10px;
+                    box-shadow: 0 0 4px #ddd;
+                    color: @fristColor;
+                    background: #fff;
+                    float: left;
+                }
+            }
+        }
+        .user {
+            display: inline-table;
+            width: 100%;
+            position: relative;
+            .sys-img {
+                position: absolute;
+                right: 15px;
+                width: @photoImg;
+                height: @photoImg;
+                border-radius: 50%;
+            }
+            .chat {
+                .msg {
+                    display: inline-block;
+                    font-size: 13px;
+                    margin: 10px 70px 15px 70px;
+                    padding: 10px;
+                    box-shadow: 0 0 4px #ddd;
+                    color: #fff;
+                    background: @fristColor;
+                    float: right;
+                }
+            }
+        }
     }
     .btn {
         position: absolute;
