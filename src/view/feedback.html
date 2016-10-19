@@ -69,5 +69,15 @@
 
 <script src="../public/js/jquery-2.1.4.js"></script>
 <script src="../js/member.js"></script>
+<script>
+    jQuery(function ($) {
+        $(".sand").click(function () {
+            var apiFeedBack = 'http://trip.inotseeyou.com/test.html#feedback.submit';
+            $.get(apiFeedBack, function (data) {
+                console.log(data);
+            });
+        });
+    })
+</script>
 </body>
 </html>
