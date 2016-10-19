@@ -3,23 +3,32 @@
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1, user-scalable=no">
     <meta charset="UTF-8">
-    <title>menber</title>
+    <title>用户反馈</title>
     <link rel="stylesheet" href="../public/css/flex.css">
     <link rel="stylesheet" href="../css/feedback.min.css">
+
+    <style type="text/css">
+        div.sample{
+            display: none!important;
+        }
+    </style>
 </head>
 <body>
 <div class="t-nav">
     <a href="javascript:window.history.back();" class="left on-menu"><i class="iconfont">&#xe602;</i></a>
+
     <div class="title"></div>
     <a href="index.html" class="right"><i class="iconfont">&#xe604;</i></a>
 </div>
 
 <div class="main">
     <div class="feedback-list">
-        <p class="time">1分钟前</p>
-        <div class="system">
+        <!--<p class="time">1分钟前</p>-->
+
+        <div class="sample">
             <div class="chat">
-                <img class="sys-img" src="../images/1.jpg" alt="">
+                <img class="sys-img" src="../images/logo.png?oss_image_style=128w_128h_4e" alt="">
+
                 <div class="msg">
                     欢迎加入TripLint...
                     <br>
@@ -30,57 +39,119 @@
                 </div>
             </div>
         </div>
-        <div class="user">
-            <div class="chat">
-                <img class="sys-img" src="../images/img.jpg" alt="">
-                <div class="msg">
-                    [鼓掌][鼓掌][鼓掌]
-                </div>
-            </div>
-        </div>
-        <div class="system">
-            <div class="chat">
-                <img class="sys-img" src="../images/1.jpg" alt="">
-                <div class="msg">
-                    您好,我是TripLint
-                </div>
-            </div>
-        </div>
-        <p class="time">1秒前</p>
-        <div class="user">
-            <div class="chat">
-                <img class="sys-img" src="../images/img.jpg" alt="">
-                <div class="msg">
-                    欢迎加入TripLint...
-                    <br>
-                    TripLint是一个帮助这个世界有环球梦的人，实现这个梦想
-                    缺时间、缺勇气，我们给予人们勇气，人们时间
-                    缺钱、缺支持，我们帮助旅者赚取旅费、给予他们无限支持
-                    只要在路上，我们就会相互扶持，相互帮助，直至沉淀的那天...
-                </div>
-            </div>
-        </div>
+        <!--<div class="user">-->
+        <!--<div class="chat">-->
+        <!--<img class="sys-img" src="../images/img.jpg" alt="">-->
+
+        <!--<div class="msg">-->
+        <!--[鼓掌][鼓掌][鼓掌]-->
+        <!--</div>-->
+        <!--</div>-->
+        <!--</div>-->
+        <!--<div class="system">-->
+        <!--<div class="chat">-->
+        <!--<img class="sys-img" src="../images/1.jpg" alt="">-->
+
+        <!--<div class="msg">-->
+        <!--您好,我是TripLint-->
+        <!--</div>-->
+        <!--</div>-->
+        <!--</div>-->
+        <!--<p class="time">1秒前</p>-->
+
+        <!--<div class="user">-->
+        <!--<div class="chat">-->
+        <!--<img class="sys-img" src="../images/img.jpg" alt="">-->
+
+        <!--<div class="msg">-->
+        <!--欢迎加入TripLint...-->
+        <!--<br>-->
+        <!--TripLint是一个帮助这个世界有环球梦的人，实现这个梦想-->
+        <!--缺时间、缺勇气，我们给予人们勇气，人们时间-->
+        <!--缺钱、缺支持，我们帮助旅者赚取旅费、给予他们无限支持-->
+        <!--只要在路上，我们就会相互扶持，相互帮助，直至沉淀的那天...-->
+        <!--</div>-->
+        <!--</div>-->
+        <!--</div>-->
     </div>
     <div class="input-sand" flex="">
-        <input type="text" flex-box="1">
+        <input id="message-input" type="text" flex-box="1">
+
         <div class="sand" flex-box="0">发送</div>
     </div>
 </div>
 
+<script src="../js/android.js"></script>
 <script src="../public/js/jquery-2.1.4.js"></script>
 <script src="../js/member.js"></script>
+<script src="../public/js/underscore.js"></script>
+<script src="../public/js/vue.min.js"></script>
+<script src="../js/api.js"></script>
 <script>
-    jQuery(function ($) {
-        $(".sand").click(function () {
-            var apiFeedBack = '/open/api?method=feedback.submit';
+    jQuery(function($){
+        var data = android.get('triplint.feedback.data') || {
+            'messages': [
+                {
+                    'created_at': new Date().getTime(),
+                    'created_by': 'system',
+                    'user_name': '弹弓人',
+                    'content': '欢迎加入TripLint...<br>' +
+                            'TripLint是一个帮助这个世界有环球梦的人，' +
+                            '实现这个梦想缺时间、缺勇气，我们给予人们勇气，' +
+                            '人们缺时间缺钱、缺支持，' +
+                            '我们帮助旅者赚取旅费、给予他们无限支持。' +
+                            '只要在路上，' +
+                            '我们就会相互扶持，相互帮助，' +
+                            '直至沉淀的那天...'
+                }
+            ]
+        };
 
-            $.post(apiFeedBack, {
-                "user_name": "弹弓人",
-                "contact": "13751855742",
-                "description": "hello world!"
-            }, function (data) {
-                console.log(data);
+        /**
+         *
+         * @param message object {'created_at':'', 'content':'', 'created_by':'user|system'}
+         */
+        function addMessageToPanel(message){
+            var $msg = $('div.sample').clone().removeClass('sample');
+            $msg.find('div.msg').html(message['content']);
+            $msg.addClass(message['created_by'] == 'system' ? 'system' : 'user');
+            $('div.feedback-list').append($msg);
+        }
+
+        var len = data.messages.length;
+        for(var i = 0;i < len; i ++){
+            addMessageToPanel(data.messages[i]);
+        }
+
+        $(".sand").click(function(){
+//            var apiFeedBack = '/open/api?method=feedback.submit';
+            var message = $('#message-input').val();
+            U.api.feedback(message, function(err, json){
+                if(err){
+                    alert(err.message);
+                    return;
+                }
+                if(json){
+                    var m ={
+                        'created_by': 'user',
+                        'created_at': (new Date()).getTime(),
+                        'user_name': '',
+                        'content': message
+                    };
+                    data.messages.push(m);
+                    addMessageToPanel(m);
+                    android.put('triplint.feedback.data', data);
+                }
             });
+
+
+//            $.post(apiFeedBack, {
+//                "user_name": "弹弓人",
+//                "contact": "13751855742",
+//                "description": "hello world!"
+//            }, function (data) {
+//                console.log(data);
+//            });
         });
     })
 </script>
