@@ -72,8 +72,13 @@
 <script>
     jQuery(function ($) {
         $(".sand").click(function () {
-            var apiFeedBack = 'http://trip.inotseeyou.com/test.html#feedback.submit';
-            $.get(apiFeedBack, function (data) {
+            var apiFeedBack = '/open/api?method=feedback.submit';
+
+            $.post(apiFeedBack, {
+                "user_name": "弹弓人",
+                "contact": "13751855742",
+                "description": "hello world!"
+            }, function (data) {
                 console.log(data);
             });
         });
