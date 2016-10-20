@@ -31,7 +31,7 @@
 </div>
 
 <div class="list">
-    <div class="info" v-for="list in lists">
+    <a href="trips.html" class="info" v-for="list in lists">
         <p v-cloak class="title">{{ list.title }}</p>
         <div class="time-didian">
             <p v-cloak>{{ list.dateTime}} {{ list.day }}天 {{ list.browse }} 次浏览</p>
@@ -42,7 +42,7 @@
             <p v-cloak>by {{ list.by }}</p>
         </div>
         <img v-cloak :src="list.img" :alt="list.title">
-    </div>
+    </a>
 </div>
 
 <div class="add">+</div>
