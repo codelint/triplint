@@ -8,9 +8,14 @@
     <link rel="stylesheet" href="../css/trips.min.css">
 </head>
 <body>
-<div class="trip">
+<div class="t-nav">
+    <a href="javascript:window.history.back();" class="left"><i class="iconfont">&#xe602;</i></a>
+    <!--<div class="title">设置</div>-->
+    <!--<div class="right">退出</div>-->
+</div>
+<div class="trip" id="trip_items">
     <section class="trip-wps">
-        <div class="day">
+        <div class="day" v-for="item in items">
             <p class="day-marker">
                 <i class="circle circle-first"></i>
                 2016-09-29 第1天
@@ -20,7 +25,7 @@
                 <div class="waypoint">
                     <div class="photo-ctn">
                         <a href="#" class="trip-photo">
-                            <img src="http://photos.breadtrip.com/photo_2016_10_11_8a34446f2824bb633ca6144018e82666.jpg?imageView/2/w/640/q/85" alt="">
+                            <img :src="item.photo" alt="">
                         </a>
                         <div class="photo-mask">
                             <div class="photo-mask-left float-left"></div>
@@ -30,34 +35,31 @@
                         </div>
                         <div class="wp-btns">
                             <a class="comment-btn" href="javascript:void(0)">
-                                <i class="icon-comment">11</i>
+                                <i class="iconfont">&#xe676;</i>
                                 <span>0</span>
                             </a>
                             <i class="icon-btnbg"></i>
                             <a class="like-btn" href="javascript:void(0)" data-time="3">
-                                <i class="icon-like">11</i>
+                                <i class="iconfont">&#xe605;</i>
                                 <span>3</span>
                             </a>
                         </div>
                     </div>
                     <p class="text" style="padding-top: 10px">
-                        【关于签证】<br>淘宝代办，我们办理的是三年多次往返，需要有两次以上发达国家出入境记录就可以办，费用1399元。<br>【关于机票】<br>国内很多城市都开通了直飞悉尼和墨尔本的航班，可以多对比下不同的出发城市票价。<br>国际机票，四川航空的重庆-悉尼，2600/人，南方航空的墨尔本-广州3730/人。<br>澳洲境内机票，悉尼往返墨尔本的航班很多。Virgin
-                        Australia，700/人。<br>【关于酒店】<br>全程Booking预订。<br>1、悉尼，The Grace Hotel，3018/两晚。地理位置好，出行十分便利！<br>2、墨尔本机场，Best
-                        western airport motel，670/晚。<br>3、阿波罗湾，Beacon point ocean view villas，1580/晚。<br>4、坎贝尔港，Loch ard
-                        motor inn，1050/晚。<br>5、墨尔本市区，Hotel grand chancellor Melbourne，1670/两晚。
+                        {{ item.comment }}
                     </p>
                     <div class="wp-stats">
-                        <p class="wp-time"><i class="icon-time"></i>09月29日 10:18</p>
+                        <p class="wp-time"><i class="icon-time"></i>{{ item.created_at }}</p>
                         <a class="wp-poi wp-poi-verified" href="###">
                             <i class="icon-poi_11"></i>
-                            澳大利亚 维多利亚州
+                            {{ item.longitude }}
                         </a>
                     </div>
                 </div>
                 <p class="wp-sep"></p>
             </div>
         </div>
-        <div class="day">
+        <div style="display: none;" class="day">
             <div class="day-content">
                 <div class="waypoint">
                     <div class="photo-ctn">
@@ -99,54 +101,10 @@
                 <p class="wp-sep"></p>
             </div>
         </div>
-        <div class="day">
-            <p class="day-marker">
-                <i class="circle circle-first"></i>
-                2016-09-29 第1天
-            </p>
-            <p class="wp-sep clear-both"></p>
-            <div class="day-content">
-                <div class="waypoint">
-                    <div class="photo-ctn">
-                        <a href="#" class="trip-photo">
-                            <img src="http://photos.breadtrip.com/photo_2016_10_11_8a34446f2824bb633ca6144018e82666.jpg?imageView/2/w/640/q/85" alt="">
-                        </a>
-                        <div class="photo-mask">
-                            <div class="photo-mask-left float-left"></div>
-                            <div class="photo-mask-arrow-left float-left"></div>
-                            <div class="photo-mask-arrow-right float-left"></div>
-                            <div class="photo-mask-right float-left"></div>
-                        </div>
-                        <div class="wp-btns">
-                            <a class="comment-btn" href="javascript:void(0)">
-                                <i class="icon-comment">11</i>
-                                <span>0</span>
-                            </a>
-                            <i class="icon-btnbg"></i>
-                            <a class="like-btn" href="javascript:void(0)" data-time="3">
-                                <i class="icon-like">11</i>
-                                <span>3</span>
-                            </a>
-                        </div>
-                    </div>
-                    <p class="text" style="padding-top: 10px">
-                        【关于签证】<br>淘宝代办，我们办理的是三年多次往返，需要有两次以上发达国家出入境记录就可以办，费用1399元。<br>【关于机票】<br>国内很多城市都开通了直飞悉尼和墨尔本的航班，可以多对比下不同的出发城市票价。<br>国际机票，四川航空的重庆-悉尼，2600/人，南方航空的墨尔本-广州3730/人。<br>澳洲境内机票，悉尼往返墨尔本的航班很多。Virgin
-                        Australia，700/人。<br>【关于酒店】<br>全程Booking预订。<br>1、悉尼，The Grace Hotel，3018/两晚。地理位置好，出行十分便利！<br>2、墨尔本机场，Best
-                        western airport motel，670/晚。<br>3、阿波罗湾，Beacon point ocean view villas，1580/晚。<br>4、坎贝尔港，Loch ard
-                        motor inn，1050/晚。<br>5、墨尔本市区，Hotel grand chancellor Melbourne，1670/两晚。
-                    </p>
-                    <div class="wp-stats">
-                        <p class="wp-time"><i class="icon-time"></i>09月29日 10:18</p>
-                        <a class="wp-poi wp-poi-verified" href="###">
-                            <i class="icon-poi_11"></i>
-                            澳大利亚 维多利亚州
-                        </a>
-                    </div>
-                </div>
-                <p class="wp-sep"></p>
-            </div>
-        </div>
     </section>
 </div>
 </body>
+<script src="../public/js/jquery-2.1.4.js"></script>
+<script src="../public/js/vue.min.js"></script>
+<script src="../js/trips.js"></script>
 </html>

@@ -1,5 +1,8 @@
 @import "variable";
 @import "base";
+@import "t-nav";
+@import "icon";
+
 a, abbr, acronym, address, applet, article, aside, audio, b, big, blockquote, body, canvas, caption, center, cite, code, dd, del, details, dfn, div, dl, dt, em, embed, fieldset, figcaption, figure, footer, form, h1, h2, h3, h4, h5, h6, header, hgroup, html, i, iframe, img, ins, kbd, label, legend, li, mark, menu, nav, object, ol, output, p, pre, q, ruby, s, samp, section, small, span, strike, strong, sub, summary, sup, table, tbody, td, tfoot, th, thead, time, tr, tt, u, ul, var, video {
     margin: 0;
     padding: 0;
@@ -7,10 +10,12 @@ a, abbr, acronym, address, applet, article, aside, audio, b, big, blockquote, bo
     font: inherit;
     vertical-align: baseline
 }
+
 a {
     color: @baseColor;
     text-decoration: none
 }
+
 body {
     background: #fbf7ed;
     font: 14px "Helvetica Neue", "Luxi Sans", "DejaVu Sans", Tahoma, STHeiti !important;
@@ -18,8 +23,9 @@ body {
     max-width: 600px;
     margin: 0 auto
 }
+
 .trip {
-    padding: 20px 15px 0;
+    padding: 70px 15px 0;
     .trip-wps {
         margin-top: 18px;
         .day {
@@ -112,7 +118,7 @@ body {
                         margin: 0 7px 0 4px;
                         float: right;
                         position: relative;
-                        top: 6px;
+                        font-size: 20px;
                     }
                 }
                 .icon-btnbg {
@@ -132,7 +138,7 @@ body {
                         margin: 0 4px 0 7px;
                         float: left;
                         position: relative;
-                        top: 6px;
+                        font-size: 20px;
                     }
                 }
             }
