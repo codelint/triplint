@@ -1,7 +1,6 @@
 /**
  * Created by yQiu on 16-10-23.
  */
-var vm;
 
 function getDataTime(time, type) {
     time = new Date(parseInt(time));
@@ -16,6 +15,7 @@ function getDataTime(time, type) {
     else if (type == "M")
         return time.getMinutes();
 }
+
 jQuery(function ($) {
     function getData(callBack) {
         var data = [
@@ -48,10 +48,11 @@ jQuery(function ($) {
                 created_at: new Date().getTime()
             }
         ];
+        // U.ajax.getJson("", callBack(false, data));
         callBack(false, data);
     }
 
-    vm = new Vue({
+    var vm = new Vue({
         el: '#trip_items',
         data: {items: []}
     });
