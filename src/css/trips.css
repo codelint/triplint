@@ -9,7 +9,9 @@ a {
 html,
 body {
   width: 100%;
+  max-width: 640px;
   background: #faf8ec;
+  margin: 0 auto;
 }
 .t-nav {
   display: -webkit-box;
@@ -17,6 +19,7 @@ body {
   position: fixed;
   top: 0;
   width: 100%;
+  max-width: 640px;
   height: 50px;
   background: #49bdca;
   z-index: 10;
@@ -145,11 +148,11 @@ a {
   color: #49bdca;
   text-decoration: none;
 }
+html,
 body {
   background: #fbf7ed;
   font: 14px "Helvetica Neue", "Luxi Sans", "DejaVu Sans", Tahoma, STHeiti !important;
   line-height: 1.5;
-  max-width: 600px;
   margin: 0 auto;
 }
 .trip {

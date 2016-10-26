@@ -1,9 +1,11 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1, user-scalable=no">
     <meta charset="UTF-8">
     <title>Trips</title>
+    <link rel="stylesheet" href="//cdn.bootcss.com/weui/0.4.3/style/weui.min.css">
+    <link rel="stylesheet" href="//cdn.bootcss.com/jquery-weui/0.8.0/css/jquery-weui.min.css">
     <link rel="stylesheet" href="../public/css/flex.css">
     <link rel="stylesheet" href="../css/trips.min.css">
 </head>
@@ -15,10 +17,10 @@
 </div>
 <div class="trip" id="trip_items">
     <section class="trip-wps">
-        <div class="day" v-for="item in items">
+        <div class="day" v-for="(item, index) in items">
             <p class="day-marker">
                 <i class="circle circle-first"></i>
-                2016-09-29 第1天
+                {{ (getDataTime(item.created_at,"y")) }}-{{ (getDataTime(item.created_at,"m")) }}-{{ (getDataTime(item.created_at,"d")) }} 第{{ index + 1 }}天
             </p>
             <p class="wp-sep clear-both"></p>
             <div class="day-content">
@@ -46,13 +48,17 @@
                         </div>
                     </div>
                     <p class="text" style="padding-top: 10px">
-                        {{ item.comment }}
+                        第{{ index + 1 }}天{{ item.comment }}
                     </p>
                     <div class="wp-stats">
-                        <p class="wp-time"><i class="icon-time"></i>{{ item.created_at }}</p>
+                        <p class="wp-time"><i class="icon-time"></i>
+                            {{ (getDataTime(item.created_at,"m")) }}月{{ (getDataTime(item.created_at,"d")) }}日
+                            {{ (getDataTime(item.created_at,"h")) }}:{{ (getDataTime(item.created_at,"M")) }}
+                        </p>
                         <a class="wp-poi wp-poi-verified" href="###">
                             <i class="icon-poi_11"></i>
-                            {{ item.longitude }}
+                            查汶海滩
+                            <!--{{ item.longitude }}-->
                         </a>
                     </div>
                 </div>
@@ -106,5 +112,6 @@
 </body>
 <script src="../public/js/jquery-2.1.4.js"></script>
 <script src="../public/js/vue.min.js"></script>
+<script src="http://api.map.baidu.com/api?v=2.0&ak=filuXPdvq36yfnV7S8Pcn6w3" type="text/javascript"></script>
 <script src="../js/trips.js"></script>
 </html>

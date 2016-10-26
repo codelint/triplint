@@ -9,7 +9,9 @@ a {
 html,
 body {
   width: 100%;
+  max-width: 640px;
   background: #faf8ec;
+  margin: 0 auto;
 }
 @font-face {
   font-family: 'iconfont';
@@ -28,6 +30,7 @@ body {
   position: fixed;
   top: 0;
   width: 100%;
+  max-width: 640px;
   height: 50px;
   background: #49bdca;
   z-index: 10;
@@ -149,6 +152,7 @@ body {
 .main {
   position: absolute;
   width: 100%;
+  max-width: 640px;
   top: 58px;
   bottom: 0;
 }
@@ -270,6 +274,7 @@ body {
   display: -webkit-box;
   display: flex;
   width: 100%;
+  max-width: 640px;
   height: 50px;
   line-height: 50px;
   bottom: 0;
