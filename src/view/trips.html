@@ -37,14 +37,14 @@
                             <div class="photo-mask-right float-left"></div>
                         </div>
                         <div class="wp-btns">
-                            <a class="comment-btn" href="javascript:void(0)">
+                            <a class="comment-btn" href="javascript:void(0)" v-on:click="comment(index)">
                                 <i class="iconfont">&#xe676;</i>
-                                <span>0</span>
+                                <span>{{ item.comment_count }}</span>
                             </a>
                             <i class="icon-btnbg"></i>
-                            <a class="like-btn" href="javascript:void(0)" data-time="3">
+                            <a href="javascript:void(0)" class="like-btn" v-on:click="like(index)">
                                 <i class="iconfont">&#xe605;</i>
-                                <span>3</span>
+                                <span>{{ item.like }}</span>
                             </a>
                         </div>
                     </div>

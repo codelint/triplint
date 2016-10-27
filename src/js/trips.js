@@ -27,6 +27,8 @@ jQuery(function ($) {
                 comment: '一场说走就走的旅行',
                 longitude: 23.03,
                 latitude: 23.03,
+                like: 10,
+                comment_count: 10,
                 created_at: new Date().getTime()
             },
             {
@@ -34,6 +36,8 @@ jQuery(function ($) {
                 comment: '一场说走就走的旅行',
                 longitude: 23.03,
                 latitude: 23.03,
+                like: 11,
+                comment_count: 11,
                 created_at: new Date().getTime()
             },
             {
@@ -41,6 +45,8 @@ jQuery(function ($) {
                 comment: '一场说走就走的旅行',
                 longitude: 23.03,
                 latitude: 23.03,
+                like: 22,
+                comment_count: 22,
                 created_at: new Date().getTime()
             },
             {
@@ -48,6 +54,8 @@ jQuery(function ($) {
                 comment: '一场说走就走的旅行',
                 longitude: 23.03,
                 latitude: 23.03,
+                like: 33,
+                comment_count: 33,
                 created_at: new Date().getTime()
             }
         ];
@@ -76,6 +84,14 @@ jQuery(function ($) {
             // 查看图片
             showImgs: function (event) {
                 getPhotoItems(event.target.alt);
+            },
+            // 喜欢
+            like: function (index) {
+                vm._data.items[index].like = ++(vm._data.items[index].like);
+            },
+            // 评论
+            comment: function () {
+                $.toast("后期开放此功能", "text");
             }
         }
     });
