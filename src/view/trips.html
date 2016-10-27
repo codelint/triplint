@@ -4,6 +4,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1, user-scalable=no">
     <meta charset="UTF-8">
     <title>Trips</title>
+    <link rel="stylesheet" href="//at.alicdn.com/t/font_h5xvumt53vwsif6r.css">
     <link rel="stylesheet" href="//cdn.bootcss.com/weui/0.4.3/style/weui.min.css">
     <link rel="stylesheet" href="//cdn.bootcss.com/jquery-weui/0.8.0/css/jquery-weui.min.css">
     <link rel="stylesheet" href="../public/css/flex.css">
@@ -11,7 +12,7 @@
 </head>
 <body>
 <div class="t-nav">
-    <a href="javascript:window.history.back();" class="left"><i class="iconfont">&#xe602;</i></a>
+    <a href="javascript:window.history.back();" class="left"><i class="iconfont icon-left"></i></a>
     <!--<div class="title">设置</div>-->
     <!--<div class="right">退出</div>-->
 </div>
@@ -38,12 +39,12 @@
                         </div>
                         <div class="wp-btns">
                             <a class="comment-btn" href="javascript:void(0)" v-on:click="comment(index)">
-                                <i class="iconfont">&#xe676;</i>
+                                <i class="iconfont icon-msg"></i>
                                 <span>{{ item.comment_count }}</span>
                             </a>
                             <i class="icon-btnbg"></i>
                             <a href="javascript:void(0)" class="like-btn" v-on:click="like(index)">
-                                <i class="iconfont">&#xe605;</i>
+                                <i class="iconfont icon-aixin2"></i>
                                 <span>{{ item.like }}</span>
                             </a>
                         </div>

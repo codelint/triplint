@@ -13,12 +13,6 @@ body {
   background: #faf8ec;
   margin: 0 auto;
 }
-@font-face {
-  font-family: 'iconfont';
-  /* project id："158059" */
-  src: url('//at.alicdn.com/t/font_t7fqjy9m7m2f0f6r.eot');
-  src: url('//at.alicdn.com/t/font_t7fqjy9m7m2f0f6r.eot') format('embedded-opentype'), url('//at.alicdn.com/t/font_t7fqjy9m7m2f0f6r.woff') format('woff'), url('//at.alicdn.com/t/font_t7fqjy9m7m2f0f6r.ttf') format('truetype'), url('//at.alicdn.com/t/font_t7fqjy9m7m2f0f6r.svg#iconfont') format('svg');
-}
 .iconfont {
   font-family: "iconfont";
   font-size: 26px;
