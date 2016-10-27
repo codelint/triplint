@@ -1,6 +1,7 @@
 /**
  * Created by Qiu on 16-10-3.
  */
+
 jQuery(function ($) {
 
     var vm = new Vue({

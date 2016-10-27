@@ -2,6 +2,7 @@
  * Created by yQiu on 16-10-23.
  */
 
+// 通过时间戳获取年月日十分秒
 function getDataTime(time, type) {
     time = new Date(parseInt(time));
     if (type == "y")
@@ -17,6 +18,8 @@ function getDataTime(time, type) {
 }
 
 jQuery(function ($) {
+    var vm;
+
     function getData(callBack) {
         var data = [
             {
@@ -27,21 +30,21 @@ jQuery(function ($) {
                 created_at: new Date().getTime()
             },
             {
-                photo: 'http://photos.breadtrip.com/photo_2016_10_11_8a34446f2824bb633ca6144018e82666.jpg',
+                photo: 'http://triplint.localhost:8060/wap/images/img.jpg',
                 comment: '一场说走就走的旅行',
                 longitude: 23.03,
                 latitude: 23.03,
                 created_at: new Date().getTime()
             },
             {
-                photo: 'http://photos.breadtrip.com/photo_2016_10_11_8a34446f2824bb633ca6144018e82666.jpg',
+                photo: 'http://triplint.localhost:8060/wap/images/1.jpg',
                 comment: '一场说走就走的旅行',
                 longitude: 23.03,
                 latitude: 23.03,
                 created_at: new Date().getTime()
             },
             {
-                photo: 'http://photos.breadtrip.com/photo_2016_10_11_8a34446f2824bb633ca6144018e82666.jpg',
+                photo: 'http://photos.breadtrip.com/photo_2016_10_17_c0b09b3c62d0918186896e6701abf2be.jpg',
                 comment: '一场说走就走的旅行',
                 longitude: 23.03,
                 latitude: 23.03,
@@ -52,14 +55,32 @@ jQuery(function ($) {
         callBack(false, data);
     }
 
-    var vm = new Vue({
+    function getPhotoItems(initIndex) {
+        var len = vm._data.items.length, images = [];
+        for (var i = 0; i < len; i++) {
+            images.push({
+                image: vm._data.items[i].photo,
+                caption: vm._data.items[i].comment
+            });
+        }
+        ($.photoBrowser({
+            initIndex: (initIndex < 0) ? 0 : initIndex,
+            items: images
+        })).open();
+    }
+
+    vm = new Vue({
         el: '#trip_items',
-        data: {items: []}
+        data: {items: []},
+        methods: {
+            // 查看图片
+            showImgs: function (event) {
+                getPhotoItems(event.target.alt);
+            }
+        }
     });
 
     getData(function (err, json) {
         vm._data.items = json;
     });
-
-
 });
