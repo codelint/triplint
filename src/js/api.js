@@ -173,8 +173,17 @@ U.api = (function(){
         }
     }
 
-    function rid2url(rid){
-        return rid;
+    function rid2url(rid, style){
+        style = style || '';
+        rid += style;
+        if(rid.indexOf('oss://') == 0){
+            rid = rid.substr(6);
+            var bucket = rid.slice(0, rid.indexOf('/'));
+            var object = rid.slice(rid.indexOf('/') + 1);
+            return 'http://' + bucket + '.oss-cn-hangzhou.aliyuncs.com/' + object + style;
+        }else{
+            return rid;
+        }
     }
 
     return {
