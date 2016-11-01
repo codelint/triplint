@@ -65,9 +65,29 @@
         </div>
     </div>
 </div>
+<script src="../js/android.js"></script>
 <script src="../public/js/jquery-2.1.4.js"></script>
 <script src="../public/js/swiper-3.3.1.jquery.min.js"></script>
 <script src="../public/js/vue.min.js"></script>
+<script src="../public/js/md5.js"></script>
+<script src="../js/api.js"></script>
 <script src="../js/index.js"></script>
+
+
+<script type="text/javascript">
+    jQuery(function(err, json){
+//        U.api.user.login('15918658642', '...', function(err,json){
+//            if(err){
+//                alert(err['message']);
+//            }else{
+//                alert('用户[' + json['nick'] + ']登录成功');
+//            }
+//        });
+
+        U.api.checkpoint.list({'group_id' : 0}, function(err, json){
+            alert(JSON.stringify(arguments));
+        })
+    })
+</script>
 </body>
 </html>
