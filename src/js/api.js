@@ -131,8 +131,29 @@ U.ajax = (function($){
 
 U.api = (function(){
 
+    var app_id = 1;
+    var app_token = '';
+    if(android){
+        app_id = android.get('app.id') || '';
+        app_token = android.get('app.token' || '');
+    }
+
+    function setup_user_auth(user){
+        android.put('app.id', user['id']);
+        android.put('app.token', user['api_token']);
+        app_id = android.get('app.id') || '';
+        app_token = android.get('app.token' || '');
+    }
+
     function _url(method){
-        return '/open/api?method=' + method;
+        var auth_params = '';
+        if(app_id && app_token && typeof(CryptoJS) != 'undefined'){
+            var now = ((new Date()).getTime()/1000).toFixed();
+            var signStr = 'app_id=' + app_id + '&method=' + method + '&secret=' + app_token + '&timestamp=' + now;
+            var sign = CryptoJS.MD5(signStr);
+            auth_params = '&app_id=' + app_id + '&timestamp=' + now + '&sign=' + sign;
+        }
+        return '/open/api?method=' + method + auth_params;
     }
 
     function callback_filter(cbf){
@@ -154,6 +175,21 @@ U.api = (function(){
 
     return {
         apiUrl: _url,
+        'user': {
+            'login': function(mobile, password, cbf){
+                U.ajax.postJson(_url('user.login'), {'login_name': mobile, 'password': password}, callback_filter(function(err, user){
+                    if(user && user['id'] && user['api_token']){
+                        setup_user_auth(user);
+                    }
+                    cbf(err, user);
+                }))
+            }
+        },
+        'checkpoint': {
+            'list': function(query, cbf){
+                U.ajax.postJson(_url('checkpoint.list'), query, callback_filter(cbf));
+            }
+        },
         'feedback' : function (message, cbf){
             U.ajax.postJson(_url('feedback.submit'), {
                 'user_name' : '',
