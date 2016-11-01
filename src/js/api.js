@@ -4,7 +4,7 @@ if (typeof String.prototype.endsWith !== 'function') {
         return this.indexOf(suffix, this.length - suffix.length) !== -1;
     };
 }
-
+OSS_DOMAIN='oss-cn-hangzhou.aliyuncs.com';
 U = typeof(U) == 'undefined' ? {} : U;
 
 U.ajax = (function($){
@@ -133,6 +133,7 @@ U.api = (function(){
 
     var app_id = 1;
     var app_token = '';
+
     if(android){
         app_id = android.get('app.id') || '';
         app_token = android.get('app.token' || '');
@@ -180,7 +181,7 @@ U.api = (function(){
             rid = rid.substr(6);
             var bucket = rid.slice(0, rid.indexOf('/'));
             var object = rid.slice(rid.indexOf('/') + 1);
-            return 'http://' + bucket + '.oss-cn-hangzhou.aliyuncs.com/' + object + style;
+            return 'http://' + bucket + '.' + OSS_DOMAIN + '/' + object + style;
         }else{
             return rid;
         }
