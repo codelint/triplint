@@ -173,8 +173,15 @@ U.api = (function(){
         }
     }
 
+    function rid2url(rid){
+        return rid;
+    }
+
     return {
         apiUrl: _url,
+        'oss': {
+            rid2url: rid2url
+        },
         'user': {
             'login': function(mobile, password, cbf){
                 U.ajax.postJson(_url('user.login'), {'login_name': mobile, 'password': password}, callback_filter(function(err, user){
@@ -187,7 +194,14 @@ U.api = (function(){
         },
         'checkpoint': {
             'list': function(query, cbf){
-                U.ajax.postJson(_url('checkpoint.list'), query, callback_filter(cbf));
+                U.ajax.postJson(_url('checkpoint.list'), query, callback_filter(function(err, json){
+                    if(json && json.length > 0){
+                        for(var i = json.length; i --;){
+                            json[i]['photo'] = rid2url(json[i]['photo']);
+                        }
+                    }
+                    cbf(err ,json);
+                }));
             }
         },
         'feedback' : function (message, cbf){
