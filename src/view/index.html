@@ -85,7 +85,9 @@
 //        });
 
         U.api.checkpoint.list({'group_id' : 0}, function(err, json){
-            alert(JSON.stringify(arguments));
+            if(json && json.length > 0){
+                alert('已获取' + json.length + '个路点');
+            }
         })
     })
 </script>
