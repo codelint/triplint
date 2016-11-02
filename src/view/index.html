@@ -75,7 +75,7 @@
 
 
 <script type="text/javascript">
-    jQuery(function(err, json){
+//    jQuery(function(err, json){
 //        U.api.user.login('15918658642', '...', function(err,json){
 //            if(err){
 //                alert(err['message']);
@@ -83,14 +83,7 @@
 //                alert('用户[' + json['nick'] + ']登录成功');
 //            }
 //        });
-
-        U.api.checkpoint.list({'group_id' : 0}, function(err, json){
-            if(json && json.length > 0){
-                alert('已获取' + json.length + '个路点');
-                // alert(JSON.stringify(json));
-            }
-        })
-    })
+//    })
 </script>
 </body>
 </html>
