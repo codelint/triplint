@@ -5,6 +5,7 @@ if (typeof String.prototype.endsWith !== 'function') {
     };
 }
 OSS_DOMAIN='oss-cn-hangzhou.aliyuncs.com';
+OSS_IMG_DOMAIN='img-cn-hangzhou.aliyuncs.com';
 U = typeof(U) == 'undefined' ? {} : U;
 
 U.ajax = (function($){
@@ -176,12 +177,12 @@ U.api = (function(){
 
     function rid2url(rid, style){
         style = style || '';
-        rid += style;
+        rid += style.indexOf('@') < 0 ? ('@' + style) : style;
         if(rid.indexOf('oss://') == 0){
             rid = rid.substr(6);
             var bucket = rid.slice(0, rid.indexOf('/'));
             var object = rid.slice(rid.indexOf('/') + 1);
-            return 'http://' + bucket + '.' + OSS_DOMAIN + '/' + object + style;
+            return 'http://' + bucket + '.' + OSS_IMG_DOMAIN + '/' + object;
         }else{
             return rid;
         }
@@ -205,11 +206,11 @@ U.api = (function(){
         'checkpoint': {
             'list': function(query, cbf){
                 U.ajax.postJson(_url('checkpoint.list'), query, callback_filter(function(err, json){
-                    if(json && json.length > 0){
-                        for(var i = json.length; i --;){
-                            json[i]['photo'] = rid2url(json[i]['photo']);
-                        }
-                    }
+//                    if(json && json.length > 0){
+//                        for(var i = json.length; i --;){
+//                            json[i]['photo'] = rid2url(json[i]['photo']);
+//                        }
+//                    }
                     cbf(err ,json);
                 }));
             }

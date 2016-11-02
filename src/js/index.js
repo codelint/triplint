@@ -26,7 +26,6 @@ jQuery(function($){
             var checkpoint;
             if(json){
                 for(var i = json.length; i--;){
-                    alert(JSON.stringify(json));
                     checkpoint = json[i];
                     arr.push({
                         'title': checkpoint['comment'],
@@ -34,8 +33,8 @@ jQuery(function($){
                         'day': 4,
                         'browse': 0,
                         'by': checkpoint['user_id'],
-                        'img': checkpoint['photo'],
-                        'portrait': checkpoint['photo'],
+                        'img': U.api.oss.rid2url(checkpoint['photo'], '1024w_768w'),
+                        'portrait': U.api.oss.rid2url(checkpoint['photo'], '1024w_768w'),
                         'place': checkpoint['longitude'] + ',' + checkpoint['latitude']
                     });
                 }
