@@ -12,11 +12,15 @@ jQuery(function($){
 //            }
 //        ]);
         var user = android.get('user.current');
-        var traveller_id = (user && user['source']) ? user['source'] : 0;
+
+        var traveller_id = (user && user['source']) ? user['source'] : user['id'];
+
         U.api.checkpoint.list({'group_id': 0, 'traveller_id': traveller_id}, function(err, json){
             var arr = [];
             var checkpoint;
-            if(json){
+            if(err){
+                android.alert(err.message);
+            }else if(json){
                 for(var i = json.length; i--;){
                     checkpoint = json[i];
                     arr.push({
@@ -87,7 +91,6 @@ jQuery(function($){
             return;
         }
         var len = data.length;
-        alert(len);
         var item;
         var $div;
         for(var i = 0; i < len; i++){
