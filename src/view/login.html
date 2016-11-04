@@ -53,6 +53,13 @@
     jQuery(function($){
         var success_cbf = U.ajax.getUrlParam('success_cbf') || '/wap/view';
 
+        var old_login_name = android.get('user.login_name');
+        var old_login_pass = android.get('user.login_password');
+        $('input[name="login_name"]').val(old_login_name);
+        if(old_login_pass){
+            $('input[name="login_password"]').val(old_login_pass);
+        }
+
         $('a.login-btn').click(function(){
             var phone = $('input[name="login_name"]').val();
             var password = $('input[name="login_password"]').val();
@@ -64,8 +71,8 @@
                     if(err){
                         android.alert(err['message']);
                     }else{
-                        android.put('user.login_password', password);
                         android.put('user.login_name', phone);
+                        android.put('user.login_password', password);
                         android.put('user.current', json);
                         location.href = success_cbf;
                         // android.alert('用户[' + json['nick'] + ']登录成功');
