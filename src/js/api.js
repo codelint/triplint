@@ -172,6 +172,7 @@ U.api = (function(){
         var callback = function(err, json){
             if(err && err.message.indexOf('未登录') >= 0){
                 location.href = ROOT_URL + '/view/login.html?success_cbf=' + location.pathname + location.search + location.hash;
+                return;
             }
             cbf(err, json);
         };
