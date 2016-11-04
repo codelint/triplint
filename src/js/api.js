@@ -170,11 +170,10 @@ U.api = (function(){
 
     function callback_filter(cbf){
         var callback = function(err, json){
-            if(err.message.indexOf('未登录') < 0){
-                                cbf(err, json);
-                            }else{
-                                location.href = ROOT_URL + '/view/login.html?success_cbf=' + location.pathname + location.search + location.hash;
-                            }
+            if(err && err.message.indexOf('未登录') >= 0){
+                location.href = ROOT_URL + '/view/login.html?success_cbf=' + location.pathname + location.search + location.hash;
+            }
+            cbf(err, json);
         };
         return function(err, json){
             if(err){
