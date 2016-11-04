@@ -171,7 +171,11 @@ U.api = (function(){
     function callback_filter(cbf){
         return function(err, json){
             if(err){
-                cbf(err, json);
+                if(err.message == '未登录'){
+                    location.href = ROOT_URL + '/view/login.html?success_cbf=' + location.pathname + location.search + location.hash;
+                }else{
+                    cbf(err, json);
+                }
             }else{
                 if(json && json['error_response']){
                     err = json['error_response'];
@@ -181,12 +185,7 @@ U.api = (function(){
                     json = json['response'];
                 }
             }
-            if(err.message == '未登录'){
-                location.href = ROOT_URL + '/view/login.html?success_cbf=' + location.pathname + location.search + location.hash;
-            }else{
-                cbf(err, json);
-            }
-
+            cbf(err, json);
         }
     }
 
