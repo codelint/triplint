@@ -6,6 +6,7 @@ if(typeof String.prototype.endsWith !== 'function'){
 }
 OSS_DOMAIN = 'oss-cn-hangzhou.aliyuncs.com';
 OSS_IMG_DOMAIN = 'img-cn-hangzhou.aliyuncs.com';
+ROOT_URL = '/wap';
 U = typeof(U) == 'undefined' ? {} : U;
 
 U.ajax = (function($){
@@ -180,7 +181,12 @@ U.api = (function(){
                     json = json['response'];
                 }
             }
-            cbf(err, json);
+            if(err.message == '未登录'){
+                location.href = ROOT_URL + '/view/login.html?success_cbf=' + location.pathname + location.search + location.hash;
+            }else{
+                cbf(err, json);
+            }
+
         }
     }
 
