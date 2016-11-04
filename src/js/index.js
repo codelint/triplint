@@ -24,8 +24,8 @@ jQuery(function($){
                 for(var i = json.length; i--;){
                     checkpoint = json[i];
                     arr.push({
-                        'src': U.api.oss.rid2url(checkpoint['photo'], '1024w_480h_4e_250-248-236bgc'),
-                        'href': U.api.oss.rid2url(checkpoint['photo'], '1024w_480h_4e_250-248-236bgc')
+                        'src': U.api.oss.rid2url(checkpoint['photo'], '1024w_480h_fillm_250-248-236bgc'),
+                        'href': U.api.oss.rid2url(checkpoint['photo'], '1024w_480h_fillm_250-248-236bgc')
                     });
                 }
                 callback(err, arr);
