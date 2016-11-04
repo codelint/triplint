@@ -1,11 +1,11 @@
 // ajax - tool
-if (typeof String.prototype.endsWith !== 'function') {
-    String.prototype.endsWith = function(suffix) {
+if(typeof String.prototype.endsWith !== 'function'){
+    String.prototype.endsWith = function(suffix){
         return this.indexOf(suffix, this.length - suffix.length) !== -1;
     };
 }
-OSS_DOMAIN='oss-cn-hangzhou.aliyuncs.com';
-OSS_IMG_DOMAIN='img-cn-hangzhou.aliyuncs.com';
+OSS_DOMAIN = 'oss-cn-hangzhou.aliyuncs.com';
+OSS_IMG_DOMAIN = 'img-cn-hangzhou.aliyuncs.com';
 U = typeof(U) == 'undefined' ? {} : U;
 
 U.ajax = (function($){
@@ -13,6 +13,15 @@ U.ajax = (function($){
     var retryTimes = 3;
 
     return {
+        getUrlParam: function(name, default_val){
+            var reg = new RegExp('(^|&)' + name + '=([^&]*)(&|$)', 'i'),
+                r = window.location.search.substr(1).match(reg);
+            if(r !== null){
+                return decodeURIComponent(r[2]);
+            }else{
+                return default_val || '';
+            }
+        },
         ajaxHtml: function(url, callback, tries){
             var ajaxHtml = arguments.callee;
             tries = tries || retryTimes;
@@ -150,7 +159,7 @@ U.api = (function(){
     function _url(method){
         var auth_params = '';
         if(app_id && app_token && typeof(CryptoJS) != 'undefined'){
-            var now = ((new Date()).getTime()/1000).toFixed();
+            var now = ((new Date()).getTime() / 1000).toFixed();
             var signStr = 'app_id=' + app_id + '&method=' + method + '&secret=' + app_token + '&timestamp=' + now;
             var sign = CryptoJS.MD5(signStr);
             auth_params = '&app_id=' + app_id + '&timestamp=' + now + '&sign=' + sign;
@@ -211,13 +220,13 @@ U.api = (function(){
 //                            json[i]['photo'] = rid2url(json[i]['photo']);
 //                        }
 //                    }
-                    cbf(err ,json);
+                    cbf(err, json);
                 }));
             }
         },
-        'feedback' : function (message, cbf){
+        'feedback': function(message, cbf){
             U.ajax.postJson(_url('feedback.submit'), {
-                'user_name' : '',
+                'user_name': '',
                 'contact': '',
                 'description': message
             }, callback_filter(cbf));

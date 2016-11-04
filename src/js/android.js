@@ -50,8 +50,25 @@ android = (function(){
             location.href = url;
         },
         // alert 你懂的
-        "alert": function(msg){
-            alert(msg);
+        "alert": function(msg, confirm_txt){
+            confirm_txt = confirm_txt || '确认';
+            if(jQuery){
+                var $weui = jQuery('<div class="js_dialog" id="iosDialog2">' +
+                    '<div class="weui-mask"></div>' +
+                    '<div class="weui-dialog">' +
+                    '<div class="weui-dialog__bd">...</div>' +
+                    '<div class="weui-dialog__ft"><a href="javascript:;" class="weui-dialog__btn weui-dialog__btn_primary">确认</a></div>' +
+                    '</div>' +
+                    '</div>');
+                $weui.find('.weui-dialog__bd').html(msg);
+                $weui.find('a').text(confirm_txt).click(function(){
+                    $weui.remove();
+                });
+                $('body').append($weui);
+                $weui.show();
+            }else{
+                alert(msg);
+            }
         },
         // 应用后台任务提示
         "notify": function(title, msg){
