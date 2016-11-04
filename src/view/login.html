@@ -54,7 +54,7 @@
 
         var old_login_name = android.get('user.login_name');
         var old_login_pass = android.get('user.login_password');
-        $('input[name="login_name"]').val(old_login_name);
+        $('input[name="login_name"]').val('').val(old_login_name);
         if(old_login_pass){
             $('input[name="login_password"]').val(old_login_pass);
         }
