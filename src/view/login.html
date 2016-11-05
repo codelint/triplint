@@ -15,43 +15,25 @@
     <div class="right">找回密码</div>
 </div>
 
-<div class="main">
-    <input name="login_name" class="t-input" type="number" pattern="[0-9]*" placeholder="手机号">
-
-    <input name="login_password" class="t-input" type="password" pattern="[0-9]*" placeholder="密码">
-
-    <a href="javascript:;" class="login-btn">登 录</a>
+<div class="main main-login">
+    <div class="login-box">
+        <input name="login_name" class="t-input" type="number" pattern="[0-9]*" placeholder="手机号">
+        <input name="login_password" class="t-input" type="password" pattern="[0-9]*" placeholder="密码">
+        <a href="javascript:;" class="login-btn t-btn">登 录</a>
+    </div>
+    <div class="reg-box">
+        <input name="reg_name" class="t-input" type="number" pattern="[0-9]*" placeholder="手机号">
+        <input name="reg_password" class="t-input" type="password" pattern="[0-9]*" placeholder="密码">
+        <input name="reg_password_verify" class="t-input" type="password" pattern="[0-9]*" placeholder="确认密码">
+        <input name="reg_invite_code" class="t-input" type="number" pattern="[0-9]*" placeholder="邀请人手机号">
+        <input name="reg_invite_code" class="t-input" type="number" pattern="[0-9]*" placeholder="邀请码">
+        <a href="javascript:;" class="reg-btn t-btn">注 册</a>
+    </div>
 </div>
 
-<!--<div class="weui-tab">
-    <div class="weui-navbar">
-        <div class="weui-navbar__item weui-bar__item_on">
-            登录
-        </div>
-        &lt;!&ndash;<div class="weui-navbar__item">&ndash;&gt;
-        &lt;!&ndash;注册&ndash;&gt;
-        &lt;!&ndash;</div>&ndash;&gt;
-    </div>
-    <div class="weui-tab__panel">
-        <div class="weui-cells weui-cells_form">
-            <div class="weui-cell">
-                <div class="weui-cell__hd"><label class="weui-label">帐号</label></div>
-                <div class="weui-cell__bd">
-                    <input name="login_name" class="weui-input" type="number" pattern="[0-9]*" placeholder="输入登录手机号">
-                </div>
-            </div>
-            <div class="weui-cell">
-                <div class="weui-cell__hd"><label class="weui-label">密码</label></div>
-                <div class="weui-cell__bd">
-                    <input name="login_password" class="weui-input" type="password" pattern="[0-9]*" placeholder="输入密码">
-                </div>
-            </div>
-        </div>
-        <div style="position: fixed;bottom: 20%;width: 96%;left: 2%">
-            <a href="javascript:;" class="weui-btn weui-btn_primary login-btn">登录</a>
-        </div>
-    </div>
-</div>-->
+<div class="tool-btns">
+    注册账号
+</div>
 
 </body>
 
@@ -64,12 +46,21 @@
 
 
 <script type="text/javascript">
+    var LoginReg = true;
     jQuery(function ($) {
         var success_cbf = U.ajax.getUrlParam('success_cbf') || '/wap/view';
 
         var old_login_name = android.get('user.login_name');
         var old_login_pass = android.get('user.login_password');
+
+        function loginReg() {
+            $(".main").toggleClass("main-reg");
+            $(".tool-btns").text((LoginReg = !LoginReg) ? "注册账号" : "已有账号");
+            $(".t-nav .right").text((LoginReg) ? "找回密码" : "");
+        }
+
         $('input[name="login_name"]').val('').val(old_login_name);
+
         if (old_login_pass) {
             $('input[name="login_password"]').val(old_login_pass);
         }
@@ -81,7 +72,6 @@
                 android.put('user.login_name', phone);
                 android.put('user.login_password', '');
                 U.api.user.login(phone, password, function (err, json) {
-
                     if (err) {
                         android.alert(err['message']);
                     } else {
@@ -95,6 +85,36 @@
             } else {
                 android.alert('帐号/密码无效');
             }
+        });
+
+        $("a.reg-btn").click(function () {
+            var phone = $('input[name="reg_name"]').val();
+            var password = $('input[name="reg_password"]').val();
+            var passwordVerify = $('input[name="reg_password_verify"]').val();
+            var inviteMobile = $('input[name="reg_invite_Mobile"]').val();
+            var inviteCode = $('input[name="reg_invite_code"]').val();
+
+            if (phone.length == 11 && (password == passwordVerify) && inviteMobile && inviteCode) {
+                android.put('user.login_name', phone);
+                android.put('user.login_password', '');
+                U.api.user.register(phone, password, inviteMobile, inviteCode, function (err, json) {
+                    if (err) {
+                        console.log(err);
+                        android.alert(err.message);
+                    } else {
+                        console.log(json);
+                        android.put('user.login_name', phone);
+                        android.put('user.login_password', password);
+                        loginReg();
+                    }
+                });
+            } else {
+                android.alert('帐号/密码无效');
+            }
+        });
+
+        $(".tool-btns").click(function () {
+            loginReg();
         });
     });
 </script>

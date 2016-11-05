@@ -73,7 +73,7 @@ body {
   margin: 15px auto;
   display: block;
   background: #49bdca;
-  font-size: 13px;
+  font-size: 16px;
   padding: 5px 0;
   text-indent: 10px;
 }
@@ -89,7 +89,7 @@ body {
 .main .t-input:-ms-input-placeholder {
   color: rgba(255, 255, 255, 0.5) !important;
 }
-.main .login-btn {
+.main .t-btn {
   display: block;
   width: 100%;
   border: 1px solid #fff;
@@ -100,4 +100,26 @@ body {
   color: #fff;
   text-align: center;
   margin-top: 80px;
+}
+.main .login-box {
+  display: block !important;
+}
+.main .reg-box {
+  display: none !important;
+}
+.main-reg .login-box {
+  display: none !important;
+}
+.main-reg .reg-box {
+  display: block !important;
+}
+.tool-btns {
+  position: fixed;
+  width: 100%;
+  height: 60px;
+  line-height: 60px;
+  color: #fff;
+  text-align: center;
+  bottom: 0;
+  border-top: 1px solid #fff;
 }

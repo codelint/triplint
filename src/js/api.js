@@ -219,6 +219,13 @@ U.api = (function(){
                     }
                     cbf(err, user);
                 }))
+            },
+            'register':function (mobile, password, inviteCode,inviteMobile,cbf) {
+                U.ajax.postJson(_url('user.register'), {
+                    "mobile": mobile, "password": password, "inviteCode": inviteCode, "inviteMobile": inviteMobile
+                },callback_filter(function (err, json) {
+                    cbf(err, json);
+                }))
             }
         },
         'checkpoint': {

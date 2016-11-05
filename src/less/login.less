@@ -3,7 +3,9 @@
 @import "icon";
 @import "t-nav";
 
-html, body { background: @baseColor; }
+html, body {
+    background: @baseColor;
+}
 
 .t-nav .right {
     width: 90px;
@@ -24,7 +26,7 @@ html, body { background: @baseColor; }
         margin: 15px auto;
         display: block;
         background: #49bdca;
-        font-size: 13px;
+        font-size: 16px;
         padding: 5px 0;
         text-indent: 10px;
         &::-webkit-input-placeholder {
@@ -40,7 +42,7 @@ html, body { background: @baseColor; }
             color: rgba(255, 255, 255, .5) !important;
         }
     }
-    .login-btn {
+    .t-btn {
         display: block;
         width: 100%;
         border: 1px solid #fff;
@@ -52,4 +54,31 @@ html, body { background: @baseColor; }
         text-align: center;
         margin-top: 80px;
     }
+
+    .login-box {
+        display: block !important;
+    }
+    .reg-box {
+        display: none !important;
+    }
+}
+
+.main-reg {
+    .login-box {
+        display: none !important;
+    }
+    .reg-box {
+        display: block !important;
+    }
+}
+
+.tool-btns {
+    position: fixed;
+    width: 100%;
+    height: 60px;
+    line-height: 60px;
+    color: #fff;
+    text-align: center;
+    bottom: 0;
+    border-top: 1px solid #fff;
 }
