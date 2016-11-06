@@ -97,7 +97,7 @@
             if (phone.length == 11 && (password == passwordVerify) && inviteMobile && inviteCode) {
                 android.put('user.login_name', phone);
                 android.put('user.login_password', '');
-                U.api.user.register(phone, password, inviteMobile, inviteCode, function (err, json) {
+                U.api.user.register(phone, password, inviteCode, inviteMobile, function (err, json) {
                     if (err) {
                         console.log(err);
                         android.alert(err.message);
