@@ -25,7 +25,7 @@
         <input name="reg_name" class="t-input" type="number" pattern="[0-9]*" placeholder="手机号">
         <input name="reg_password" class="t-input" type="password" pattern="[0-9]*" placeholder="密码">
         <input name="reg_password_verify" class="t-input" type="password" pattern="[0-9]*" placeholder="确认密码">
-        <input name="reg_invite_code" class="t-input" type="number" pattern="[0-9]*" placeholder="邀请人手机号">
+        <input name="reg_invite_mobile" class="t-input" type="number" pattern="[0-9]*" placeholder="邀请人手机号">
         <input name="reg_invite_code" class="t-input" type="number" pattern="[0-9]*" placeholder="邀请码">
         <a href="javascript:;" class="reg-btn t-btn">注 册</a>
     </div>
@@ -91,7 +91,7 @@
             var phone = $('input[name="reg_name"]').val();
             var password = $('input[name="reg_password"]').val();
             var passwordVerify = $('input[name="reg_password_verify"]').val();
-            var inviteMobile = $('input[name="reg_invite_Mobile"]').val();
+            var inviteMobile = $('input[name="reg_invite_mobile"]').val();
             var inviteCode = $('input[name="reg_invite_code"]').val();
 
             if (phone.length == 11 && (password == passwordVerify) && inviteMobile && inviteCode) {
