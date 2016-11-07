@@ -4,7 +4,7 @@
 
 // 通过时间戳获取年月日十分秒
 function getDataTime(time, type) {
-    time = new Date(parseInt(time));
+    time = new Date((isNaN(time)) ? time : parseInt(time));
     if (type == "y")
         return time.getFullYear();
     else if (type == "m")
@@ -21,45 +21,6 @@ jQuery(function ($) {
     var vm;
 
     function getData(callBack) {
-        var data = [
-            {
-                photo: 'http://photos.breadtrip.com/photo_2016_10_11_8a34446f2824bb633ca6144018e82666.jpg',
-                comment: '一场说走就走的旅行',
-                longitude: 23.03,
-                latitude: 23.03,
-                like: 10,
-                comment_count: 10,
-                created_at: new Date().getTime()
-            },
-            {
-                photo: 'http://triplint.localhost:8060/wap/images/img.jpg',
-                comment: '一场说走就走的旅行',
-                longitude: 23.03,
-                latitude: 23.03,
-                like: 11,
-                comment_count: 11,
-                created_at: new Date().getTime()
-            },
-            {
-                photo: 'http://triplint.localhost:8060/wap/images/1.jpg',
-                comment: '一场说走就走的旅行',
-                longitude: 23.03,
-                latitude: 23.03,
-                like: 22,
-                comment_count: 22,
-                created_at: new Date().getTime()
-            },
-            {
-                photo: 'http://photos.breadtrip.com/photo_2016_10_17_c0b09b3c62d0918186896e6701abf2be.jpg',
-                comment: '一场说走就走的旅行',
-                longitude: 23.03,
-                latitude: 23.03,
-                like: 33,
-                comment_count: 33,
-                created_at: new Date().getTime()
-            }
-        ];
-
         var query = {
             "group_id": U.ajax.getUrlParam("groupid"),
             "page": 1,
@@ -105,8 +66,6 @@ jQuery(function ($) {
     });
 
     getData(function (err, json) {
-        console.log(err);
-        console.log(json);
         vm._data.items = json;
     });
 });
