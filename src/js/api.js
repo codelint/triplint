@@ -6,7 +6,7 @@ if(typeof String.prototype.endsWith !== 'function'){
 }
 OSS_DOMAIN = 'oss-cn-hangzhou.aliyuncs.com';
 OSS_IMG_DOMAIN = 'img-cn-hangzhou.aliyuncs.com';
-ROOT_URL = 'http://complint.localhost/wap';
+ROOT_URL = 'http://'+location.host+'/wap';
 U = typeof(U) == 'undefined' ? {} : U;
 
 U.ajax = (function($){
