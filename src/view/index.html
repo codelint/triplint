@@ -20,14 +20,14 @@
 <div class="swiper-container barn">
     <div class="swiper-wrapper">
         <!--<div class="swiper-slide">-->
-            <!--<img src="../images/img.jpg?oss_image_style=1024w_480h_4e_250-248-236bgc" alt="">-->
+        <!--<img src="../images/img.jpg?oss_image_style=1024w_480h_4e_250-248-236bgc" alt="">-->
         <!--</div>-->
     </div>
     <div class="swiper-pagination"></div>
 </div>
 
 <div class="list">
-    <a href="trips.html" class="info" v-for="list in lists">
+    <a :href="'trips.html?groupid='+list.id" class="info" v-for="list in lists">
         <p v-cloak class="title">{{ list.title }}</p>
         <div class="time-didian">
             <p v-cloak>{{ list.dateTime}} {{ list.day }}天 {{ list.browse }} 次浏览</p>
@@ -44,24 +44,24 @@
 <!--<div class="add">+</div>-->
 
 <!--<div class="leftMenu">-->
-    <!--<div class="t-mask-visible"></div>-->
-    <!--<div class="menu">-->
-        <!--<a href="menber.html" class="portrarit">-->
-            <!--<img src="../images/1.jpg?oss_image_style=120w_120h_4e_73-189-202bgc" alt="">-->
-            <!--<p class="name">Triplint</p>-->
-        <!--</a>-->
-        <!--<div class="menu-list">-->
-            <!--<a href="index.html" class="on">热门游记</a>-->
-            <!--<a href="javascript:;">草稿箱</a>-->
-            <!--<a href="setting.html">设置</a>-->
-        <!--</div>-->
-        <!--<div class="cp">-->
-            <!--Triplint-->
-        <!--</div>-->
-    <!--</div>-->
+<!--<div class="t-mask-visible"></div>-->
+<!--<div class="menu">-->
+<!--<a href="menber.html" class="portrarit">-->
+<!--<img src="../images/1.jpg?oss_image_style=120w_120h_4e_73-189-202bgc" alt="">-->
+<!--<p class="name">Triplint</p>-->
+<!--</a>-->
+<!--<div class="menu-list">-->
+<!--<a href="index.html" class="on">热门游记</a>-->
+<!--<a href="javascript:;">草稿箱</a>-->
+<!--<a href="setting.html">设置</a>-->
+<!--</div>-->
+<!--<div class="cp">-->
+<!--Triplint-->
+<!--</div>-->
+<!--</div>-->
 <!--</div>-->
 <!--<form>-->
-    <!--<input type="file" name="file" class="form-control" id="fileInput" placeholder="选择文件"/>-->
+<!--<input type="file" name="file" class="form-control" id="fileInput" placeholder="选择文件"/>-->
 <!--</form>-->
 <script src="../js/android.js"></script>
 <script src="../public/js/jquery-2.1.4.js"></script>
@@ -73,7 +73,7 @@
 
 
 <script type="text/javascript">
-    jQuery(function(err, json){
+    jQuery(function (err, json) {
 //        U.api.user.login('15918658642', '...', function(err,json){
 //            if(err){
 //                alert(err['message']);
@@ -82,8 +82,8 @@
 //                alert('用户[' + json['nick'] + ']登录成功');
 //            }
 //        });
-        $('input[type="file"]').change(function(err ,json){
-            U.api.oss.uploadTempFile(1, $('form'), function(err, json){
+        $('input[type="file"]').change(function (err, json) {
+            U.api.oss.uploadTempFile(1, $('form'), function (err, json) {
                 alert('todo');
             })
         });

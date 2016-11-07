@@ -19,8 +19,6 @@ function getDataTime(time, type) {
 
 jQuery(function ($) {
     var vm;
-    var user = android.get('user.current');
-    var traveller_id = (user && Number(user['source']) > 0.01) ? user['source'] : user['id'];
 
     function getData(callBack) {
         var data = [
@@ -63,8 +61,7 @@ jQuery(function ($) {
         ];
 
         var query = {
-            "traveller_id": traveller_id,
-            "group_id": 0,
+            "group_id": U.ajax.getUrlParam("groupid"),
             "page": 1,
             "pageSize": 10
         };

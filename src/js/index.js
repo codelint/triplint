@@ -2,9 +2,9 @@
  * Created by Qiu on 16-10-3.
  */
 
-jQuery(function($){
+jQuery(function ($) {
 
-    function loadBarData(callback){
+    function loadBarData(callback) {
 //        callback(false, [
 //            {
 //                'src': '../images/img.jpg?oss_image_style=1024w_480h_4e_250-248-236bgc',
@@ -15,13 +15,13 @@ jQuery(function($){
 
         var traveller_id = (user && Number(user['source']) > 0.01) ? user['source'] : user['id'];
 
-        U.api.checkpoint.list({'group_id': 0, 'traveller_id': traveller_id}, function(err, json){
+        U.api.checkpoint.list({'group_id': 0, 'traveller_id': traveller_id}, function (err, json) {
             var arr = [];
             var checkpoint;
-            if(err){
+            if (err) {
                 android.alert(err.message);
-            }else if(json){
-                for(var i = json.length; i--;){
+            } else if (json) {
+                for (var i = json.length; i--;) {
                     checkpoint = json[i];
                     arr.push({
                         'src': U.api.oss.rid2url(checkpoint['photo'], 'image/resize,w_1024,h_480,m_fill,color_FAF8EC'),
@@ -37,7 +37,7 @@ jQuery(function($){
      *
      * @param callback
      */
-    function loadData(callback){
+    function loadData(callback) {
 //        callback([
 //            {
 //                title: '六月在夏天又去了海边',
@@ -50,13 +50,15 @@ jQuery(function($){
 //                portrait: '../images/img.jpg?oss_image_style=1024w'
 //            }
 //        ]);
-        U.api.checkpoint.list({'group_id': 0}, function(err, json){
+        U.api.checkpoint.list({'group_id': 0}, function (err, json) {
+            console.log(json);
             var arr = [];
             var checkpoint;
-            if(json){
-                for(var i = json.length; i--;){
+            if (json) {
+                for (var i = json.length; i--;) {
                     checkpoint = json[i];
                     arr.push({
+                        'id': checkpoint['id'],
                         'title': checkpoint['comment'],
                         'dateTime': checkpoint['created_at'],
                         'day': 4,
@@ -72,8 +74,8 @@ jQuery(function($){
         })
     }
 
-    loadData(function(err, data){
-        if(err){
+    loadData(function (err, data) {
+        if (err) {
             alert(err.message);
             return;
         }
@@ -85,15 +87,15 @@ jQuery(function($){
         })
     });
 
-    loadBarData(function(err, data){
-        if(err){
+    loadBarData(function (err, data) {
+        if (err) {
             alert(err.message);
             return;
         }
         var len = data.length;
         var item;
         var $div;
-        for(var i = 0; i < len; i++){
+        for (var i = 0; i < len; i++) {
             item = data[i];
             $div = $('<div class="swiper-slide">' +
                 '<img src="../images/img.jpg?oss_image_style=1024w_480h_4e_250-248-236bgc" alt="">' +
@@ -110,35 +112,35 @@ jQuery(function($){
         });
     });
 
-    $('leftMenu').length < 1 && U.ajax.ajaxHtml(U.ajax.url('/view/component/menu.html'), function(err, html){
+    $('leftMenu').length < 1 && U.ajax.ajaxHtml(U.ajax.url('/view/component/menu.html'), function (err, html) {
         var $menu = $(html);
         $('body').append($menu);
         var user = android.get('user.current');
-        if(!user){
-            U.api.user.info(user, function(err, user){
-                if(!err && user && user['avatar']){
+        if (!user) {
+            U.api.user.info(user, function (err, user) {
+                if (!err && user && user['avatar']) {
                     $menu.find('img.avatar').attr('src', U.api.oss.rid2url(user['avatar'], 'image/resize,w_128,h_128'));
                     $menu.find('p.name').text(user['nick']);
                 }
             })
-        }else{
+        } else {
             $menu.find('img.avatar').attr('src', U.api.oss.rid2url(user['avatar'], 'image/resize,w_128,h_128'));
             $menu.find('p.name').text(user['nick']);
 
         }
-        $menu.find('.t-mask-visible').click(function(){
+        $menu.find('.t-mask-visible').click(function () {
             $menu.removeClass("on");
-            setTimeout(function(){
+            setTimeout(function () {
                 $menu.css("left", "-100%");
             }, 300);
         });
     });
 
-    $(".on-menu").click(function(){
+    $(".on-menu").click(function () {
         $(".leftMenu").css("left", "0").addClass("on");
     });
 
-    $(".add").click(function(){
+    $(".add").click(function () {
         alert("ok");
         // location.href = "http://192.168.1.106:8050/src/view/";
     });
