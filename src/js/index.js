@@ -51,7 +51,6 @@ jQuery(function ($) {
 //            }
 //        ]);
         U.api.checkpoint.list({'group_id': 0}, function (err, json) {
-            console.log(json);
             var arr = [];
             var checkpoint;
             if (json) {
