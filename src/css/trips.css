@@ -142,6 +142,9 @@ a {
   color: #49bdca;
   text-decoration: none;
 }
+[v-cloak] {
+  display: none;
+}
 html,
 body {
   background: #fbf7ed;

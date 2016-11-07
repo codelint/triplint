@@ -21,15 +21,15 @@
         <div class="day" v-for="(item, index) in items">
             <p class="day-marker">
                 <i class="circle circle-first"></i>
-                {{ (getDataTime(item.created_at,"y")) }}-{{ (getDataTime(item.created_at,"m")) }}-{{
-                (getDataTime(item.created_at,"d")) }} 第{{ index + 1 }}天
+                第{{ index + 1 }}天 {{ (getDataTime(item.created_at,"m")) }}月{{ (getDataTime(item.created_at,"d")) }}日
             </p>
             <p class="wp-sep clear-both"></p>
             <div class="day-content">
                 <div class="waypoint">
                     <div class="photo-ctn">
                         <a href="javascript:;" class="trip-photo" v-on:click="showImgs">
-                            <img :src="item.photo" :alt="index">
+                            <!--item.photo-->
+                            <img :src="(U.api.oss.rid2url(item.photo))" :alt="index">
                         </a>
                         <div class="photo-mask">
                             <div class="photo-mask-left float-left"></div>
@@ -50,17 +50,15 @@
                         </div>
                     </div>
                     <p class="text" style="padding-top: 10px">
-                        第{{ index + 1 }}天 {{ item.comment }}
+                        {{ item.comment }}
                     </p>
                     <div class="wp-stats">
                         <p class="wp-time"><i class="icon-time"></i>
-                            {{ (getDataTime(item.created_at,"m")) }}月{{ (getDataTime(item.created_at,"d")) }}日
                             {{ (getDataTime(item.created_at,"h")) }}:{{ (getDataTime(item.created_at,"M")) }}
                         </p>
                         <a class="wp-poi wp-poi-verified" href="###">
                             <i class="icon-poi_11"></i>
-                            查汶海滩
-                            <!--{{ item.longitude }}-->
+                            {{ item.longitude }},{{ item.altitude }}
                         </a>
                     </div>
                 </div>
@@ -116,6 +114,7 @@
 <script src="../public/js/vue.min.js"></script>
 <script src="//cdn.bootcss.com/jquery-weui/0.8.0/js/jquery-weui.min.js"></script>
 <script src="//cdn.bootcss.com/jquery-weui/0.8.0/js/swiper.min.js"></script>
+<script src="../js/android.js"></script>
 <script src="../js/api.js"></script>
 <script src="../js/trips.js"></script>
 </html>

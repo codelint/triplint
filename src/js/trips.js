@@ -19,6 +19,8 @@ function getDataTime(time, type) {
 
 jQuery(function ($) {
     var vm;
+    var user = android.get('user.current');
+    var traveller_id = (user && Number(user['source']) > 0.01) ? user['source'] : user['id'];
 
     function getData(callBack) {
         var data = [
@@ -59,15 +61,23 @@ jQuery(function ($) {
                 created_at: new Date().getTime()
             }
         ];
-        // U.ajax.getJson("", callBack(false, data));
-        callBack(false, data);
+
+        var query = {
+            "traveller_id": traveller_id,
+            "group_id": 0,
+            "page": 1,
+            "pageSize": 10
+        };
+        U.api.checkpoint.list(query, function (err, json) {
+            callBack(err, json);
+        });
     }
 
     function getPhotoItems(initIndex) {
         var len = vm._data.items.length, images = [];
         for (var i = 0; i < len; i++) {
             images.push({
-                image: vm._data.items[i].photo,
+                image: (U.api.oss.rid2url(vm._data.items[i].photo)),
                 caption: vm._data.items[i].comment
             });
         }
@@ -87,7 +97,8 @@ jQuery(function ($) {
             },
             // 喜欢
             like: function (index) {
-                vm._data.items[index].like = ++(vm._data.items[index].like);
+                $.toast("后期开放此功能", "text");
+                // vm._data.items[index].like = ++(vm._data.items[index].like);
             },
             // 评论
             comment: function () {
@@ -97,6 +108,8 @@ jQuery(function ($) {
     });
 
     getData(function (err, json) {
+        console.log(err);
+        console.log(json);
         vm._data.items = json;
     });
 });
