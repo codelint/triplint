@@ -200,7 +200,7 @@ U.api = (function($){
         style = style || '';
         // rid += style.indexOf('@') < 0 ? ('@' + style) : style;
 
-        if(rid.indexOf('oss://') == 0){
+        if(rid && rid.indexOf('oss://') == 0){
             if(style.indexOf('@') == 0){
                 rid += style;
             }else{
