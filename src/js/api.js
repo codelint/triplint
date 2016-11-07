@@ -6,7 +6,7 @@ if(typeof String.prototype.endsWith !== 'function'){
 }
 OSS_DOMAIN = 'oss-cn-hangzhou.aliyuncs.com';
 OSS_IMG_DOMAIN = 'img-cn-hangzhou.aliyuncs.com';
-ROOT_URL = '/wap';
+ROOT_URL = 'http://complint.localhost/wap';
 U = typeof(U) == 'undefined' ? {} : U;
 
 U.ajax = (function($){
@@ -140,7 +140,7 @@ U.ajax = (function($){
     }
 })(jQuery);
 
-U.api = (function(){
+U.api = (function($){
 
     var app_id = 1;
     var app_token = '';
@@ -195,8 +195,14 @@ U.api = (function(){
 
     function rid2url(rid, style){
         style = style || '';
-        rid += style.indexOf('@') < 0 ? ('@' + style) : style;
+        // rid += style.indexOf('@') < 0 ? ('@' + style) : style;
+
         if(rid.indexOf('oss://') == 0){
+            if(style.indexOf('@') == 0){
+                rid += style;
+            }else{
+                rid += ('?x-oss-process=' + style);
+            }
             rid = rid.substr(6);
             var bucket = rid.slice(0, rid.indexOf('/'));
             var object = rid.slice(rid.indexOf('/') + 1);
@@ -209,7 +215,51 @@ U.api = (function(){
     return {
         apiUrl: _url,
         'oss': {
-            rid2url: rid2url
+            rid2url: rid2url,
+            uploadTempFile: function(slot, $form, callback){
+                slot = (slot%7 + 1) || 1;
+                // $('body').append($form);
+                U.ajax.postJson(_url('checkpoint.upload'), {'slot': slot}, callback_filter(function(err, json){
+                    if(json && json['data'] && json['data']['post']){
+                        var postData = json['data']['post'];
+                        // var $form = $('#oss-upload-form');
+//                        var $form = $('<form id="oss-upload-form">' +
+//                            '<input type="file" name="file" class="form-control" id="fileInput" placeholder="选择文件"/>' +
+//                        '</form>');
+                        // $('body').append($form);
+                        $form.attr('action', 'http://' + postData['host'] + '/');
+                        $form.attr('method', 'post');
+                        $form.attr('target', 'hidden_frame');
+                        $form.attr('encrypt', 'multipart/form-data');
+                        $form.attr('autocomplete', 'off');
+                        if(!$form.find('iframe').length){
+                            $form.append($('<iframe name="hidden_frame" id="hidden_frame" style="display: none"></iframe>'));
+                        }
+                        var $file = $form.find('input[type="file"]');
+                        if($file.length == 0 || !$file.val()){
+                            android.alert('未选择照片');
+                        }
+                        $form.append($('<input type="hidden" name="OSSAccessKeyId" value=""/>').val(postData['accessid']));
+                        $form.append($('<input type="hidden" name="policy" value=""/>').val(postData['policy']));
+                        $form.append($('<input type="hidden" name="Signature" value=""/>').val(postData['signature']));
+                        $form.append($('<input type="hidden" name="key" value=""/>').val(postData['object']));
+                        $form.append($('<input type="hidden" name="success_action_redirect" value=""/>').val(ROOT_URL + '/view/oss_upload_success.html'));
+
+                        U.api.oss.uploadSuccessCallback = function(){
+                            $form.remove();
+                            callback(err, json);
+                        };
+
+                        $form.submit();
+                    }else{
+                        if(err){
+                            android.alert(err.message);
+                        }else{
+                            android.alert('上传文件失败');
+                        }
+                    }
+                }));
+            }
         },
         'user': {
             'login': function(mobile, password, cbf){
@@ -226,6 +276,10 @@ U.api = (function(){
                 },callback_filter(function (err, json) {
                     cbf(err, json);
                 }))
+            },
+            'uploadAvatar': function(){
+                //todo
+
             }
         },
         'checkpoint': {
@@ -248,4 +302,4 @@ U.api = (function(){
             }, callback_filter(cbf));
         }
     }
-})();
+})(jQuery);

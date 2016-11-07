@@ -119,6 +119,7 @@ body {
 .tool-btns {
   position: fixed;
   width: 100%;
+  max-width: 640px;
   height: 49px;
   line-height: 49px;
   color: #fff;

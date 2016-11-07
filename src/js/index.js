@@ -24,8 +24,8 @@ jQuery(function($){
                 for(var i = json.length; i--;){
                     checkpoint = json[i];
                     arr.push({
-                        'src': U.api.oss.rid2url(checkpoint['photo'], '1024w_480h_fillm_250-248-236bgc'),
-                        'href': U.api.oss.rid2url(checkpoint['photo'], '1024w_480h_fillm_250-248-236bgc')
+                        'src': U.api.oss.rid2url(checkpoint['photo'], 'image/resize,w_1024,h_480,m_fill,color_FAF8EC'),
+                        'href': U.api.oss.rid2url(checkpoint['photo'], 'image/resize,w_1024,h_480,m_fill,color_FAF8EC')
                     });
                 }
                 callback(err, arr);
@@ -62,8 +62,8 @@ jQuery(function($){
                         'day': 4,
                         'browse': 0,
                         'by': checkpoint['user']['nick'],
-                        'img': U.api.oss.rid2url(checkpoint['photo'], '1024w_768w'),
-                        'portrait': U.api.oss.rid2url(checkpoint['photo'], '1024w_768w'),
+                        'img': U.api.oss.rid2url(checkpoint['photo'], 'image/resize,w_1024,h_768'),
+                        'portrait': U.api.oss.rid2url(checkpoint['photo'], 'image/resize,w_1024,h_768'),
                         'place': checkpoint['longitude'] + ',' + checkpoint['latitude']
                     });
                 }
