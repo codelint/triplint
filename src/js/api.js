@@ -156,6 +156,7 @@ U.api = (function($){
     function setup_user_auth(user){
         android.put('app.id', user['id']);
         android.put('app.token', user['api_token']);
+        android.put("app.user", user);
         app_id = android.get('app.id') || '';
         app_token = android.get('app.token' || '');
     }
@@ -219,6 +220,9 @@ U.api = (function($){
         apiUrl: _url,
         'oss': {
             rid2url: rid2url,
+            upload: function(slot, cbf){
+                U.ajax.postJson(_url('checkpoint.upload'), {'slot': slot}, callback_filter(cbf));
+            },
             uploadTempFile: function(slot, $form, callback){
                 slot = (slot%7 + 1) || 1;
                 // $('body').append($form);
@@ -265,6 +269,19 @@ U.api = (function($){
             }
         },
         'user': {
+            'info': function(uid, callback){
+                if(!callback){
+                    callback = uid;
+                    uid = uid || android.get('app.id');
+                }
+                if(uid){
+                    U.ajax.postJson(_url('user.info'), {'user_id': uid}, callback_filter(callback));
+                }else{
+                    callback({
+                        'message': "用户["+uid+"]不存在"
+                    });
+                }
+            },
             'login': function(mobile, password, cbf){
                 U.ajax.postJson(_url('user.login'), {'login_name': mobile, 'password': password}, callback_filter(function(err, user){
                     if(user && user['id'] && user['api_token']){

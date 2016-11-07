@@ -113,6 +113,19 @@ jQuery(function($){
     $('leftMenu').length < 1 && U.ajax.ajaxHtml(U.ajax.url('/view/component/menu.html'), function(err, html){
         var $menu = $(html);
         $('body').append($menu);
+        var user = android.get('user.current');
+        if(!user){
+            U.api.user.info(user, function(err, user){
+                if(!err && user && user['avatar']){
+                    $menu.find('img.avatar').attr('src', U.api.oss.rid2url(user['avatar'], 'image/resize,w_128,h_128'));
+                    $menu.find('p.name').text(user['nick']);
+                }
+            })
+        }else{
+            $menu.find('img.avatar').attr('src', U.api.oss.rid2url(user['avatar'], 'image/resize,w_128,h_128'));
+            $menu.find('p.name').text(user['nick']);
+
+        }
         $menu.find('.t-mask-visible').click(function(){
             $menu.removeClass("on");
             setTimeout(function(){
