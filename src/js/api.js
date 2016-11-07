@@ -14,6 +14,9 @@ U.ajax = (function($){
     var retryTimes = 3;
 
     return {
+        url: function(uri){
+            return ROOT_URL + uri;
+        },
         getUrlParam: function(name, default_val){
             var reg = new RegExp('(^|&)' + name + '=([^&]*)(&|$)', 'i'),
                 r = window.location.search.substr(1).match(reg);
@@ -197,7 +200,7 @@ U.api = (function($){
         style = style || '';
         // rid += style.indexOf('@') < 0 ? ('@' + style) : style;
 
-        if(rid.indexOf('oss://') == 0){
+        if(rid && rid.indexOf('oss://') == 0){
             if(style.indexOf('@') == 0){
                 rid += style;
             }else{
