@@ -13,7 +13,7 @@ jQuery(function($){
 //        ]);
         var user = android.get('user.current');
 
-        var traveller_id = (user && user['source']) ? user['source'] : user['id'];
+        var traveller_id = (user && Number(user['source']) > 0.01) ? user['source'] : user['id'];
 
         U.api.checkpoint.list({'group_id': 0, 'traveller_id': traveller_id}, function(err, json){
             var arr = [];
