@@ -6,6 +6,7 @@
     <title>Triplint</title>
     <link rel="stylesheet" href="//at.alicdn.com/t/font_h5xvumt53vwsif6r.css">
     <link rel="stylesheet" href="../public/css/swiper-3.3.1.min.css">
+    <link rel="stylesheet" href="../public/css/weui.css">
     <link rel="stylesheet" href="../css/index.min.css">
 </head>
 <body>
@@ -42,23 +43,26 @@
 
 <!--<div class="add">+</div>-->
 
-<div class="leftMenu">
-    <div class="t-mask-visible"></div>
-    <div class="menu">
-        <a href="menber.html" class="portrarit">
-            <img src="../images/1.jpg?oss_image_style=120w_120h_4e_73-189-202bgc" alt="">
-            <p class="name">Triplint</p>
-        </a>
-        <div class="menu-list">
-            <a href="index.html" class="on">热门游记</a>
-            <a href="javascript:;">草稿箱</a>
-            <a href="setting.html">设置</a>
-        </div>
-        <div class="cp">
-            Triplint
-        </div>
-    </div>
-</div>
+<!--<div class="leftMenu">-->
+    <!--<div class="t-mask-visible"></div>-->
+    <!--<div class="menu">-->
+        <!--<a href="menber.html" class="portrarit">-->
+            <!--<img src="../images/1.jpg?oss_image_style=120w_120h_4e_73-189-202bgc" alt="">-->
+            <!--<p class="name">Triplint</p>-->
+        <!--</a>-->
+        <!--<div class="menu-list">-->
+            <!--<a href="index.html" class="on">热门游记</a>-->
+            <!--<a href="javascript:;">草稿箱</a>-->
+            <!--<a href="setting.html">设置</a>-->
+        <!--</div>-->
+        <!--<div class="cp">-->
+            <!--Triplint-->
+        <!--</div>-->
+    <!--</div>-->
+<!--</div>-->
+<!--<form>-->
+    <!--<input type="file" name="file" class="form-control" id="fileInput" placeholder="选择文件"/>-->
+<!--</form>-->
 <script src="../js/android.js"></script>
 <script src="../public/js/jquery-2.1.4.js"></script>
 <script src="../public/js/swiper-3.3.1.jquery.min.js"></script>
@@ -69,7 +73,7 @@
 
 
 <script type="text/javascript">
-//    jQuery(function(err, json){
+    jQuery(function(err, json){
 //        U.api.user.login('15918658642', '...', function(err,json){
 //            if(err){
 //                alert(err['message']);
@@ -78,7 +82,12 @@
 //                alert('用户[' + json['nick'] + ']登录成功');
 //            }
 //        });
-//    })
+        $('input[type="file"]').change(function(err ,json){
+            U.api.oss.uploadTempFile(1, $('form'), function(err, json){
+                alert('todo');
+            })
+        });
+    })
 </script>
 </body>
 </html>

@@ -14,6 +14,9 @@ U.ajax = (function($){
     var retryTimes = 3;
 
     return {
+        url: function(uri){
+            return ROOT_URL + uri;
+        },
         getUrlParam: function(name, default_val){
             var reg = new RegExp('(^|&)' + name + '=([^&]*)(&|$)', 'i'),
                 r = window.location.search.substr(1).match(reg);

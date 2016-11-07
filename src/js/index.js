@@ -63,7 +63,7 @@ jQuery(function($){
                         'browse': 0,
                         'by': checkpoint['user']['nick'],
                         'img': U.api.oss.rid2url(checkpoint['photo'], 'image/resize,w_1024,h_768'),
-                        'portrait': U.api.oss.rid2url(checkpoint['photo'], 'image/resize,w_1024,h_768'),
+                        'portrait': U.api.oss.rid2url(checkpoint['user']['avatar'], 'image/resize,w_128,h_128'),
                         'place': checkpoint['longitude'] + ',' + checkpoint['latitude']
                     });
                 }
@@ -110,19 +110,19 @@ jQuery(function($){
         });
     });
 
-    var $leftMenu = $(".leftMenu");
-
-
-    $(".on-menu").click(function(){
-        $leftMenu.css("left", "0");
-        $leftMenu.addClass("on");
+    $('leftMenu').length < 1 && U.ajax.ajaxHtml(U.ajax.url('/view/component/menu.html'), function(err, html){
+        var $menu = $(html);
+        $('body').append($menu);
+        $menu.find('.t-mask-visible').click(function(){
+            $menu.removeClass("on");
+            setTimeout(function(){
+                $menu.css("left", "-100%");
+            }, 300);
+        });
     });
 
-    $(".leftMenu .t-mask-visible").click(function(){
-        $leftMenu.removeClass("on");
-        setTimeout(function(){
-            $leftMenu.css("left", "-100%");
-        }, 300);
+    $(".on-menu").click(function(){
+        $(".leftMenu").css("left", "0").addClass("on");
     });
 
     $(".add").click(function(){
