@@ -3,23 +3,21 @@
  */
 
 // 通过时间戳获取年月日十分秒
-function getDateTime(time, type) {
+function getDateTime(time, type){
     time = new Date((isNaN(time)) ? time : parseInt(time));
-    if (type == "y")
+    if(type == "y")
         return time.getFullYear();
-    else if (type == "m")
+    else if(type == "m")
         return (time.getMonth()) + 1;
-    else if (type == "d")
+    else if(type == "d")
         return time.getDate();
-    else if (type == "h")
+    else if(type == "h")
         return time.getHours();
-    else if (type == "M")
+    else if(type == "M")
         return time.getMinutes();
 }
 
-jQuery(function ($) {
-    var vm;
-
+jQuery(function($){
     /**
      * @param callBack function(err, data)
      *  data : array [{
@@ -33,20 +31,19 @@ jQuery(function ($) {
      *      "like":0
      *  }]
      */
-    function init(callBack) {
+    function init(callBack){
         var query = {
             "group_id": U.ajax.getUrlParam("groupid"),
             "page": 1,
             "pageSize": 10
         };
-        U.api.checkpoint.list(query, function (err, json) {
+        U.api.checkpoint.list(query, function(err, json){
             if(err){
                 android.alert(err.message);
             }else{
                 // calculate array[].day
                 if(json && json.length){
-
-                    var minTime = (new Date()).getTime()/1000;
+                    var minTime = (new Date()).getTime() / 1000;
                     json = _.sortBy(json, function(v){
                         if(v['create_time'] < minTime){
                             minTime = v['create_time'];
@@ -55,7 +52,7 @@ jQuery(function ($) {
                     });
 
                     _.each(json, function(v, k, arr){
-                        v['day'] = Math.round((Number(v['create_time']) - minTime)/86400 + 1);
+                        v['day'] = Math.round((Number(v['create_time']) - minTime) / 86400 + 1);
                         arr[k] = v;
                     });
                 }
@@ -65,9 +62,9 @@ jQuery(function ($) {
         });
     }
 
-    function getPhotoItems(initIndex) {
+    function getPhotoItems(initIndex){
         var len = vm._data.items.length, images = [];
-        for (var i = 0; i < len; i++) {
+        for(var i = 0; i < len; i++){
             images.push({
                 image: (U.api.oss.rid2url(vm._data.items[i].photo, 'image/resize,w_1024,h_768')),
                 caption: vm._data.items[i].comment
@@ -79,27 +76,58 @@ jQuery(function ($) {
         })).open();
     }
 
-    init(function (err, data) {
-        vm = new Vue({
-            el: '#trip_items',
-            data: {items: []},
-            methods: {
-                // 查看图片
-                showImgs: function (event) {
-                    getPhotoItems(event.target.alt);
-                },
-                // 喜欢
-                like: function (index) {
-                    $.toast("后期开放此功能", "text");
-                    // vm._data.items[index].like = ++(vm._data.items[index].like);
-                },
-                // 评论
-                comment: function () {
-                    $.toast("后期开放此功能", "text");
-                }
-            }
-        });
+    /**
+     * 初始化页面
+     */
+    init(function(err, data){
 
-        vm._data.items = data;
+        if(err){
+            android.alert(err.message);
+            return;
+        }
+
+        if(data && data.length){
+            // find father
+            var father = false;
+
+            data = _.filter(data, function(v){
+                if(Number(v['group_id']) < 0.01){
+                    father = v;
+                    return false;
+                }else{
+                    return true;
+                }
+            });
+
+            if(father){
+                $('title').text(father['comment']);
+                $('div.title').text(father['comment']);
+            }
+
+            var vm = new Vue({
+                el: '#trip_items',
+                data: {items: []},
+                methods: {
+                    // 查看图片
+                    showImgs: function(event){
+                        getPhotoItems(event.target.alt);
+                    },
+                    // 喜欢
+                    like: function(index){
+                        $.toast("后期开放此功能", "text");
+                        // vm._data.items[index].like = ++(vm._data.items[index].like);
+                    },
+                    // 评论
+                    comment: function(){
+                        $.toast("后期开放此功能", "text");
+                    }
+                }
+            });
+
+            vm._data.items = data;
+        }else{
+            //todo no data process
+        }
+
     });
 });
