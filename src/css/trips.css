@@ -290,7 +290,14 @@ body {
   height: 22px;
   line-height: 22px;
 }
-.trip .trip-wps .wp-stats a {
+.trip .trip-wps .wp-stats .wp-time i {
+  position: absolute;
+  font-size: 17px;
+}
+.trip .trip-wps .wp-stats .wp-time span {
+  margin-left: 20px;
+}
+.trip .trip-wps .wp-stats .wp-poi-verified {
   float: right;
   font-size: 12px;
   height: 22px;
@@ -305,4 +312,10 @@ body {
   overflow: hidden;
   text-overflow: ellipsis;
   -o-text-overflow: ellipsis;
+}
+.trip .trip-wps .wp-stats .wp-poi-verified i {
+  font-size: 15px;
+}
+.weui-photo-browser-modal {
+  z-index: 11;
 }

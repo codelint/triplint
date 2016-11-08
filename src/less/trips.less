@@ -166,8 +166,13 @@ html, body {
                 color: #999;
                 height: 22px;
                 line-height: 22px;
+                i {
+                    position: absolute;
+                    font-size: 17px;
+                }
+                span { margin-left: 20px; }
             }
-            a {
+            .wp-poi-verified {
                 float: right;
                 font-size: 12px;
                 height: 22px;
@@ -182,7 +187,12 @@ html, body {
                 overflow: hidden;
                 text-overflow: ellipsis;
                 -o-text-overflow: ellipsis;
+                i {font-size: 15px;}
             }
         }
     }
+}
+
+.weui-photo-browser-modal {
+    z-index: 11;
 }
