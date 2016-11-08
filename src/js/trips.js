@@ -90,12 +90,9 @@ jQuery(function($){
             // find father
             var father = false;
 
-            data = _.filter(data, function(v){
+            data = _.each(data, function(v){
                 if(Number(v['group_id']) < 0.01){
                     father = v;
-                    return false;
-                }else{
-                    return true;
                 }
             });
 
