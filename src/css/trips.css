@@ -293,6 +293,7 @@ body {
 .trip .trip-wps .wp-stats .wp-time i {
   position: absolute;
   font-size: 17px;
+  margin-top: 1px;
 }
 .trip .trip-wps .wp-stats .wp-time span {
   margin-left: 20px;

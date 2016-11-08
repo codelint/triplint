@@ -19,7 +19,7 @@
 <div class="trip" id="trip_items">
     <section class="trip-wps">
         <div class="day" v-for="(item, index) in items">
-            <p class="day-marker">
+            <p v-cloak class="day-marker">
                 <i class="circle circle-first"></i>
                 第{{ index + 1 }}天 {{ (getDataTime(item.created_at,"m")) }}月{{ (getDataTime(item.created_at,"d")) }}日
             </p>
@@ -40,24 +40,24 @@
                         <div class="wp-btns">
                             <a class="comment-btn" href="javascript:void(0)" v-on:click="comment(index)">
                                 <i class="iconfont icon-msg"></i>
-                                <span>{{ item.comment_count }}</span>
+                                <span v-cloak>{{ item.comment_count }}</span>
                             </a>
                             <i class="icon-btnbg"></i>
                             <a href="javascript:void(0)" class="like-btn" v-on:click="like(index)">
                                 <i class="iconfont icon-aixin2"></i>
-                                <span>{{ item.like }}</span>
+                                <span v-cloak>{{ item.like }}</span>
                             </a>
                         </div>
                     </div>
-                    <p class="text" style="padding-top: 10px">
+                    <p v-cloak class="text" style="padding-top: 10px">
                         {{ item.comment }}
                     </p>
                     <div class="wp-stats">
                         <p class="wp-time">
                             <i class="iconfont icon-shijian"></i>
-                            <span>{{ (getDataTime(item.created_at,"h")) }}:{{ (getDataTime(item.created_at,"M")) }}</span>
+                            <span v-cloak>{{ (getDataTime(item.created_at,"h")) }}:{{ (getDataTime(item.created_at,"M")) }}</span>
                         </p>
-                        <a class="wp-poi wp-poi-verified" href="javascript:;">
+                        <a v-cloak class="wp-poi wp-poi-verified" href="javascript:;">
                             <i class="iconfont icon-map"></i>
                             {{ item.longitude }},{{ item.latitude }}
                         </a>
