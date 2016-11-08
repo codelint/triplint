@@ -97,8 +97,9 @@ jQuery(function($){
             });
 
             if(father){
-                $('title').text(father['comment']);
-                $('div.title').text(father['comment']);
+                var title = father['comment'].substr(0,6);
+                $('title').text(title);
+                $('div.title').text(title);
             }
 
             var vm = new Vue({
