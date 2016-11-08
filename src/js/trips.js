@@ -3,7 +3,7 @@
  */
 
 // 通过时间戳获取年月日十分秒
-function getDataTime(time, type) {
+function getDateTime(time, type) {
     time = new Date((isNaN(time)) ? time : parseInt(time));
     if (type == "y")
         return time.getFullYear();
@@ -20,14 +20,48 @@ function getDataTime(time, type) {
 jQuery(function ($) {
     var vm;
 
-    function getData(callBack) {
+    /**
+     * @param callBack function(err, data)
+     *  data : array [{
+     *      "day":1,
+     *      "timeline":"12:30",
+     *      "dateline":"10月8日",
+     *      "comment":"",
+     *      "longitude":0.0,
+     *      "latitude":0.0,
+     *      "comment_count":0
+     *      "like":0
+     *  }]
+     */
+    function init(callBack) {
         var query = {
             "group_id": U.ajax.getUrlParam("groupid"),
             "page": 1,
             "pageSize": 10
         };
         U.api.checkpoint.list(query, function (err, json) {
-            callBack(err, json);
+            if(err){
+                android.alert(err.message);
+            }else{
+                // calculate array[].day
+                if(json && json.length){
+
+                    var minTime = (new Date()).getTime()/1000;
+                    json = _.sortBy(json, function(v){
+                        if(v['create_time'] < minTime){
+                            minTime = v['create_time'];
+                        }
+                        return v['create_time'];
+                    });
+
+                    _.each(json, function(v, k, arr){
+                        v['day'] = Math.round((Number(v['create_time']) - minTime)/86400 + 1);
+                        arr[k] = v;
+                    });
+                }
+                callBack(err, json);
+            }
+
         });
     }
 
@@ -45,27 +79,27 @@ jQuery(function ($) {
         })).open();
     }
 
-    vm = new Vue({
-        el: '#trip_items',
-        data: {items: []},
-        methods: {
-            // 查看图片
-            showImgs: function (event) {
-                getPhotoItems(event.target.alt);
-            },
-            // 喜欢
-            like: function (index) {
-                $.toast("后期开放此功能", "text");
-                // vm._data.items[index].like = ++(vm._data.items[index].like);
-            },
-            // 评论
-            comment: function () {
-                $.toast("后期开放此功能", "text");
+    init(function (err, data) {
+        vm = new Vue({
+            el: '#trip_items',
+            data: {items: []},
+            methods: {
+                // 查看图片
+                showImgs: function (event) {
+                    getPhotoItems(event.target.alt);
+                },
+                // 喜欢
+                like: function (index) {
+                    $.toast("后期开放此功能", "text");
+                    // vm._data.items[index].like = ++(vm._data.items[index].like);
+                },
+                // 评论
+                comment: function () {
+                    $.toast("后期开放此功能", "text");
+                }
             }
-        }
-    });
+        });
 
-    getData(function (err, json) {
-        vm._data.items = json;
+        vm._data.items = data;
     });
 });

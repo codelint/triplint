@@ -21,7 +21,7 @@
         <div class="day" v-for="(item, index) in items">
             <p v-cloak class="day-marker">
                 <i class="circle circle-first"></i>
-                第{{ index + 1 }}天 {{ (getDataTime(item.created_at,"m")) }}月{{ (getDataTime(item.created_at,"d")) }}日
+                第{{ item.day }}天 {{ (new Date(item.create_time*1000).getMonth() + 1) }}月{{ (new Date(item.create_time*1000).getDate()) }}日
             </p>
             <p class="wp-sep clear-both"></p>
             <div class="day-content">
@@ -55,7 +55,7 @@
                     <div class="wp-stats">
                         <p class="wp-time">
                             <i class="iconfont icon-shijian"></i>
-                            <span v-cloak>{{ (getDataTime(item.created_at,"h")) }}:{{ (getDataTime(item.created_at,"M")) }}</span>
+                            <span v-cloak>{{ (new Date(item.create_time*1000).getHours()) }}:{{ (new Date(item.create_time*1000).getMinutes()) }}</span>
                         </p>
                         <a v-cloak class="wp-poi wp-poi-verified" href="javascript:;">
                             <i class="iconfont icon-map"></i>
@@ -113,6 +113,7 @@
 </body>
 <script src="../public/js/jquery-2.1.4.js"></script>
 <script src="../public/js/vue.min.js"></script>
+<script src="../public/js/underscore.js"></script>
 <script src="//cdn.bootcss.com/jquery-weui/0.8.0/js/jquery-weui.min.js"></script>
 <script src="//cdn.bootcss.com/jquery-weui/0.8.0/js/swiper.min.js"></script>
 <script src="../js/android.js"></script>

@@ -198,7 +198,7 @@ U.api = (function($){
     }
 
     function rid2url(rid, style){
-        style = style || '';
+        style = style || 'image/resize,w_1024,h_768';
         // rid += style.indexOf('@') < 0 ? ('@' + style) : style;
 
         if(rid && rid.indexOf('oss://') == 0){
@@ -305,11 +305,11 @@ U.api = (function($){
         'checkpoint': {
             'list': function(query, cbf){
                 U.ajax.postJson(_url('checkpoint.list'), query, callback_filter(function(err, json){
-//                    if(json && json.length > 0){
-//                        for(var i = json.length; i --;){
-//                            json[i]['photo'] = rid2url(json[i]['photo']);
-//                        }
-//                    }
+                    if(json && json.length > 0){
+                        for(var i = json.length; i --;){
+                            json[i]['create_time'] = Number(json[i]['create_time']);
+                        }
+                    }
                     cbf(err, json);
                 }));
             }
