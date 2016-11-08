@@ -62,20 +62,6 @@ jQuery(function($){
         });
     }
 
-    function getPhotoItems(initIndex){
-        var len = vm._data.items.length, images = [];
-        for(var i = 0; i < len; i++){
-            images.push({
-                image: (U.api.oss.rid2url(vm._data.items[i].photo, 'image/resize,w_1024,h_768')),
-                caption: vm._data.items[i].comment
-            });
-        }
-        ($.photoBrowser({
-            initIndex: (initIndex < 0) ? 0 : initIndex,
-            items: images
-        })).open();
-    }
-
     /**
      * 初始化页面
      */
@@ -121,6 +107,20 @@ jQuery(function($){
                     }
                 }
             });
+
+            function getPhotoItems(initIndex){
+                var len = vm._data.items.length, images = [];
+                for(var i = 0; i < len; i++){
+                    images.push({
+                        image: (U.api.oss.rid2url(vm._data.items[i].photo, 'image/resize,w_1024,h_768')),
+                        caption: vm._data.items[i].comment
+                    });
+                }
+                ($.photoBrowser({
+                    initIndex: (initIndex < 0) ? 0 : initIndex,
+                    items: images
+                })).open();
+            }
 
             vm._data.items = data;
         }else{
