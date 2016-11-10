@@ -290,9 +290,13 @@ U.api = (function($){
                     cbf(err, user);
                 }))
             },
-            'register':function (mobile, password, inviteCode,inviteMobile,cbf) {
+            'register':function (mobile, nick, password, inviteCode,inviteMobile,cbf) {
                 U.ajax.postJson(_url('user.register'), {
-                    "mobile": mobile, "password": password, "inviteCode": inviteCode, "inviteMobile": inviteMobile
+                    "mobile": mobile,
+                    "nick": nick,
+                    "password": password,
+                    "inviteCode": inviteCode,
+                    "inviteMobile": inviteMobile
                 },callback_filter(function (err, json) {
                     cbf(err, json);
                 }))
