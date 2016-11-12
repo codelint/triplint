@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1, user-scalable=no">
+    <title>邀请</title>
+    <link rel="stylesheet" href="../public/css/font_h5xvumt53vwsif6r.css">
+    <link rel="stylesheet" href="../public/css/weui.css">
+    <link rel="stylesheet" href="../css/login.min.css">
+</head>
+<body>
+<div class="t-nav">
+    <a style="display: none" href="javascript:window.history.back();" class="left on-menu goback"><i
+            class="iconfont icon-left"></i></a>
+
+    <div class="title">邀请好友加入</div>
+</div>
+
+<div class="main main-login">
+    <div class="login-box">
+        <input name="mobile" class="t-input" type="number" pattern="[0-9]*" placeholder="手机号">
+        <input name="nick" class="t-input" type="text" placeholder="被邀请人介绍" style="display: none">
+        <a href="javascript:;" class="invite-btn t-btn">邀请</a>
+    </div>
+</div>
+</body>
+
+<script src="../public/js/jquery-2.1.4.js"></script>
+<script src="../public/js/vue.min.js"></script>
+<script src="../public/js/md5.js"></script>
+
+<script src="../js/android.js"></script>
+<script src="../js/api.js"></script>
+
+
+<script type="text/javascript">
+    jQuery(function($){
+        if(document.referrer){
+            $('div.goback').show();
+        }
+        $('a.invite-btn').click(function(){
+            var mobile = $('input[name="mobile"]').val();
+            if(!Number(mobile) || mobile.length < 11){
+                android.alert('手机号格式不合正确');
+            }else{
+                U.api.user.invite(mobile, function(err, json){
+                    if(err){
+                        android.alert(err.message);
+                    }else{
+                        android.alert(json['message']);
+                    }
+                });
+            }
+
+        });
+    })
+</script>
+</html>

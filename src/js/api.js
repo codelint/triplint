@@ -301,9 +301,15 @@ U.api = (function($){
                     cbf(err, json);
                 }))
             },
-            'uploadAvatar': function(){
-                //todo
-
+            'invite': function(mobile, memo, cbf){
+                if(!cbf){
+                    cbf = memo;
+                    memo = '';
+                }
+                U.ajax.postJson(_url('user.invite'), {
+                    'mobile' : mobile,
+                    'nick': memo
+                }, callback_filter(cbf))
             }
         },
         'checkpoint': {
