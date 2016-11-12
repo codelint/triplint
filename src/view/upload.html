@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1, user-scalable=no">
+    <title>上传图片</title>
+    <link rel="stylesheet" href="//at.alicdn.com/t/font_h5xvumt53vwsif6r.css">
+    <link rel="stylesheet" href="../public/css/swiper-3.3.1.min.css">
+    <link rel="stylesheet" href="../public/css/weui.css">
+</head>
+<body>
+
+<div class="weui-cells weui-cells_form">
+    <div class="weui-cells__title">选择图片</div>
+    <div class="weui-cell">
+        <div class="weui-cell__bd">
+            <img class="temp_picture" src="" alt="上传图片"/>
+
+            <form id="oss-upload-form" autocomplete="off" action="http://yue.oss-cn-hangzhou.aliyuncs.com/"
+                  method="post" enctype="multipart/form-data" target="hidden_frame">
+                <iframe name='hidden_frame' id="hidden_frame" style='display: none'></iframe>
+                <input type="hidden" name="OSSAccessKeyId" value=""/>
+                <input type="hidden" name="policy" value=""/>
+                <input type="hidden" name="Signature" value=""/>
+                <input type="hidden" name="key" value=""/>
+                <input type="hidden" name="success_action_redirect"
+                       value="http://complint.localhost/wap/view/oss_upload_success.html"/>
+                <input type="file" name="file" class="form-control" id="fileInput" placeholder="选择文件"/>
+            </form>
+            <input type="hidden" name="rid" value=""/>
+        </div>
+    </div>
+    <div class="weui-cells__title">图片故事</div>
+    <div class="weui-cell">
+        <div class="weui-cell__bd">
+            <textarea name="comment" class="weui-textarea" placeholder="输入描述文字" rows="3"></textarea>
+
+            <div class="weui-textarea-counter"><span>0</span>/200</div>
+        </div>
+    </div>
+    <div class="weui-cell">
+        <div class="weui-cell__hd"><label class="weui-label">上级ID</label></div>
+        <div class="weui-cell__bd">
+            <input name="group_id" class="weui-input" type="number" pattern="[0-9]*" placeholder="上级ID" value="0">
+        </div>
+    </div>
+    <div class="weui-cell">
+        <div class="weui-cell__hd"><label class="weui-label">经度</label></div>
+        <div class="weui-cell__bd">
+            <input name="longitude" class="weui-input" type="number" placeholder="输入经度">
+        </div>
+    </div>
+    <div class="weui-cell">
+        <div class="weui-cell__hd"><label class="weui-label">纬度</label></div>
+        <div class="weui-cell__bd">
+            <input name="latitude" class="weui-input" type="number" placeholder="输入纬度">
+        </div>
+    </div>
+    <div class="weui-cell">
+        <div class="weui-cell__hd"><label class="weui-label">海拔</label></div>
+        <div class="weui-cell__bd">
+            <input name="altitude" class="weui-input" type="number" placeholder="输入海拔" value="0">
+        </div>
+    </div>
+    <div class="weui-cell">
+        <div class="weui-cell__hd"><label class="weui-label">拍摄时间</label></div>
+        <div class="weui-cell__bd">
+            <input name="create_time" class="weui-input" type="text" placeholder="图片拍摄时间">
+        </div>
+    </div>
+
+</div>
+
+<div class="weui-btn-area">
+    <a class="weui-btn weui-btn_primary commit" href="javascript:" id="showTooltips">保存</a>
+</div>
+</body>
+<script src="../public/js/jquery-2.1.4.js"></script>
+<script src="../public/js/swiper-3.3.1.jquery.min.js"></script>
+<script src="../public/js/vue.min.js"></script>
+<script src="../public/js/md5.js"></script>
+
+<script src="../js/android.js"></script>
+<script src="../js/api.js"></script>
+<script type="text/javascript">
+    jQuery(function($){
+        $('input[name="create_time"]').val('1').val(Math.round((new Date()).getTime()/1000))
+
+        $('input[name="file"]').change(function(){
+            U.api.oss.upload(1, function(err, json){
+                if(err){
+                    alert(err.message);
+                }else{
+                    var postData = json['data']['post'];
+                    var $form = $('#oss-upload-form');
+                    $form.attr('action', 'http://' + postData['host'] + '/');
+                    $('input[name="success_action_redirect"]').val(ROOT_URL + '/view/oss_upload_success.html');
+                    var $file = $form.find('input[type="file"]');
+                    if(!$file.val()){
+                        return;
+                    }
+                    $form.find('input[name="OSSAccessKeyId"]').val(postData['accessid']);
+                    $form.find('input[name="policy"]').val(postData['policy']);
+                    $form.find('input[name="Signature"]').val(postData['signature']);
+                    $form.find('input[name="key"]').val(postData['object']);
+
+                    U.api.oss.uploadSuccessCallback = (function(info){
+                        return function(){
+                            // $form.remove();
+                            android.alert('上传成功');
+                            $('img.temp_picture').attr('src', U.api.oss.rid2url(info['rid'], 'image/resize,w_128,h_128'));
+                            $('input[name="rid"]').val(info['rid']);
+                        }
+                    })(json['data']);
+                    $form.submit();
+
+                }
+            });
+        });
+
+        $('a.commit').click(function(){
+            var data = {
+                'group_id': Number($('input[name="group_id"]').val()),
+                'resource': $('input[name="rid"]').val(),
+                'altitude': Number($('input[name="altitude"]').val()),
+                'longitude': Number($('input[name="longitude"]').val()),
+                'latitude': Number($('input[name="latitude"]').val()),
+                'create_time': Number($('input[name="create_time"]').val()),
+                'comment': $('textarea[name="comment"]').val()
+            };
+            U.api.checkpoint.commit(data, function(err, json){
+                if(err){
+                    android.alert(err.message);
+                }else{
+                    android.alert('保存成功');
+                }
+            })
+        });
+
+
+    });
+
+</script>
+
+</html>

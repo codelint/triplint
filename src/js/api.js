@@ -323,6 +323,21 @@ U.api = (function($){
                     }
                     cbf(err, json);
                 }));
+            },
+            /**
+             * @param data array {
+                 "group_id": 1000000,
+                 "resource": "oss://yue/image/1/tmp/checkpoint/hour/1.jpg",
+                 "latitude": 23.04,
+                 "longitude": 23.04,
+                 "altitude": 123,
+                 "create_time": 0,
+                 "comment": "有一种鸟一生只降落一次"
+             }
+             * @param cbf
+             */
+            'commit': function(data, cbf){
+                U.ajax.postJson(_url('checkpoint.commit'), data, callback_filter(cbf));
             }
         },
         'feedback': function(message, cbf){
