@@ -115,17 +115,20 @@ jQuery(function ($) {
         var $menu = $(html);
         $('body').append($menu);
         var user = android.get('user.current');
+        function load_user_info(user){
+            $menu.find('img.avatar').attr('src', U.api.oss.rid2url(user['avatar'], 'image/resize,w_128,h_128'));
+            $menu.find('p.name').text(user['nick']);
+            $menu.find('a[href="member.html"]').attr('href', 'member.html?uid=' + user['id']);
+        }
+
         if (!user) {
             U.api.user.info(user, function (err, user) {
                 if (!err && user && user['avatar']) {
-                    $menu.find('img.avatar').attr('src', U.api.oss.rid2url(user['avatar'], 'image/resize,w_128,h_128'));
-                    $menu.find('p.name').text(user['nick']);
+                    load_user_info(user);
                 }
             })
         } else {
-            $menu.find('img.avatar').attr('src', U.api.oss.rid2url(user['avatar'], 'image/resize,w_128,h_128'));
-            $menu.find('p.name').text(user['nick']);
-
+            load_user_info(user);
         }
         $menu.find('.t-mask-visible').click(function () {
             $menu.removeClass("on");

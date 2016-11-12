@@ -72,8 +72,7 @@ body {
 }
 .member .box {
   width: 100%;
-  position: absolute;
-  top: 10%;
+  margin-top: 68px;
 }
 .member .box .info {
   position: relative;

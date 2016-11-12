@@ -277,8 +277,9 @@ U.api = (function($){
                 if(uid){
                     U.ajax.postJson(_url('user.info'), {'user_id': uid}, callback_filter(callback));
                 }else{
-                    callback({
-                        'message': "用户["+uid+"]不存在"
+                    var cbf = callback_filter(callback);
+                    cbf({
+                        'message': "未登录"
                     });
                 }
             },
