@@ -84,7 +84,11 @@
 <script src="../js/api.js"></script>
 <script type="text/javascript">
     jQuery(function($){
-        $('input[name="create_time"]').val('1').val(Math.round((new Date()).getTime()/1000))
+        var group_id = Math.round(Number(U.ajax.getUrlParam('group_id')));
+        if(group_id){
+            $('input[name="group_id"]').val(group_id).attr('readonly','readonly');
+        }
+        $('input[name="create_time"]').val('1').val(Math.round((new Date()).getTime()/1000));
 
         $('input[name="file"]').change(function(){
             U.api.oss.upload(1, function(err, json){
