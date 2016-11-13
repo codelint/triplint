@@ -45,10 +45,13 @@
                    value="0">
         </div>
     </div>
-    <div class="weui-cell">
+    <div class="weui-cell weui-cell_vcode">
         <div class="weui-cell__hd"><label class="weui-label">经度</label></div>
         <div class="weui-cell__bd">
             <input name="longitude" class="weui-input auto-fill" type="number" placeholder="输入经度">
+        </div>
+        <div class="weui-cell__ft">
+            <a href="javascript:;" class="weui-vcode-btn map-btn">地图选择</a>
         </div>
     </div>
     <div class="weui-cell">
@@ -99,9 +102,15 @@
 
     jQuery(function($){
         form_auto_fill_by_params();
+        var latitude = U.ajax.getUrlParam('latitude') || false;
+        var longitude = U.ajax.getUrlParam('longitude') || false;
+
         $('textarea[name="comment"]').bind('keydown', function(){
             $('span.font-number').text($(this).text().length);
         });
+        
+        $('.weui-vcode-btn.map-btn').attr('href', latitude && longitude ? 'map.html?latitude=' + latitude + '&longitude=' + longitude : 'map.html');
+
         $('input[name="create_time"]').val('1').val(Math.round((new Date()).getTime() / 1000));
 
         $('input[name="file"]').change(function(){
