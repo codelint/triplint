@@ -3,7 +3,7 @@
 <head>
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no"/>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-    <title>Hello, World</title>
+    <title>选择位置</title>
     <link rel="stylesheet" href="../public/css/weui.css">
     <style type="text/css">
         html {
@@ -61,12 +61,18 @@
             return default_val || '';
         }
     }
-    var latitude = getUrlParam('latitude') || false;
-    var longitude = getUrlParam('longitude') || false;
+
+    var latitude = getUrlParam('latitude') || android.get('checkpoint.geo.latitude') || 24.778;
+    var longitude = getUrlParam('longitude') || android.get('checkpoint.geo.longitude') || 110.489;
     var group_id = getUrlParam('group_id') || false;
     var map = new BMap.Map("container");          // 创建地图实例
-    var point = new BMap.Point(110.489, 24.778);  // 创建点坐标
+    var point = new BMap.Point(longitude, latitude);  // 创建点坐标
+    map.enableScrollWheelZoom();
     map.centerAndZoom(point, 15);                 // 初始化地图，设置中心点坐标和地图级别
+//    setTimeout(function(){
+//        map.panTo(new BMap.Point(113.270793, 23.13338));
+//    }, 2000);
+
 
     function search(keyword){
         var local = new BMap.LocalSearch(map, {
@@ -78,6 +84,8 @@
     function select(e){
         longitude = e.point.lng;
         latitude = e.point.lat;
+        android.put('checkpoint.geo.latitude', latitude);
+        android.put('checkpoint.geo.longitude', longitude);
         var marker = new BMap.Marker(new BMap.Point(longitude, latitude));
         map.clearOverlays();
         map.addOverlay(marker);
@@ -85,7 +93,7 @@
     map.addEventListener('touchend', select);
     map.addEventListener('click', select);
 
-    map.enableScrollWheelZoom();
+
     var elem = document.getElementById('select-gps');
     elem.addEventListener('click', function(){
         var callback = getUrlParam('callback') || U.ajax.url('/view/upload.html');
