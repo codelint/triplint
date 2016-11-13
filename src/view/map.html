@@ -37,6 +37,15 @@
 </head>
 
 <body>
+<div class="weui-cell weui-cell_vcode">
+
+    <div class="weui-cell__bd">
+        <input name="keyword" class="weui-input auto-fill" type="text" placeholder="输入关键字">
+    </div>
+    <div class="weui-cell__ft">
+        <a id="search-btn" href="javascript:;" class="weui-vcode-btn map-btn">搜索</a>
+    </div>
+</div>
 <div class="weui-btn-area">
     <a class="weui-btn weui-btn_primary commit" href="javascript:" id="select-gps">保存</a>
 </div>
@@ -58,6 +67,14 @@
     var map = new BMap.Map("container");          // 创建地图实例
     var point = new BMap.Point(110.489, 24.778);  // 创建点坐标
     map.centerAndZoom(point, 15);                 // 初始化地图，设置中心点坐标和地图级别
+
+    function search(keyword){
+        var local = new BMap.LocalSearch(map, {
+            renderOptions:{map: map}
+        });
+        local.search(keyword);
+    }
+
     function select(e){
         longitude = e.point.lng;
         latitude = e.point.lat;
@@ -82,8 +99,16 @@
         }else{
             android.alert('没有选择任何路点');
         }
+    });
 
-    })
+    jQuery(function($){
+        $('#search-btn').click(function(){
+            var keyword = $('input[name="keyword"]').val();
+            if(keyword){
+                search(keyword);
+            }
+        });
+    });
 </script>
 </body>
 </html>
