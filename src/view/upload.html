@@ -101,12 +101,28 @@
         }
     }
 
+    function adjust_file_input_pos(){
+        var $file = $('input[name="file"]');
+        var $preview = $('img.temp_picture');
+
+        $file.css('position', 'fixed');
+        $file.css('left', $preview.offset().left);
+        $file.css('top', $preview.offset().top);
+        $file.css('width', $preview.css('width'));
+        $file.css('height', $preview.css('height'));
+        $file.css('z-index', 1);
+        $file.css('opacity', 0);
+    }
+
     jQuery(function($){
         form_auto_fill_by_params();
+        adjust_file_input_pos();
+        var $file = $('input[name="file"]');
         var latitude = U.ajax.getUrlParam('latitude') || false;
         var longitude = U.ajax.getUrlParam('longitude') || false;
         var $group_id = $('input[name="group_id"]');
         $group_id.val() && $group_id.attr('readonly', 'readonly');
+
 
         $('textarea[name="comment"]').bind('keydown', function(){
             $('span.font-number').text($(this).text().length);
@@ -116,7 +132,7 @@
 
         $('input[name="create_time"]').val('1').val(Math.round((new Date()).getTime() / 1000));
 
-        $('input[name="file"]').change(function(){
+        $file.change(function(){
             U.api.oss.upload(1, function(err, json){
                 if(err){
                     alert(err.message);
@@ -140,6 +156,7 @@
                             android.alert('上传成功');
                             $('img.temp_picture').attr('src', U.api.oss.rid2url(info['rid'], 'image/resize,w_128,h_128'));
                             $('input[name="rid"]').val(info['rid']);
+                            setTimeout(adjust_file_input_pos, 2000);
                         }
                     })(json['data']);
                     $form.submit();
