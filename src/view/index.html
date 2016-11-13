@@ -27,7 +27,7 @@
 </div>
 
 <div class="list">
-    <a :href="'trips.html?groupid='+list.id" class="info" v-for="list in lists">
+    <a :href="'trips.html?group_id='+list.id" class="info" v-for="list in lists">
         <p v-cloak class="title">{{ list.title }}</p>
         <div class="time-didian">
             <p v-cloak>{{ list.dateTime}} {{ list.day }}天 {{ list.browse }} 次浏览</p>

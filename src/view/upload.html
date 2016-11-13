@@ -104,12 +104,14 @@
         form_auto_fill_by_params();
         var latitude = U.ajax.getUrlParam('latitude') || false;
         var longitude = U.ajax.getUrlParam('longitude') || false;
+        var $group_id = $('input[name="group_id"]');
+        $group_id.val() && $group_id.attr('readonly', 'readonly');
 
         $('textarea[name="comment"]').bind('keydown', function(){
             $('span.font-number').text($(this).text().length);
         });
-        
-        $('.weui-vcode-btn.map-btn').attr('href', latitude && longitude ? 'map.html?latitude=' + latitude + '&longitude=' + longitude : 'map.html');
+
+        $('.weui-vcode-btn.map-btn').attr('href', 'map.html' + location.search);
 
         $('input[name="create_time"]').val('1').val(Math.round((new Date()).getTime() / 1000));
 

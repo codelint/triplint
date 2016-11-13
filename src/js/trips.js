@@ -18,6 +18,9 @@ function getDateTime(time, type){
 }
 
 jQuery(function($){
+
+    var group_id = U.ajax.getUrlParam("group_id");
+    $('a.upload-btn').attr('href', 'upload.html?group_id=' + group_id);
     /**
      * @param callBack function(err, data)
      *  data : array [{
@@ -33,7 +36,7 @@ jQuery(function($){
      */
     function init(callBack){
         var query = {
-            "group_id": U.ajax.getUrlParam("groupid"),
+            "group_id": group_id,
             "page": 1,
             "pageSize": 10
         };
