@@ -79,7 +79,7 @@
                         android.put('user.login_name', phone);
                         android.put('user.login_password', password);
                         android.put('user.current', json);
-                        location.href = success_cbf;
+                        location.href = decodeURIComponent(success_cbf);
                         // android.alert('用户[' + json['nick'] + ']登录成功');
                     }
                 });

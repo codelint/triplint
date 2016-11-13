@@ -35,31 +35,32 @@
         <div class="weui-cell__bd">
             <textarea name="comment" class="weui-textarea" placeholder="输入描述文字" rows="3"></textarea>
 
-            <div class="weui-textarea-counter"><span>0</span>/200</div>
+            <div class="weui-textarea-counter"><span class="font-number">0</span>/200</div>
         </div>
     </div>
     <div class="weui-cell">
         <div class="weui-cell__hd"><label class="weui-label">上级ID</label></div>
         <div class="weui-cell__bd">
-            <input name="group_id" class="weui-input" type="number" pattern="[0-9]*" placeholder="上级ID" value="0">
+            <input name="group_id" class="weui-input auto-fill" type="number" pattern="[0-9]*" placeholder="上级ID"
+                   value="0">
         </div>
     </div>
     <div class="weui-cell">
         <div class="weui-cell__hd"><label class="weui-label">经度</label></div>
         <div class="weui-cell__bd">
-            <input name="longitude" class="weui-input" type="number" placeholder="输入经度">
+            <input name="longitude" class="weui-input auto-fill" type="number" placeholder="输入经度">
         </div>
     </div>
     <div class="weui-cell">
         <div class="weui-cell__hd"><label class="weui-label">纬度</label></div>
         <div class="weui-cell__bd">
-            <input name="latitude" class="weui-input" type="number" placeholder="输入纬度">
+            <input name="latitude" class="weui-input auto-fill" type="number" placeholder="输入纬度">
         </div>
     </div>
     <div class="weui-cell">
         <div class="weui-cell__hd"><label class="weui-label">海拔</label></div>
         <div class="weui-cell__bd">
-            <input name="altitude" class="weui-input" type="number" placeholder="输入海拔" value="0">
+            <input name="altitude" class="weui-input auto-fill" type="number" placeholder="输入海拔" value="0">
         </div>
     </div>
     <div class="weui-cell">
@@ -79,16 +80,29 @@
 <script src="../public/js/swiper-3.3.1.jquery.min.js"></script>
 <script src="../public/js/vue.min.js"></script>
 <script src="../public/js/md5.js"></script>
+<script src="../public/js/underscore.js"></script>
 
 <script src="../js/android.js"></script>
 <script src="../js/api.js"></script>
 <script type="text/javascript">
-    jQuery(function($){
-        var group_id = Math.round(Number(U.ajax.getUrlParam('group_id')));
-        if(group_id){
-            $('input[name="group_id"]').val(group_id).attr('readonly','readonly');
+    function form_auto_fill_by_params(){
+        if(location.search.length > 1){
+            var params = location.search.substr(1).split('&');
+            for(var i = params.length; i--;){
+                var items = params[i].split('=');
+                if(items.length > 1 && items[1]){
+                    $('input[name="' + items[0] + '"].auto-fill').val('1').val(items[1]);
+                }
+            }
         }
-        $('input[name="create_time"]').val('1').val(Math.round((new Date()).getTime()/1000));
+    }
+
+    jQuery(function($){
+        form_auto_fill_by_params();
+        $('textarea[name="comment"]').bind('keydown', function(){
+            $('span.font-number').text($(this).text().length);
+        });
+        $('input[name="create_time"]').val('1').val(Math.round((new Date()).getTime() / 1000));
 
         $('input[name="file"]').change(function(){
             U.api.oss.upload(1, function(err, json){
