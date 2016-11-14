@@ -11,6 +11,11 @@
         img.temp_picture {
             max-width: 100%;
         }
+        input[name='file'] {
+            position: absolute;
+            left: 15px;
+            top:10px;
+        }
     </style>
 </head>
 <body>
@@ -84,8 +89,7 @@
 <div class="weui-btn-area">
     <a class="weui-btn weui-btn_primary commit" href="javascript:" id="showTooltips">保存</a>
 </div>
-<iframe id="map-frame" src="map.html"
-        style="position:fixed;width:100%;height:100%;top:0;left:0;z-index:999;display: none;"></iframe>
+
 </body>
 <script src="../public/js/jquery-2.1.4.js"></script>
 <script src="../public/js/swiper-3.3.1.jquery.min.js"></script>
@@ -116,9 +120,6 @@
         var $file = $('input[name="file"]');
         var $preview = $('img.temp_picture');
 
-        $file.css('position', 'fixed');
-        $file.css('left', $preview.offset().left);
-        $file.css('top', $preview.offset().top);
         $file.css('width', $preview.css('width'));
         $file.css('height', $preview.css('height'));
         $file.css('z-index', 1);
@@ -128,8 +129,8 @@
     function setup_geo(lon, lat){
         latitude = lat;
         longitude = lon;
-        $('input[name="latitude"]').val(lat);
-        $('input[name="longitude"]').val(lon);
+        $('input[name="latitude"]').val('1').val(lat);
+        $('input[name="longitude"]').val('1').val(lon);
     }
 
     jQuery(function($){
@@ -145,12 +146,14 @@
         });
 
         $('.weui-vcode-btn.map-btn').attr('href', 'map.html' + location.search).click(function(){
-            $('#map-frame').show();
-            //$(parent.document.getElementById('map-frame')).show();
+            var lat = $('input[name="latitude"]').val();
+            var lon = $('input[name="longitude"]').val();
+            $('#map-frame').remove();
+            var $frame = $('<iframe id="map-frame" src="map.html" style="position:fixed;width:100%;height:100%;top:0;left:0;z-index:999;"></iframe>');
+            $frame.attr('src', 'map.html?latitude=' + lat + '&longitude=' + lon);
+            $('body').append($frame);
             return false;
         });
-
-        parent.document.getElementById('#map-frame');
 
         $('input[name="create_time"]').val('1').val(Math.round((new Date()).getTime() / 1000));
 
@@ -207,8 +210,7 @@
                 if(latitude && longitude){
                     latitude = latitude[0] + latitude[1] / 60 + latitude[2] / 3600;
                     longitude = longitude[0] + longitude[1] / 60 + longitude[2] / 3600;
-                    $('input[name="latitude"]').val('1').val(latitude.toFixed(4));
-                    $('input[name="longitude"]').val('1').val(longitude.toFixed(4));
+                    setup_geo(longitude.toFixed(4), latitude.toFixed(4));
                 }
             });
         });
