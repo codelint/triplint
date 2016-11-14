@@ -7,6 +7,11 @@
     <link rel="stylesheet" href="//at.alicdn.com/t/font_h5xvumt53vwsif6r.css">
     <link rel="stylesheet" href="../public/css/swiper-3.3.1.min.css">
     <link rel="stylesheet" href="../public/css/weui.css">
+    <style type="text/css">
+        img.temp_picture{
+            max-width: 100%;
+        }
+    </style>
 </head>
 <body>
 
@@ -128,7 +133,6 @@
     jQuery(function($){
         form_auto_fill_by_params();
         adjust_file_input_pos();
-        var $file = $('input[name="file"]');
 
         var $group_id = $('input[name="group_id"]');
         $group_id.val() && $group_id.attr('readonly', 'readonly');
@@ -148,10 +152,10 @@
 
         $('input[name="create_time"]').val('1').val(Math.round((new Date()).getTime() / 1000));
 
-        $file.change(function(){
+        $('input[name="file"]').change(function(){
             U.api.oss.upload(1, function(err, json){
                 if(err){
-                    alert(err.message);
+                    android.alert(err.message);
                 }else{
                     var postData = json['data']['post'];
                     var $form = $('#oss-upload-form');
@@ -170,7 +174,7 @@
                         return function(){
                             // $form.remove();
                             android.alert('上传成功');
-                            $('img.temp_picture').attr('src', U.api.oss.rid2url(info['rid'], 'image/resize,w_128,h_128'));
+                            $('img.temp_picture').attr('src', U.api.oss.rid2url(info['rid'], 'image/resize,w_1024,h_768'));
                             $('input[name="rid"]').val(info['rid']);
                             setTimeout(adjust_file_input_pos, 2000);
                         }
