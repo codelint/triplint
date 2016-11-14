@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="../public/css/swiper-3.3.1.min.css">
     <link rel="stylesheet" href="../public/css/weui.css">
     <style type="text/css">
-        img.temp_picture{
+        img.temp_picture {
             max-width: 100%;
         }
     </style>
@@ -84,13 +84,15 @@
 <div class="weui-btn-area">
     <a class="weui-btn weui-btn_primary commit" href="javascript:" id="showTooltips">保存</a>
 </div>
-<iframe id="map-frame" src="map.html" style="position:fixed;width:100%;height:100%;top:0;left:0;z-index:999;display: none;"></iframe>
+<iframe id="map-frame" src="map.html"
+        style="position:fixed;width:100%;height:100%;top:0;left:0;z-index:999;display: none;"></iframe>
 </body>
 <script src="../public/js/jquery-2.1.4.js"></script>
 <script src="../public/js/swiper-3.3.1.jquery.min.js"></script>
 <script src="../public/js/vue.min.js"></script>
 <script src="../public/js/md5.js"></script>
 <script src="../public/js/underscore.js"></script>
+<script src="../public/js/exif.js"></script>
 
 <script src="../js/android.js"></script>
 <script src="../js/api.js"></script>
@@ -181,6 +183,32 @@
                     })(json['data']);
                     $form.submit();
 
+                }
+            });
+        }).change(function(e){
+            if(!e.target || !e.target.files.length || !e.target.files[0]){
+                return
+            }
+
+            var _file = e.target.files[0];
+            var passFileType = /^(?:image\/bmp|image\/gif|image\/jpeg|image\/png)$/i;
+
+            if(!passFileType.test(_file.type)){
+                return
+            }
+
+            (new FileReader()).readAsDataURL(_file);
+
+            EXIF.getData(_file, function(){
+                // var _dataTxt = EXIF.pretty(this);
+                var json = EXIF.getAllTags(this);
+                var latitude = json['GPSLatitude'];
+                var longitude = json['GPSLongitude'];
+                if(latitude && longitude){
+                    latitude = latitude[0] + latitude[1] / 60 + latitude[2] / 3600;
+                    longitude = longitude[0] + longitude[1] / 60 + longitude[2] / 3600;
+                    $('input[name="latitude"]').val('1').val(latitude.toFixed(4));
+                    $('input[name="longitude"]').val('1').val(longitude.toFixed(4));
                 }
             });
         });
