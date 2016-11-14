@@ -28,6 +28,12 @@
             width: 90%;
             z-index: 1;
         }
+
+        #search-area{
+            background-color: white;
+
+        }
+
     </style>
     <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=o9CPvMuqXebMhwZvsbYmHW2P">
     </script>
@@ -37,8 +43,7 @@
 </head>
 
 <body>
-<div class="weui-cell weui-cell_vcode">
-
+<div id="search-area" class="weui-cell weui-cell_vcode">
     <div class="weui-cell__bd">
         <input name="keyword" class="weui-input auto-fill" type="text" placeholder="输入关键字">
     </div>
@@ -102,8 +107,13 @@
             if(group_id){
                 callback += '&group_id=' + group_id;
             }
-            location.href = callback;
 
+            if(parent.location.href == location.href){
+                location.href = callback;
+            }else{
+                parent['setup_geo'](longitude, latitude);
+                $(parent.document.getElementById('map-frame')).hide();
+            }
         }else{
             android.alert('没有选择任何路点');
         }

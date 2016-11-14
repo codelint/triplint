@@ -79,6 +79,7 @@
 <div class="weui-btn-area">
     <a class="weui-btn weui-btn_primary commit" href="javascript:" id="showTooltips">保存</a>
 </div>
+<iframe id="map-frame" src="map.html" style="position:fixed;width:100%;height:100%;top:0;left:0;z-index:999;display: none;"></iframe>
 </body>
 <script src="../public/js/jquery-2.1.4.js"></script>
 <script src="../public/js/swiper-3.3.1.jquery.min.js"></script>
@@ -89,6 +90,9 @@
 <script src="../js/android.js"></script>
 <script src="../js/api.js"></script>
 <script type="text/javascript">
+    var latitude = U.ajax.getUrlParam('latitude') || false;
+    var longitude = U.ajax.getUrlParam('longitude') || false;
+
     function form_auto_fill_by_params(){
         if(location.search.length > 1){
             var params = location.search.substr(1).split('&');
@@ -114,12 +118,19 @@
         $file.css('opacity', 0);
     }
 
+    function setup_geo(lon, lat){
+        latitude = lat;
+        longitude = lon;
+        $('input[name="latitude"]').val(lat);
+        $('input[name="longitude"]').val(lon);
+        alert(latitude + '&' + longitude);
+    }
+
     jQuery(function($){
         form_auto_fill_by_params();
         adjust_file_input_pos();
         var $file = $('input[name="file"]');
-        var latitude = U.ajax.getUrlParam('latitude') || false;
-        var longitude = U.ajax.getUrlParam('longitude') || false;
+
         var $group_id = $('input[name="group_id"]');
         $group_id.val() && $group_id.attr('readonly', 'readonly');
 
@@ -128,7 +139,13 @@
             $('span.font-number').text($(this).text().length);
         });
 
-        $('.weui-vcode-btn.map-btn').attr('href', 'map.html' + location.search);
+        $('.weui-vcode-btn.map-btn').attr('href', 'map.html' + location.search).click(function(){
+            $('#map-frame').show();
+            //$(parent.document.getElementById('map-frame')).show();
+            return false;
+        });
+
+        parent.document.getElementById('#map-frame');
 
         $('input[name="create_time"]').val('1').val(Math.round((new Date()).getTime() / 1000));
 
