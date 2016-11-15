@@ -56,6 +56,7 @@
                    value="0">
         </div>
     </div>
+    <div id="geo-title" class="weui-cells__title">位置</div>
     <div class="weui-cell weui-cell_vcode">
         <div class="weui-cell__hd"><label class="weui-label">经度</label></div>
         <div class="weui-cell__bd">
@@ -91,15 +92,16 @@
 </div>
 
 </body>
-<script src="../public/js/jquery-2.1.4.js"></script>
-<script src="../public/js/swiper-3.3.1.jquery.min.js"></script>
-<script src="../public/js/vue.min.js"></script>
-<script src="../public/js/md5.js"></script>
-<script src="../public/js/underscore.js"></script>
-<script src="../public/js/exif.js"></script>
+<script type="text/javascript" src="../public/js/jquery-2.1.4.js"></script>
+<script type="text/javascript" src="../public/js/swiper-3.3.1.jquery.min.js"></script>
+<script type="text/javascript" src="../public/js/vue.min.js"></script>
+<script type="text/javascript" src="../public/js/md5.js"></script>
+<script type="text/javascript" src="../public/js/underscore.js"></script>
+<script type="text/javascript" src="../public/js/exif.js"></script>
+<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=o9CPvMuqXebMhwZvsbYmHW2P"></script>
 
-<script src="../js/android.js"></script>
-<script src="../js/api.js"></script>
+<script type="text/javascript" src="../js/android.js"></script>
+<script type="text/javascript" src="../js/api.js"></script>
 <script type="text/javascript">
     var latitude = U.ajax.getUrlParam('latitude') || false;
     var longitude = U.ajax.getUrlParam('longitude') || false;
@@ -131,6 +133,11 @@
         longitude = lon;
         $('input[name="latitude"]').val('1').val(lat);
         $('input[name="longitude"]').val('1').val(lon);
+        (new BMap.Geocoder()).getLocation(new BMap.Point(longitude, latitude), function(rs){
+            var addComp = rs.addressComponents;
+            var strGeo = addComp.province + ", " + addComp.city + ", " + addComp.district + ", " + addComp.street + ", " + addComp.streetNumber;
+            $('#geo-title').text(strGeo);
+        });
     }
 
     jQuery(function($){
