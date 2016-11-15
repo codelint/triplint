@@ -98,13 +98,9 @@
     map.enableScrollWheelZoom();
     map.centerAndZoom(new BMap.Point(longitude, latitude), 15);                 // 初始化地图，设置中心点坐标和地图级别
     mark(latitude, longitude);
-    setInterval(function(){
+    setTimeout(function(){
         map.setCenter(new BMap.Point(longitude, latitude));
-    }, 5000);
-
-//    setTimeout(function(){
-//        map.setCenter(new BMap.Point(longitude, latitude));
-//    }, 1000);
+    }, 1000);
 
 
     //    setTimeout(function(){
