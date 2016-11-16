@@ -274,14 +274,8 @@ U.api = (function($){
                     callback = uid;
                     uid = uid || android.get('app.id');
                 }
-                if(uid){
-                    U.ajax.postJson(_url('user.info'), {'user_id': uid}, callback_filter(callback));
-                }else{
-                    var cbf = callback_filter(callback);
-                    cbf({
-                        'message': "未登录"
-                    });
-                }
+                uid = uid || 0;
+                U.ajax.postJson(_url('user.info'), {'user_id': uid}, callback_filter(callback));
             },
             'login': function(mobile, password, cbf){
                 U.ajax.postJson(_url('user.login'), {'login_name': mobile, 'password': password}, callback_filter(function(err, user){
@@ -311,6 +305,11 @@ U.api = (function($){
                     'mobile' : mobile,
                     'nick': memo
                 }, callback_filter(cbf))
+            }
+        },
+        'traveller':{
+            'apply': function(data, cbf){
+                return U.ajax.postJson(_url('traveller.apply'), data, callback_filter(cbf));
             }
         },
         'checkpoint': {
