@@ -98,7 +98,7 @@
 
             //todo check the data
 
-            if (nick.length > 3 && phone.length == 11 && (password == passwordVerify) && inviteMobile && inviteCode) {
+            if (nick.length > 1 && phone.length == 11 && (password == passwordVerify) && inviteMobile && inviteCode) {
                 android.put('user.login_name', phone);
                 android.put('user.login_password', '');
                 U.api.user.register(phone, nick, password, inviteCode, inviteMobile, function (err, json) {
