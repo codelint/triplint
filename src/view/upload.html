@@ -100,10 +100,11 @@
 <script type="text/javascript" src="../public/js/underscore.js"></script>
 <script type="text/javascript" src="../public/js/exif.js"></script>
 <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=o9CPvMuqXebMhwZvsbYmHW2P"></script>
+<script type="text/javascript" src="../public/js/coordtransform.js"></script>
 
 <script type="text/javascript" src="../js/android.js"></script>
 <script type="text/javascript" src="../js/api.js"></script>
-<!--<script type="text/javascript" src="../js/common/ue.js"></script>-->
+<script type="text/javascript" src="../js/common/ue.js"></script>
 <script type="text/javascript">
     var latitude = U.ajax.getUrlParam('latitude') || false;
     var longitude = U.ajax.getUrlParam('longitude') || false;
@@ -123,7 +124,8 @@
         longitude = lon;
         $('input[name="latitude"]').val('1').val(lat);
         $('input[name="longitude"]').val('1').val(lon);
-        (typeof(BMap) != 'undefined') && (new BMap.Geocoder()).getLocation(new BMap.Point(longitude, latitude), function(rs){
+        var bd09 = coordtransform.wgs84tobd09(lon, lat);
+        (typeof(BMap) != 'undefined') && (new BMap.Geocoder()).getLocation(new BMap.Point(bd09[0], bd09[1]), function(rs){
             var addComp = rs.addressComponents;
             var strGeo = addComp.province + ", " + addComp.city + ", " + addComp.district + ", " + addComp.street + ", " + addComp.streetNumber;
             $('#geo-title').text(strGeo);
@@ -137,10 +139,16 @@
         $group_id.val() && $group_id.attr('readonly', 'readonly');
 
         setTimeout(function(){
-            var gps_info = android.gps();
-            gps_info = gps_info.split(',');
-            if(Number(gps_info[0]) > 0.01){
-                setup_geo(Number(gps_info[0]), Number(gps_info[1]));
+            var longitude = Number($('input[name="longitude"]').val());
+            var latitude = Number($('input[name="latitude"]').val());
+            if(longitude > 0.001 && latitude > 0.001){
+                setup_geo(longitude, latitude);
+            }else{
+                var gps_info = android.gps();
+                gps_info = gps_info.split(',');
+                if(Number(gps_info[0]) > 0.01){
+                    setup_geo(Number(gps_info[0]), Number(gps_info[1]));
+                }
             }
         }, 2000);
 
@@ -150,11 +158,12 @@
         });
 
         $('.weui-vcode-btn.map-btn').attr('href', 'map.html' + location.search).click(function(){
-            var lat = $('input[name="latitude"]').val();
-            var lon = $('input[name="longitude"]').val();
+            var lat = Number($('input[name="latitude"]').val());
+            var lon = Number($('input[name="longitude"]').val());
             $('#map-frame').remove();
             var $frame = $('<iframe id="map-frame" src="map.html" style="position:fixed;width:100%;height:100%;top:0;left:0;z-index:999;"></iframe>');
-            $frame.attr('src', 'map.html?latitude=' + lat + '&longitude=' + lon);
+//            location.href = 'map.html?latitude=' + latitude + '&longitude=' + longitude;
+            $frame.attr('src', 'map.html?latitude=' + latitude + '&longitude=' + longitude);
             $('body').append($frame);
             return false;
         });
@@ -214,7 +223,7 @@
                 if(latitude && longitude){
                     latitude = latitude[0] + latitude[1] / 60 + latitude[2] / 3600;
                     longitude = longitude[0] + longitude[1] / 60 + longitude[2] / 3600;
-                    setup_geo(longitude.toFixed(4), latitude.toFixed(4));
+                    setup_geo(longitude.toFixed(8), latitude.toFixed(8));
                 }
             });
         });

@@ -12,7 +12,7 @@
 
         body {
             height: 100%;
-            width:100%;
+            width: 100%;
             margin: 0px;
             padding: 0px
         }
@@ -39,6 +39,7 @@
     </style>
     <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=o9CPvMuqXebMhwZvsbYmHW2P">
     </script>
+    <script type="text/javascript" src="../public/js/coordtransform.js"></script>
     <script src="../public/js/jquery-2.1.4.js"></script>
     <script type="text/javascript" src="../js/android.js"></script>
     <script type="text/javascript" src="../js/api.js"></script>
@@ -78,8 +79,14 @@
         local.search(keyword);
     }
 
-    function mark(lat, lon){
-        var marker = new BMap.Marker(new BMap.Point(lon, lat));
+    /**
+     * wgs
+     * @param lat
+     * @param lon
+     */
+    function mark(lon, lat){
+        var bd09 = coordtransform.wgs84tobd09(lon, lat);
+        var marker = new BMap.Marker(new BMap.Point(bd09[0], bd09[1]));
         map.clearOverlays();
         map.addOverlay(marker);
         android.put('checkpoint.geo.latitude', latitude);
@@ -87,32 +94,30 @@
     }
 
     function select(e){
-        longitude = e.point.lng;
-        latitude = e.point.lat;
-        mark(latitude, longitude);
+        var wgs = coordtransform.bd09towgs84(e.point.lng, e.point.lat);
+        longitude = wgs[0];
+        latitude = wgs[1];
+        mark(longitude, latitude);
     }
-
 
     var latitude = getUrlParam('latitude') || android.get('checkpoint.geo.latitude') || 24.778;
     var longitude = getUrlParam('longitude') || android.get('checkpoint.geo.longitude') || 110.489;
+
     var group_id = getUrlParam('group_id') || false;
     map.enableScrollWheelZoom();
-    map.centerAndZoom(new BMap.Point(longitude, latitude), 15);                 // 初始化地图，设置中心点坐标和地图级别
-    mark(latitude, longitude);
+
+    mark(longitude, latitude);
+    var bd09 = coordtransform.wgs84tobd09(longitude, latitude);
+    // 初始化地图，设置中心点坐标和地图级别
+    map.centerAndZoom(new BMap.Point(bd09[0], bd09[1]), 15);
     setTimeout(function(){
-        map.setCenter(new BMap.Point(longitude, latitude));
+        map.setCenter(new BMap.Point(bd09[0], bd09[1]));
     }, 1000);
-
-
-    //    setTimeout(function(){
-    //        map.panTo(new BMap.Point(113.270793, 23.13338));
-    //    }, 2000);
-
-
+    // 设置选择位置事件
     map.addEventListener('touchend', select);
     map.addEventListener('click', select);
 
-
+    // 保存位置
     var elem = document.getElementById('select-gps');
     elem.addEventListener('click', function(){
         var callback = getUrlParam('callback') || U.ajax.url('/view/upload.html');

@@ -43,12 +43,13 @@ android = (function(){
         // 获得gps地址
         "gps": (function(){
             function getGps(callback){
-                if((typeof(BMap) != 'undefined')){
+                if((typeof(BMap) != 'undefined') && (typeof(coordtransform) != 'undefined')){
                     var geolocation = new BMap.Geolocation();
                     geolocation.getCurrentPosition(function(r){
                         if(this.getStatus() == BMAP_STATUS_SUCCESS){
                             if(callback){
-                                callback(r.point.lng, r.point.lat);
+                                var wgs = coordtransform.bd09towgs84(r.point.lng, r.point.lat);
+                                callback(wgs[0], wgs[1]);
                             }
                         }
                     }, {enableHighAccuracy: true});

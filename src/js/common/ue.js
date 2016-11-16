@@ -15,7 +15,7 @@ jQuery(function($){
         function backup(elem){
             var $input = $(elem);
             if(android && $input.attr('name')){
-                android.put(location.href + location.search + '#' + $input.attr('name'), $input.val());
+                $input.attr('type') != 'file' && android.put(location.href + location.search + '#' + $input.attr('name'), $input.val());
             }
         }
 
@@ -23,7 +23,7 @@ jQuery(function($){
             var $input = $(elem);
             if(android && $input.attr('name')){
                 var v = android.get(location.href + location.search + '#' + $input.attr('name'));
-                v && $input.val('1').val(v);
+                v && $input.attr('type') != 'file' && $input.val('1').val(v);
             }
         }
 
