@@ -79,6 +79,7 @@
             <input name="altitude" class="weui-input auto-fill" type="number" placeholder="输入海拔" value="0">
         </div>
     </div>
+    <div id="time-title" class="weui-cells__title">拍摄时间</div>
     <div class="weui-cell">
         <div class="weui-cell__hd"><label class="weui-label">拍摄时间</label></div>
         <div class="weui-cell__bd">
@@ -104,7 +105,9 @@
 
 <script type="text/javascript" src="../js/android.js"></script>
 <script type="text/javascript" src="../js/api.js"></script>
+<script type="text/javascript" src="../js/common/date.js"></script>
 <script type="text/javascript" src="../js/common/ue.js"></script>
+
 <script type="text/javascript">
     var latitude = U.ajax.getUrlParam('latitude') || false;
     var longitude = U.ajax.getUrlParam('longitude') || false;
@@ -168,7 +171,9 @@
             return false;
         });
 
-        $('input[name="create_time"]').val('1').val(Math.round((new Date()).getTime() / 1000));
+        $('input[name="create_time"]').change(function(){
+            $('#time-title').text(new DateFormat('yyyy:MM:dd HH:mm:ss').format(new Date($('input[name="create_time"]').val()*1000)));
+        }).val('1').val(Math.round((new Date()).getTime() / 1000)).trigger('change');
 
         $('input[name="file"]').change(function(){
             U.api.oss.upload(1, function(err, json){
@@ -192,7 +197,7 @@
                         return function(){
                             // $form.remove();
                             android.alert('上传成功');
-                            $('img.temp_picture').attr('src', U.api.oss.rid2url(info['rid'], 'image/resize,w_1024,h_768'));
+                            $('img.temp_picture').attr('src', U.api.oss.rid2url(info['rid'], 'image/resize,w_640,h_480'));
                             $('input[name="rid"]').val(info['rid']);
                             setTimeout(adjust_file_input_pos, 2000);
                         }
@@ -225,8 +230,15 @@
                     longitude = longitude[0] + longitude[1] / 60 + longitude[2] / 3600;
                     setup_geo(longitude.toFixed(8), latitude.toFixed(8));
                 }
+                var time = json['DateTimeOriginal'];
+                var dateFormat = new DateFormat('yyyy:MM:dd HH:mm:ss');
+                if(time && (time = dateFormat.parse(time))){
+                    $('input[name="create_time"]').val(Math.round(time.getTime()/1000));
+                    $('#time-title').text(dateFormat.format(time));
+                }
             });
         });
+
 
         $('a.commit').click(function(){
             var data = {
