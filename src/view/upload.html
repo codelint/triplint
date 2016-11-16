@@ -11,10 +11,11 @@
         img.temp_picture {
             max-width: 100%;
         }
+
         input[name='file'] {
             position: absolute;
             left: 15px;
-            top:10px;
+            top: 10px;
         }
     </style>
 </head>
@@ -102,21 +103,10 @@
 
 <script type="text/javascript" src="../js/android.js"></script>
 <script type="text/javascript" src="../js/api.js"></script>
+<!--<script type="text/javascript" src="../js/common/ue.js"></script>-->
 <script type="text/javascript">
     var latitude = U.ajax.getUrlParam('latitude') || false;
     var longitude = U.ajax.getUrlParam('longitude') || false;
-
-    function form_auto_fill_by_params(){
-        if(location.search.length > 1){
-            var params = location.search.substr(1).split('&');
-            for(var i = params.length; i--;){
-                var items = params[i].split('=');
-                if(items.length > 1 && items[1]){
-                    $('input[name="' + items[0] + '"].auto-fill').val('1').val(items[1]);
-                }
-            }
-        }
-    }
 
     function adjust_file_input_pos(){
         var $file = $('input[name="file"]');
@@ -133,7 +123,7 @@
         longitude = lon;
         $('input[name="latitude"]').val('1').val(lat);
         $('input[name="longitude"]').val('1').val(lon);
-        (new BMap.Geocoder()).getLocation(new BMap.Point(longitude, latitude), function(rs){
+        (typeof(BMap) != 'undefined') && (new BMap.Geocoder()).getLocation(new BMap.Point(longitude, latitude), function(rs){
             var addComp = rs.addressComponents;
             var strGeo = addComp.province + ", " + addComp.city + ", " + addComp.district + ", " + addComp.street + ", " + addComp.streetNumber;
             $('#geo-title').text(strGeo);
@@ -141,11 +131,18 @@
     }
 
     jQuery(function($){
-        form_auto_fill_by_params();
         adjust_file_input_pos();
 
         var $group_id = $('input[name="group_id"]');
         $group_id.val() && $group_id.attr('readonly', 'readonly');
+
+        setTimeout(function(){
+            var gps_info = android.gps();
+            gps_info = gps_info.split(',');
+            if(Number(gps_info[0]) > 0.01){
+                setup_geo(Number(gps_info[0]), Number(gps_info[1]));
+            }
+        }, 2000);
 
 
         $('textarea[name="comment"]').bind('keydown', function(){
