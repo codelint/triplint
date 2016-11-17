@@ -223,7 +223,7 @@
                     $('input[name="id"]').val(cp['id']);
                     $('input[name="group_id"]').val(cp['group_id']);
                     $('input[name="mark"]').val(cp['mark']);
-                    $('input[name="comment"]').val(cp['comment']);
+                    $('textarea[name="comment"]').val(cp['comment']);
                     $('input[name="create_time"]').val(cp['create_time']).trigger('change');
                     $('img.temp_picture').attr('src', U.api.oss.rid2url(cp['photo'], 'image/resize,w_640,h_480'));
                 }
