@@ -336,7 +336,15 @@ U.api = (function($){
              * @param cbf
              */
             'commit': function(data, cbf){
-                U.ajax.postJson(_url('checkpoint.commit'), data, callback_filter(cbf));
+                if(data['id']){
+                    delete data['resource'];
+                    U.ajax.postJson(_url('checkpoint.update'), data, callback_filter(cbf));
+                }else{
+                    U.ajax.postJson(_url('checkpoint.commit'), data, callback_filter(cbf));
+                }
+            },
+            'info': function(id, cbf){
+                U.ajax.postJson(_url('checkpoint.info'), {'id': id}, callback_filter(cbf));
             }
         },
         'feedback': function(message, cbf){

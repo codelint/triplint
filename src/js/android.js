@@ -74,7 +74,7 @@ android = (function(){
             location.href = url;
         },
         // alert 你懂的
-        "alert": function(msg, confirm_txt){
+        "alert": function(msg, confirm_txt, callback){
             confirm_txt = confirm_txt || '确认';
             if(jQuery){
                 var $weui = jQuery('<div class="js_dialog" id="iosDialog2">' +
@@ -86,7 +86,9 @@ android = (function(){
                     '</div>');
                 $weui.find('.weui-dialog__bd').html(msg);
                 $weui.find('a').text(confirm_txt).click(function(){
-                    $weui.remove();
+                    if(!callback || callback()){
+                        $weui.remove();
+                    }
                 });
                 $('body').append($weui);
                 $weui.show();

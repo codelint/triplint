@@ -22,6 +22,7 @@
 <body>
 
 <div class="weui-cells weui-cells_form">
+    <input type="hidden" name="id"/>
     <div class="weui-cells__title">选择图片</div>
     <div class="weui-cell">
         <div class="weui-cell__bd">
@@ -77,6 +78,12 @@
         <div class="weui-cell__hd"><label class="weui-label">海拔</label></div>
         <div class="weui-cell__bd">
             <input name="altitude" class="weui-input auto-fill" type="number" placeholder="输入海拔" value="0">
+        </div>
+    </div>
+    <div class="weui-cell">
+        <div class="weui-cell__hd"><label class="weui-label">路标</label></div>
+        <div class="weui-cell__bd">
+            <input name="mark" class="weui-input" type="text" placeholder="输入路标，如码农寺" value="">
         </div>
     </div>
     <div id="time-title" class="weui-cells__title">拍摄时间</div>
@@ -135,8 +142,96 @@
         });
     }
 
+    function upload_file(){
+        U.api.oss.upload(1, function(err, json){
+            if(err){
+                android.alert(err.message);
+            }else{
+                var postData = json['data']['post'];
+                var $form = $('#oss-upload-form');
+                $form.attr('action', 'http://' + postData['host'] + '/');
+                $('input[name="success_action_redirect"]').val(ROOT_URL + '/view/oss_upload_success.html');
+                var $file = $form.find('input[type="file"]');
+                if(!$file.val()){
+                    return;
+                }
+                $form.find('input[name="OSSAccessKeyId"]').val(postData['accessid']);
+                $form.find('input[name="policy"]').val(postData['policy']);
+                $form.find('input[name="Signature"]').val(postData['signature']);
+                $form.find('input[name="key"]').val(postData['object']);
+
+                U.api.oss.uploadSuccessCallback = (function(info){
+                    return function(){
+                        // $form.remove();
+                        android.alert('上传成功');
+                        $('img.temp_picture').attr('src', U.api.oss.rid2url(info['rid'], 'image/resize,w_640,h_480'));
+                        $('input[name="rid"]').val(info['rid']);
+                        setTimeout(adjust_file_input_pos, 2000);
+                    }
+                })(json['data']);
+                $form.submit();
+
+            }
+        });
+    }
+
+    function parse_file(e){
+        if(!e.target || !e.target.files.length || !e.target.files[0]){
+            return
+        }
+
+        var _file = e.target.files[0];
+        var passFileType = /^(?:image\/bmp|image\/gif|image\/jpeg|image\/png)$/i;
+
+        if(!passFileType.test(_file.type)){
+            return
+        }
+
+        (new FileReader()).readAsDataURL(_file);
+
+        EXIF.getData(_file, function(){
+            // var _dataTxt = EXIF.pretty(this);
+            var json = EXIF.getAllTags(this);
+            var latitude = json['GPSLatitude'];
+            var longitude = json['GPSLongitude'];
+            if(latitude && longitude){
+                latitude = latitude[0] + latitude[1] / 60 + latitude[2] / 3600;
+                longitude = longitude[0] + longitude[1] / 60 + longitude[2] / 3600;
+                setup_geo(longitude.toFixed(8), latitude.toFixed(8));
+            }
+            var time = json['DateTimeOriginal'];
+            var dateFormat = new DateFormat('yyyy:MM:dd HH:mm:ss');
+            if(time && (time = dateFormat.parse(time))){
+                $('input[name="create_time"]').val(Math.round(time.getTime() / 1000));
+                $('#time-title').text(dateFormat.format(time));
+            }
+        });
+    }
+
     jQuery(function($){
+        // setup by id
+        (function(id){
+            id = Math.round(Number(id));
+            id && $('#oss-upload-form').hide() && U.api.checkpoint.info(id, function(err, cp){
+                if(err){
+                    android.alert(err['message'], '确认', function(){
+                        window.location.href = location.href;
+                        return false;
+                    });
+                }else{
+                    setup_geo(cp['longitude'], cp['latitude']);
+                    $('input[name="id"]').val(cp['id']);
+                    $('input[name="group_id"]').val(cp['group_id']);
+                    $('input[name="mark"]').val(cp['mark']);
+                    $('input[name="comment"]').val(cp['comment']);
+                    $('input[name="create_time"]').val(cp['create_time']).trigger('change');
+                    $('img.temp_picture').attr('src', U.api.oss.rid2url(cp['photo'], 'image/resize,w_640,h_480'));
+                }
+            });
+
+        })(U.ajax.getUrlParam('id'));
         adjust_file_input_pos();
+
 
         var $group_id = $('input[name="group_id"]');
         $group_id.val() && $group_id.attr('readonly', 'readonly');
@@ -172,83 +267,22 @@
         });
 
         $('input[name="create_time"]').change(function(){
-            $('#time-title').text(new DateFormat('yyyy:MM:dd HH:mm:ss').format(new Date($('input[name="create_time"]').val()*1000)));
+            $('#time-title').text(new DateFormat('yyyy-MM-dd HH:mm:ss').format(new Date($('input[name="create_time"]').val() * 1000)));
         }).val('1').val(Math.round((new Date()).getTime() / 1000)).trigger('change');
 
-        $('input[name="file"]').change(function(){
-            U.api.oss.upload(1, function(err, json){
-                if(err){
-                    android.alert(err.message);
-                }else{
-                    var postData = json['data']['post'];
-                    var $form = $('#oss-upload-form');
-                    $form.attr('action', 'http://' + postData['host'] + '/');
-                    $('input[name="success_action_redirect"]').val(ROOT_URL + '/view/oss_upload_success.html');
-                    var $file = $form.find('input[type="file"]');
-                    if(!$file.val()){
-                        return;
-                    }
-                    $form.find('input[name="OSSAccessKeyId"]').val(postData['accessid']);
-                    $form.find('input[name="policy"]').val(postData['policy']);
-                    $form.find('input[name="Signature"]').val(postData['signature']);
-                    $form.find('input[name="key"]').val(postData['object']);
-
-                    U.api.oss.uploadSuccessCallback = (function(info){
-                        return function(){
-                            // $form.remove();
-                            android.alert('上传成功');
-                            $('img.temp_picture').attr('src', U.api.oss.rid2url(info['rid'], 'image/resize,w_640,h_480'));
-                            $('input[name="rid"]').val(info['rid']);
-                            setTimeout(adjust_file_input_pos, 2000);
-                        }
-                    })(json['data']);
-                    $form.submit();
-
-                }
-            });
-        }).change(function(e){
-            if(!e.target || !e.target.files.length || !e.target.files[0]){
-                return
-            }
-
-            var _file = e.target.files[0];
-            var passFileType = /^(?:image\/bmp|image\/gif|image\/jpeg|image\/png)$/i;
-
-            if(!passFileType.test(_file.type)){
-                return
-            }
-
-            (new FileReader()).readAsDataURL(_file);
-
-            EXIF.getData(_file, function(){
-                // var _dataTxt = EXIF.pretty(this);
-                var json = EXIF.getAllTags(this);
-                var latitude = json['GPSLatitude'];
-                var longitude = json['GPSLongitude'];
-                if(latitude && longitude){
-                    latitude = latitude[0] + latitude[1] / 60 + latitude[2] / 3600;
-                    longitude = longitude[0] + longitude[1] / 60 + longitude[2] / 3600;
-                    setup_geo(longitude.toFixed(8), latitude.toFixed(8));
-                }
-                var time = json['DateTimeOriginal'];
-                var dateFormat = new DateFormat('yyyy:MM:dd HH:mm:ss');
-                if(time && (time = dateFormat.parse(time))){
-                    $('input[name="create_time"]').val(Math.round(time.getTime()/1000));
-                    $('#time-title').text(dateFormat.format(time));
-                }
-            });
-        });
-
+        $('input[name="file"]').change(upload_file).change(parse_file);
 
         $('a.commit').click(function(){
             var data = {
+                'id': Math.round(Number($('input[name="id"]').val())),
                 'group_id': Number($('input[name="group_id"]').val()),
                 'resource': $('input[name="rid"]').val(),
                 'altitude': Number($('input[name="altitude"]').val()),
                 'longitude': Number($('input[name="longitude"]').val()),
                 'latitude': Number($('input[name="latitude"]').val()),
                 'create_time': Number($('input[name="create_time"]').val()),
-                'comment': $('textarea[name="comment"]').val()
+                'comment': $('textarea[name="comment"]').val(),
+                'mark': $('input[name="mark"]').val()
             };
             U.api.checkpoint.commit(data, function(err, json){
                 if(err){
@@ -258,10 +292,7 @@
                 }
             })
         });
-
-
     });
-
 </script>
 
 </html>
