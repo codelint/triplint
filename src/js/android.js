@@ -1,7 +1,7 @@
 android = (function(){
     var token = '';
 
-    if(typeof(android) != 'undefined' ){
+    if(typeof(android) != 'undefined'){
         android.get = function(key){
             return JSON.parse(android._get(key) || '""');
         };
@@ -11,8 +11,7 @@ android = (function(){
         return android;
     }
 
-    function noop()
-    {
+    function noop(){
         //todo
     }
 
@@ -42,15 +41,40 @@ android = (function(){
             sessionStorage[key] = value;
         },
         // 获得gps地址
-        "gps": function(){
-            return "0.0,0.0"
-        },
+        "gps": (function(){
+            function getGps(callback){
+                if((typeof(BMap) != 'undefined') && (typeof(coordtransform) != 'undefined')){
+                    var geolocation = new BMap.Geolocation();
+                    geolocation.getCurrentPosition(function(r){
+                        if(this.getStatus() == BMAP_STATUS_SUCCESS){
+                            if(callback){
+                                var wgs = coordtransform.bd09towgs84(r.point.lng, r.point.lat);
+                                callback(wgs[0], wgs[1]);
+                            }
+                        }
+                    }, {enableHighAccuracy: true});
+                }
+            }
+
+            var longitude = 0.0;
+            var latitude = 0.0;
+
+            getGps(function(lon, lat){
+                longitude = Number(lon);
+                latitude = Number(lat);
+            });
+
+            return function(callback){
+                getGps(callback);
+                return longitude + ',' + latitude;
+            }
+        })(),
         // 用浏览器打开地址
         "open_url": function(url){
             location.href = url;
         },
         // alert 你懂的
-        "alert": function(msg, confirm_txt){
+        "alert": function(msg, confirm_txt, callback){
             confirm_txt = confirm_txt || '确认';
             if(jQuery){
                 var $weui = jQuery('<div class="js_dialog" id="iosDialog2">' +
@@ -62,7 +86,9 @@ android = (function(){
                     '</div>');
                 $weui.find('.weui-dialog__bd').html(msg);
                 $weui.find('a').text(confirm_txt).click(function(){
-                    $weui.remove();
+                    if(!callback || callback()){
+                        $weui.remove();
+                    }
                 });
                 $('body').append($weui);
                 $weui.show();

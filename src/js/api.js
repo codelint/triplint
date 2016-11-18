@@ -274,14 +274,8 @@ U.api = (function($){
                     callback = uid;
                     uid = uid || android.get('app.id');
                 }
-                if(uid){
-                    U.ajax.postJson(_url('user.info'), {'user_id': uid}, callback_filter(callback));
-                }else{
-                    var cbf = callback_filter(callback);
-                    cbf({
-                        'message': "未登录"
-                    });
-                }
+                uid = uid || 0;
+                U.ajax.postJson(_url('user.info'), {'user_id': uid}, callback_filter(callback));
             },
             'login': function(mobile, password, cbf){
                 U.ajax.postJson(_url('user.login'), {'login_name': mobile, 'password': password}, callback_filter(function(err, user){
@@ -313,6 +307,11 @@ U.api = (function($){
                 }, callback_filter(cbf))
             }
         },
+        'traveller':{
+            'apply': function(data, cbf){
+                return U.ajax.postJson(_url('traveller.apply'), data, callback_filter(cbf));
+            }
+        },
         'checkpoint': {
             'list': function(query, cbf){
                 U.ajax.postJson(_url('checkpoint.list'), query, callback_filter(function(err, json){
@@ -337,7 +336,15 @@ U.api = (function($){
              * @param cbf
              */
             'commit': function(data, cbf){
-                U.ajax.postJson(_url('checkpoint.commit'), data, callback_filter(cbf));
+                if(data['id']){
+                    delete data['resource'];
+                    U.ajax.postJson(_url('checkpoint.update'), data, callback_filter(cbf));
+                }else{
+                    U.ajax.postJson(_url('checkpoint.commit'), data, callback_filter(cbf));
+                }
+            },
+            'info': function(id, cbf){
+                U.ajax.postJson(_url('checkpoint.info'), {'id': id}, callback_filter(cbf));
             }
         },
         'feedback': function(message, cbf){

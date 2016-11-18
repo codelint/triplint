@@ -12,12 +12,14 @@
 
         body {
             height: 100%;
+            width: 100%;
             margin: 0px;
             padding: 0px
         }
 
         #container {
-            height: 100%
+            height: 100%;
+            width: 100%;
         }
 
         div.weui-btn-area {
@@ -29,7 +31,7 @@
             z-index: 1;
         }
 
-        #search-area{
+        #search-area {
             background-color: white;
 
         }
@@ -37,6 +39,7 @@
     </style>
     <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=o9CPvMuqXebMhwZvsbYmHW2P">
     </script>
+    <script type="text/javascript" src="../public/js/coordtransform.js"></script>
     <script src="../public/js/jquery-2.1.4.js"></script>
     <script type="text/javascript" src="../js/android.js"></script>
     <script type="text/javascript" src="../js/api.js"></script>
@@ -57,6 +60,8 @@
 <div id="container"></div>
 
 <script type="text/javascript">
+    var map = new BMap.Map("container");          // 创建地图实例
+
     function getUrlParam(name, default_val){
         var reg = new RegExp('(^|&)' + name + '=([^&]*)(&|$)', 'i'),
                 r = window.location.search.substr(1).match(reg);
@@ -67,38 +72,52 @@
         }
     }
 
-    var latitude = getUrlParam('latitude') || android.get('checkpoint.geo.latitude') || 24.778;
-    var longitude = getUrlParam('longitude') || android.get('checkpoint.geo.longitude') || 110.489;
-    var group_id = getUrlParam('group_id') || false;
-    var map = new BMap.Map("container");          // 创建地图实例
-    var point = new BMap.Point(longitude, latitude);  // 创建点坐标
-    map.enableScrollWheelZoom();
-    map.centerAndZoom(point, 15);                 // 初始化地图，设置中心点坐标和地图级别
-//    setTimeout(function(){
-//        map.panTo(new BMap.Point(113.270793, 23.13338));
-//    }, 2000);
-
-
     function search(keyword){
         var local = new BMap.LocalSearch(map, {
-            renderOptions:{map: map}
+            renderOptions: {map: map}
         });
         local.search(keyword);
     }
 
-    function select(e){
-        longitude = e.point.lng;
-        latitude = e.point.lat;
-        android.put('checkpoint.geo.latitude', latitude);
-        android.put('checkpoint.geo.longitude', longitude);
-        var marker = new BMap.Marker(new BMap.Point(longitude, latitude));
+    /**
+     * wgs
+     * @param lat
+     * @param lon
+     */
+    function mark(lon, lat){
+        var bd09 = coordtransform.wgs84tobd09(lon, lat);
+        var marker = new BMap.Marker(new BMap.Point(bd09[0], bd09[1]));
         map.clearOverlays();
         map.addOverlay(marker);
+        android.put('checkpoint.geo.latitude', latitude);
+        android.put('checkpoint.geo.longitude', longitude);
     }
+
+    function select(e){
+        var wgs = coordtransform.bd09towgs84(e.point.lng, e.point.lat);
+        longitude = wgs[0];
+        latitude = wgs[1];
+        mark(longitude, latitude);
+    }
+
+    var latitude = getUrlParam('latitude') || android.get('checkpoint.geo.latitude') || 24.778;
+    var longitude = getUrlParam('longitude') || android.get('checkpoint.geo.longitude') || 110.489;
+
+    var group_id = getUrlParam('group_id') || false;
+    map.enableScrollWheelZoom();
+
+    mark(longitude, latitude);
+    var bd09 = coordtransform.wgs84tobd09(longitude, latitude);
+    // 初始化地图，设置中心点坐标和地图级别
+    map.centerAndZoom(new BMap.Point(bd09[0], bd09[1]), 15);
+    setTimeout(function(){
+        map.setCenter(new BMap.Point(bd09[0], bd09[1]));
+    }, 1000);
+    // 设置选择位置事件
     map.addEventListener('touchend', select);
     map.addEventListener('click', select);
 
-
+    // 保存位置
     var elem = document.getElementById('select-gps');
     elem.addEventListener('click', function(){
         var callback = getUrlParam('callback') || U.ajax.url('/view/upload.html');
