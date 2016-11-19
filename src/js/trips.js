@@ -105,8 +105,9 @@ jQuery(function($){
                         // vm._data.items[index].like = ++(vm._data.items[index].like);
                     },
                     // 评论
-                    comment: function(){
-                        $.toast("后期开放此功能", "text");
+                    comment: function(group_id){
+                        location.href = 'trips.html?group_id=' + group_id;
+                        // $.toast("后期开放此功能", "text");
                     }
                 }
             });
