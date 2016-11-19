@@ -24,6 +24,8 @@ jQuery(function($){
     /**
      * @param callBack function(err, data)
      *  data : array [{
+     *      "id": 1,
+     *      "group_id": 1,
      *      "day":1,
      *      "timeline":"12:30",
      *      "dateline":"10月8日",
@@ -80,7 +82,11 @@ jQuery(function($){
             var father = false;
 
             data = _.each(data, function(v){
-                if(Number(v['group_id']) < 0.01){
+                if(!father){
+                    father = v;
+                }
+
+                if(father['group_id'] == v['id']){
                     father = v;
                 }
             });
