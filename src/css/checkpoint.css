@@ -51,3 +51,93 @@ body {
   font-size: 26px;
   font-style: normal;
 }
+.main .box {
+  margin: 50px 15px 0;
+}
+.main .box textarea[name=comment] {
+  width: 100%;
+  height: 100px;
+  font-size: 14px;
+  margin-top: 15px;
+  color: #49bdca;
+  outline: none;
+  resize: none;
+  background: transparent;
+  border: 1px dashed #faf8ec;
+}
+.main .box textarea:hover,
+.main .box textarea.on {
+  border: 1px dashed #e4e4da;
+}
+.main .box .img-box {
+  width: 100%;
+}
+.main .box .img-box .img {
+  position: relative;
+}
+.main .box .img-box .img img {
+  width: 100%;
+  display: block;
+}
+.main .box .img-box .img .photo-mask {
+  bottom: 0;
+  height: 5px;
+  position: absolute;
+  width: 100%;
+  display: -webkit-box;
+}
+.main .box .img-box .img .photo-mask .photo-mask-left {
+  background: #faf8ec;
+  height: 5px;
+  width: 10px;
+}
+.main .box .img-box .img .photo-mask .photo-mask-arrow-left {
+  width: 0;
+  height: 0;
+  border-bottom: 5px solid #faf8ec;
+  border-right: 5px solid transparent;
+}
+.main .box .img-box .img .photo-mask .photo-mask-arrow-right {
+  width: 0;
+  height: 0;
+  border-bottom: 5px solid #faf8ec;
+  border-left: 5px solid transparent;
+}
+.main .box .img-box .img .photo-mask .photo-mask-right {
+  background: #faf8ec;
+  height: 5px;
+  -webkit-box-flex: 1;
+}
+.main .box .img-box .map {
+  font-size: 14px;
+  margin-top: 10px;
+  color: #49bdca;
+}
+.main .box .img-box .map .icon-map {
+  font-size: 18px;
+}
+.main .weui-cells {
+  background-color: transparent;
+}
+.main .weui-label,
+.main .weui-input {
+  color: #c9cac5;
+  font-size: 14px;
+}
+.main input::-webkit-input-placeholder {
+  color: #c9cac5 !important;
+}
+.main input:-moz-placeholder {
+  color: #c9cac5 !important;
+}
+.main input::-moz-placeholder {
+  color: #c9cac5 !important;
+}
+.main input:-ms-input-placeholder {
+  color: #c9cac5 !important;
+}
+.main .weui-cells:before,
+.main .weui-cells:after,
+.main .weui-cell:before {
+  border-top: 1px solid #c9cac5;
+}
