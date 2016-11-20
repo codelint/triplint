@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="//at.alicdn.com/t/font_ll29t97fsvgc766r.css">
     <link rel="stylesheet" href="../public/css/swiper-3.3.1.min.css">
     <!--<link rel="stylesheet" href="../public/css/weui.css">-->
-    <link rel="stylesheet" href="//cdn.bootcss.com/weui/0.4.3/style/weui.min.css">
+    <link rel="stylesheet" href="http://mobile.uzise.com/assets/mob/css/weui.min.css">
     <link rel="stylesheet" href="//cdn.bootcss.com/jquery-weui/0.8.0/css/jquery-weui.min.css">
     <link rel="stylesheet" href="../css/checkpoint.min.css">
 </head>
@@ -21,9 +21,12 @@
 <div class="main" id="app">
     <div class="box">
         <textarea name="comment" id="" cols="30" rows="10" placeholder="把你的故事记录在这里..."></textarea>
+
         <div class="img-box">
             <div class="img">
-                <img src="/src/images/img.jpg" alt="">
+                <img src="http://note.img-cn-hangzhou.aliyuncs.com/image/1/checkpoint/2d5e8c80c510ac4a2f18bf26fbc9c4fd.jpg?x-oss-process=image/resize,w_1024,h_768"
+                     alt="">
+
                 <div class="photo-mask">
                     <div class="photo-mask-left float-left"></div>
                     <div class="photo-mask-arrow-left float-left"></div>
@@ -37,31 +40,35 @@
             </div>
         </div>
     </div>
-    <div class="weui-cells weui-cells_form">
-        <div class="weui_cell">
-            <div class="weui_cell_hd"><label for="time" class="weui_label">默认配置</label></div>
+    <div class="weui_cells weui_cells_form">
+        <div class="weui_cell" style="display: none;">
+            <div class="weui_cell_hd"><label class="weui_label">上级ID</label></div>
             <div class="weui_cell_bd weui_cell_primary">
-                <input class="weui_input" id="time" type="text" value="" readonly="">
+                <input class="weui_input" type="text" value="0">
             </div>
         </div>
-
-
-        <div class="weui-cell">
-            <div class="weui-cell__hd"><label class="weui-label">摄影时间</label></div>
-            <div class="weui-cell__bd">
-                <input class="weui-input" type="text" :value="(new Date().getTime()) " placeholder="请输入摄影时间">
+        <div class="weui_cell">
+            <div class="weui_cell_hd"><label class="weui_label">摄影时间</label></div>
+            <div class="weui_cell_bd weui_cell_primary">
+                <input class="weui_input" type="text" :value="(new Date().getTime()) " placeholder="请输入摄影时间">
             </div>
         </div>
-        <div class="weui-cell">
-            <div class="weui-cell__hd"><label for="" class="weui-label">日期</label></div>
-            <div class="weui-cell__bd">
-                <input class="weui-input" type="date" value="">
+        <div class="weui_cell">
+            <div class="weui_cell_hd"><label class="weui_label">经纬度</label></div>
+            <div class="weui_cell_bd weui_cell_primary">
+                <input class="weui_input" type="text" value="" placeholder="请输入经纬度">
             </div>
         </div>
-        <div class="weui-cell">
-            <div class="weui-cell__hd"><label for="" class="weui-label">时间</label></div>
-            <div class="weui-cell__bd">
-                <input class="weui-input" type="datetime-local" value="" placeholder="">
+        <div class="weui_cell">
+            <div class="weui_cell_hd"><label class="weui_label">海拔</label></div>
+            <div class="weui_cell_bd weui_cell_primary">
+                <input class="weui_input" type="text" value="" placeholder="请输入海拔">
+            </div>
+        </div>
+        <div class="weui_cell">
+            <div class="weui_cell_hd"><label class="weui_label">路标</label></div>
+            <div class="weui_cell_bd weui_cell_primary">
+                <input class="weui_input" type="text" value="" placeholder="请输入路标">
             </div>
         </div>
     </div>
@@ -72,6 +79,6 @@
 <script src="../public/js/vue.min.js"></script>
 <script src="//cdn.bootcss.com/jquery-weui/0.8.0/js/jquery-weui.min.js"></script>
 <!--<script src="../public/js/vue-router.min.js"></script>-->
-<script src="/src/js/check-point.js"></script>
+<!--<script src="/src/js/check-point.js"></script>-->
 </body>
 </html>

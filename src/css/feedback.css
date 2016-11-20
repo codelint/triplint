@@ -274,6 +274,7 @@ body {
   bottom: 0;
   text-align: center;
   background: #49bdca;
+  z-index: 10;
 }
 .main .input-sand input {
   border: none;

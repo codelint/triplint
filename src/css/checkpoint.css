@@ -116,11 +116,14 @@ body {
 .main .box .img-box .map .icon-map {
   font-size: 18px;
 }
-.main .weui-cells {
+.main .weui_cells {
   background-color: transparent;
 }
-.main .weui-label,
-.main .weui-input {
+.main .weui_label {
+  color: #49bdca;
+  font-size: 14px;
+}
+.main .weui_input {
   color: #c9cac5;
   font-size: 14px;
 }
