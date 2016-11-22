@@ -13,6 +13,9 @@ body {
   background: #faf8ec;
   margin: 0 auto;
 }
+.hide {
+  display: none;
+}
 .t-nav {
   display: -webkit-box;
   display: flex;
@@ -51,6 +54,9 @@ body {
   font-size: 26px;
   font-style: normal;
 }
+.t-nav .right {
+  font-size: 15px;
+}
 .main .box {
   margin: 50px 15px 0;
 }
@@ -74,9 +80,17 @@ body {
 }
 .main .box .img-box .img {
   position: relative;
+  min-height: 100px;
+  text-align: center;
+  line-height: 100px;
+  color: #c9cac5;
 }
-.main .box .img-box .img img {
+.main .box .img-box .img .temp_picture {
   width: 100%;
+  display: block;
+  display: none;
+}
+.main .box .img-box .img .temp_picture[src^=http] {
   display: block;
 }
 .main .box .img-box .img .photo-mask {
