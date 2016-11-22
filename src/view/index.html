@@ -27,7 +27,7 @@
 </div>
 
 <div class="list">
-    <a :href="'trips.html?group_id='+list.id" class="info" v-for="list in lists">
+    <a :href="'trips.html?group_id='+list.id" class="info" v-for="(list,index) in lists">
         <p v-cloak class="title">{{ list.title }}</p>
         <div class="time-didian">
             <p v-cloak>{{ list.dateTime}} {{ list.day }}天 {{ list.browse }} 次浏览</p>
@@ -41,33 +41,13 @@
     </a>
 </div>
 
-<!--<div class="add">+</div>-->
-
-<!--<div class="leftMenu">-->
-<!--<div class="t-mask-visible"></div>-->
-<!--<div class="menu">-->
-<!--<a href="menber.html" class="portrarit">-->
-<!--<img src="../images/1.jpg?oss_image_style=120w_120h_4e_73-189-202bgc" alt="">-->
-<!--<p class="name">Triplint</p>-->
-<!--</a>-->
-<!--<div class="menu-list">-->
-<!--<a href="index.html" class="on">热门游记</a>-->
-<!--<a href="javascript:;">草稿箱</a>-->
-<!--<a href="setting.html">设置</a>-->
-<!--</div>-->
-<!--<div class="cp">-->
-<!--Triplint-->
-<!--</div>-->
-<!--</div>-->
-<!--</div>-->
-<!--<form>-->
-<!--<input type="file" name="file" class="form-control" id="fileInput" placeholder="选择文件"/>-->
-<!--</form>-->
 <script src="../js/android.js"></script>
 <script src="../public/js/jquery-2.1.4.js"></script>
 <script src="../public/js/swiper-3.3.1.jquery.min.js"></script>
 <script src="../public/js/vue.min.js"></script>
 <script src="../public/js/md5.js"></script>
+<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=o9CPvMuqXebMhwZvsbYmHW2P"></script>
+<script type="text/javascript" src="../public/js/coordtransform.js"></script>
 <script src="../js/api.js"></script>
 <script src="../js/index.js"></script>
 

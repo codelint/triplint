@@ -1,6 +1,21 @@
 /**
  * Created by Qiu on 16-10-3.
  */
+var vue = new Vue({
+    el: '.list',
+    data: {
+        lists: {}
+    }
+});
+
+function setup_geo(lon, lat, index) {
+    (new BMap.Geocoder()).getLocation(new BMap.Point(lon, lat), function (result) {
+        if (result) {
+            console.log(index);
+            vue._data.lists[index].place = result.address;
+        }
+    });
+}
 
 jQuery(function ($) {
 
@@ -21,7 +36,7 @@ jQuery(function ($) {
             if (err) {
                 android.alert(err.message);
             } else if (json) {
-                for (var i = json.length; i--;) {
+                for (var i = 0; i < json.length; i++) {
                     checkpoint = json[i];
                     arr.push({
                         'src': U.api.oss.rid2url(checkpoint['photo'], 'image/resize,w_1024,h_480,m_fill,color_FAF8EC'),
@@ -54,6 +69,7 @@ jQuery(function ($) {
             var arr = [];
             var checkpoint;
             if (json) {
+                
                 for (var i = json.length; i--;) {
                     checkpoint = json[i];
                     arr.push({
@@ -65,7 +81,7 @@ jQuery(function ($) {
                         'by': checkpoint['user']['nick'],
                         'img': U.api.oss.rid2url(checkpoint['photo'], 'image/resize,w_1024,h_768'),
                         'portrait': U.api.oss.rid2url(checkpoint['user']['avatar'], 'image/resize,w_128,h_128'),
-                        'place': checkpoint['longitude'] + ',' + checkpoint['latitude']
+                        'place': [checkpoint['longitude'], checkpoint['latitude']]
                     });
                 }
                 callback(err, arr);
@@ -78,12 +94,11 @@ jQuery(function ($) {
             alert(err.message);
             return;
         }
-        new Vue({
-            el: '.list',
-            data: {
-                lists: data
-            }
-        })
+
+        for (var i = 0; i < data.length; i++) {
+            setup_geo(data[i].place[0], data[i].place[1], i);
+        }
+        vue._data.lists = data;
     });
 
     loadBarData(function (err, data) {
@@ -115,7 +130,8 @@ jQuery(function ($) {
         var $menu = $(html);
         $('body').append($menu);
         var user = android.get('user.current');
-        function load_user_info(user){
+
+        function load_user_info(user) {
             $menu.find('img.avatar').attr('src', U.api.oss.rid2url(user['avatar'], 'image/resize,w_128,h_128'));
             $menu.find('p.name').text(user['nick']);
             $menu.find('a[href="member.html"]').attr('href', 'member.html?uid=' + user['id']);
