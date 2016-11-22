@@ -54,6 +54,9 @@ body {
   flex: 1;
   -webkit-tap-highlight-color: transparent;
 }
+[v-cloak] {
+  display: none;
+}
 .t-nav {
   background: transparent;
 }
@@ -128,11 +131,78 @@ body {
   margin: 25px auto 0 auto;
   background: #fff;
 }
-.items .null {
+.trip .null {
   margin-top: 50px;
   color: #ded3b3;
   text-align: center;
   font-size: 13px;
+}
+.trip .list {
+  margin: 20px 10px 100px;
+}
+.trip .list img {
+  width: 100%;
+  display: block;
+  border-radius: 8px;
+}
+.trip .list .info {
+  display: block;
+  position: relative;
+  margin-bottom: 10px;
+}
+.trip .list .info .title {
+  position: absolute;
+  top: 10px;
+  left: 15px;
+  color: #fff;
+  font-size: 20px;
+  text-shadow: 1px 1px 2px #000;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  width: 95%;
+}
+.trip .list .info .time-didian {
+  position: absolute;
+  padding-left: 10px;
+  line-height: 12px;
+  top: 40px;
+  left: 15px;
+  color: #fff;
+}
+.trip .list .info .time-didian p,
+.trip .list .info .time-didian i {
+  font-size: 12px;
+  text-shadow: 1px 1px 2px #000;
+}
+.trip .list .info .time-didian::before {
+  position: absolute;
+  height: 100%;
+  top: 0;
+  left: 0;
+  content: "";
+  display: block;
+  width: 4px;
+  background: #49bdca;
+}
+.trip .list .info .user {
+  position: absolute;
+  display: inline-flex;
+  left: 15px;
+  bottom: 15px;
+}
+.trip .list .info .user img {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  float: left;
+}
+.trip .list .info .user p {
+  color: #fff;
+  font-size: 13px;
+  line-height: 30px;
+  text-indent: 15px;
+  text-shadow: 1px 1px 2px #000;
 }
 .router-link-active {
   color: red;

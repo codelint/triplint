@@ -4,7 +4,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1, user-scalable=no">
     <meta charset="UTF-8">
     <title>用户中心</title>
-    <link rel="stylesheet" href="//at.alicdn.com/t/font_h5xvumt53vwsif6r.css">
+    <link rel="stylesheet" href="//at.alicdn.com/t/font_6lr3ht58zbfswcdi.css">
+    <link rel="stylesheet" href="//cdn.bootcss.com/weui/0.4.3/style/weui.min.css">
+    <link rel="stylesheet" href="//cdn.bootcss.com/jquery-weui/0.8.0/css/jquery-weui.min.css">
     <link rel="stylesheet" href="../public/css/flex.css">
     <link rel="stylesheet" href="../css/member.min.css">
 </head>
@@ -37,30 +39,34 @@
     </div>
     <!--<img class="member-bg" src="../../public/images/member.jpg" alt="">-->
 </div>
-<div class="items">
-    <p class="null">这里空空如也</p>
+
+<div class="trip" id="trip_items">
+    <div class="list">
+        <a :href="'trips.html?group_id='+list.id" class="info" v-for="list in lists">
+            <p v-cloak class="title">{{ list.title }}</p>
+            <div class="time-didian">
+                <p v-cloak>{{ list.dateTime}} {{ list.day }}天 {{ list.browse }} 次浏览</p>
+                <i v-cloak>{{ list.place }}</i>
+            </div>
+            <div class="user">
+                <img v-cloak :src="list.portrait" :alt="list.by">
+                <p v-cloak>by {{ list.by }}</p>
+            </div>
+            <img v-cloak :src="list.img" :alt="list.title">
+        </a>
+    </div>
+    <p class="null hide">这里空空如也</p>
 </div>
 
+
 <script src="../public/js/jquery-2.1.4.js"></script>
-<script src="../public/js/md5.js"></script>
+<script src="../public/js/vue.min.js"></script>
+<script src="../public/js/underscore.js"></script>
+<script src="//cdn.bootcss.com/jquery-weui/0.8.0/js/jquery-weui.min.js"></script>
+<script src="//cdn.bootcss.com/jquery-weui/0.8.0/js/swiper.min.js"></script>
 <script src="../js/android.js"></script>
 <script src="../js/api.js"></script>
-
 <script src="../js/member.js"></script>
 
-
-
-<script type="text/javascript">
-    jQuery(function($){
-        U.api.user.info(U.ajax.getUrlParam('uid'), function(err, user){
-            if(err){
-                android.alert(err.message);
-            }else{
-                $('img.avatar').attr('src', U.api.oss.rid2url(user['avatar'], 'image/resize,w_128,h_128'));
-                $('p.name').text(user['nick']);
-            }
-        })
-    });
-</script>
 </body>
 </html>

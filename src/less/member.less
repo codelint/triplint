@@ -3,6 +3,12 @@
 @import "icon";
 @import "t-nav";
 
+@radius: 8px;
+
+[v-cloak] {
+    display: none;
+}
+
 .t-nav {
     background: transparent;
     .left {
@@ -18,7 +24,7 @@
     background-size: cover;
     .box {
         width: 100%;
-//        position: absolute;
+        //        position: absolute;
         margin-top: 68px;
         .info {
             position: relative;
@@ -80,12 +86,79 @@
         }*/
 }
 
-.items {
+.trip {
     .null {
         margin-top: 50px;
         color: #ded3b3;
         text-align: center;
         font-size: 13px;
+    }
+
+    .list {
+        margin: 20px 10px 100px;
+        img {
+            width: 100%;
+            display: block;
+            border-radius: @radius;
+        }
+        .info {
+            display: block;
+            position: relative;
+            margin-bottom: 10px;
+            .title {
+                position: absolute;
+                top: 10px;
+                left: 15px;
+                color: #fff;
+                font-size: 20px;
+                text-shadow: 1px 1px 2px #000;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+                overflow: hidden;
+                width: 95%;
+            }
+            .time-didian {
+                position: absolute;
+                padding-left: 10px;
+                line-height: 12px;
+                top: 40px;
+                left: 15px;
+                color: #fff;
+                p, i {
+                    font-size: 12px;
+                    text-shadow: 1px 1px 2px #000;
+                }
+            }
+            .time-didian::before {
+                position: absolute;
+                height: 100%;
+                top: 0;
+                left: 0;
+                content: "";
+                display: block;
+                width: 4px;
+                background: @baseColor;
+            }
+            .user {
+                position: absolute;
+                display: inline-flex;
+                left: 15px;
+                bottom: 15px;
+                img {
+                    width: 30px;
+                    height: 30px;
+                    border-radius: 50%;
+                    float: left;
+                }
+                p {
+                    color: #fff;
+                    font-size: 13px;
+                    line-height: 30px;
+                    text-indent: 15px;
+                    text-shadow: 1px 1px 2px #000;
+                }
+            }
+        }
     }
 }
 
