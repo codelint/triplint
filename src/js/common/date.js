@@ -216,3 +216,8 @@ function getTime(date){
 
     return html;
 }
+
+Date.prototype.toString = function(pattern){
+    var df = new DateFormat(pattern || 'yyyy-MM-dd HH:mm:ss');
+    return df.format(this);
+};
