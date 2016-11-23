@@ -51,7 +51,6 @@ jQuery(function($){
         if(!callBack){
             callBack = query;
             query = {
-                "traveller_id": (uid)?uid:1,
                 "group_id": group_id,
                 "page": 1,
                 "psize": page_size

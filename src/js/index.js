@@ -9,7 +9,7 @@ var vue = new Vue({
 });
 
 function setup_geo(lon, lat, index) {
-    (new BMap.Geocoder()).getLocation(new BMap.Point(lon, lat), function (result) {
+    typeof(BMap) != 'undefined' && (new BMap.Geocoder()).getLocation(new BMap.Point(lon, lat), function (result) {
         if (result) {
             console.log(index);
             vue._data.lists[index].place = result.address;
@@ -81,7 +81,7 @@ jQuery(function ($) {
                         'by': checkpoint['user']['nick'],
                         'img': U.api.oss.rid2url(checkpoint['photo'], 'image/resize,w_1024,h_768'),
                         'portrait': U.api.oss.rid2url(checkpoint['user']['avatar'], 'image/resize,w_128,h_128'),
-                        'place': [checkpoint['longitude'], checkpoint['latitude']]
+                        'place': checkpoint['mark'] && [checkpoint['longitude'], checkpoint['latitude']]
                     });
                 }
                 callback(err, arr);
