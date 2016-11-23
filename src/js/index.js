@@ -80,7 +80,9 @@ jQuery(function ($) {
                         'by': checkpoint['user']['nick'],
                         'img': U.api.oss.rid2url(checkpoint['photo'], 'image/resize,w_1024,h_768'),
                         'portrait': U.api.oss.rid2url(checkpoint['user']['avatar'], 'image/resize,w_128,h_128'),
-                        'place': checkpoint['mark'] || [checkpoint['longitude'], checkpoint['latitude']]
+                        'place': checkpoint['mark'] || (checkpoint['longitude'] + ',' + checkpoint['latitude']),
+                        'longitude': checkpoint['longitude'],
+                        'latitude': checkpoint['latitude']
                     });
                 }
                 callback(err, arr);
@@ -94,9 +96,9 @@ jQuery(function ($) {
             return;
         }
 
-        for (var i = 0; i < data.length; i++) {
-            setup_geo(data[i].place[0], data[i].place[1], i);
-        }
+//        for (var i = 0; i < data.length; i++) {
+//            setup_geo(data[i]['longitude'], data[i]['latitude'], i);
+//        }
         vue._data.lists = data;
     });
 
