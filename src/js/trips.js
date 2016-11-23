@@ -41,6 +41,7 @@ jQuery(function($){
      *      "comment":"",
      *      "longitude":0.0,
      *      "latitude":0.0,
+     *      "location" : "",
      *      "comment_count":0
      *      "like":0
      *  }]
@@ -74,6 +75,7 @@ jQuery(function($){
 
                     _.each(json, function(v, k, arr){
                         v['day'] = Math.round((Number(v['create_time']) - minTime) / 86400 + 1);
+                        v['location'] = v['mark'] || (v['longitude'] + ',' + v['latitude']);
                         arr[k] = v;
                     });
                 }
