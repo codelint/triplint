@@ -285,6 +285,13 @@ U.api = (function($){
                     cbf(err, user);
                 }))
             },
+            'logout': function(meta, cbf){
+                if(!cbf){
+                    cbf = meta;
+                    meta = {};
+                }
+                U.ajax.postJson(_url('user.logout'), meta, callback_filter(cbf));
+            },
             'register':function (mobile, nick, password, inviteCode,inviteMobile,cbf) {
                 U.ajax.postJson(_url('user.register'), {
                     "mobile": mobile,

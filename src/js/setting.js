@@ -34,4 +34,14 @@ jQuery(function($){
     $(".on-menu").click(function(){
         $(".leftMenu").css("left", "0").addClass("on");
     });
+
+    $("div.logout a").click(function(){
+        U.api.user.logout(function(err, json){
+            if(err){
+                android.alert(err.message);
+            }else{
+                location.href = 'index.html';
+            }
+        });
+    })
 });
