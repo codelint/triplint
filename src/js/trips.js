@@ -198,11 +198,12 @@ jQuery(function($){
         var canQuery = true;
         if(canQuery && $loadBtn.css('display') != 'none' && rect.isBottom){
             canQuery = false;
-            query({
-                page: Math.round(Number($loadBtn.attr('page'))),
-                psize: page_size
-            }, function(err, json){
-                loadData(err, json);
+            var queryData = {
+                            page: Math.round(Number($loadBtn.attr('page'))),
+                            psize: page_size
+                        };
+            query(queryData, function(err, json){
+                loadData(err, json, queryData);
                 setTimeout(function(){
                     canQuery = true;
                 }, 5000);
