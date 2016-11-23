@@ -17,6 +17,15 @@ function getDateTime(time, type){
         return time.getMinutes();
 }
 
+function getRect(ele){
+    var inHeight = window.innerHeight,
+        rect = ele.getBoundingClientRect();
+
+    rect.isVisible = rect.top - inHeight < 0;  // 是否在可视区域
+    rect.isBottom = rect.bottom - inHeight <= 0;
+    return rect;
+}
+
 jQuery(function($){
     var page_size = 10;
     var group_id = U.ajax.getUrlParam("group_id");
@@ -37,6 +46,7 @@ jQuery(function($){
      *  }]
      */
     var minTime = (new Date()).getTime() / 1000;
+
     function query(query, callBack){
         if(!callBack){
             callBack = query;
@@ -109,14 +119,13 @@ jQuery(function($){
                     $('div.title').text(title);
                 }
 
-                var $elem = $('div.sample.item-list').clone();
-                $elem.attr('id', 'div-' + (new Date()).getTime()).removeClass('sample');
+                var $elem = $('div.sample.item-list').clone().removeClass('sample');
+                $elem.attr('id', 'div-' + (new Date()).getTime());
                 if(data.length){
-                    $('a.load-btn').attr('page', query['page']+1);
+                    $('a.load-btn').attr('page', query['page'] + 1);
                 }else{
                     $('a.load-btn').hide();
                 }
-
 
                 $('section.trip-wps').append($elem);
 
@@ -163,13 +172,35 @@ jQuery(function($){
         };
     })();
 
-
     query(loadData);
 
     $('a.load-btn').click(function(){
         query({
             page: Math.round(Number($('a.load-btn').attr('page'))),
             psize: page_size
-        },loadData);
+        }, loadData);
     });
+
+    var EventUtil = {
+        addHandler: function(element, type, handler){
+            if(element.addEventListener){
+                element.addEventListener(type, handler, false);
+            }else if(element.attachEvent){
+                element.attachEvent("on" + type, handler);
+            }else{
+                element["on" + type] = handler;
+            }
+        }
+    };
+    EventUtil.addHandler(window, "scroll", function(){
+        var rect = getRect(document.body);
+        if(rect.isBottom){
+            query({
+                page: Math.round(Number($('a.load-btn').attr('page'))),
+                psize: page_size
+            }, loadData);
+        }
+        return true;
+    });
+
 });
