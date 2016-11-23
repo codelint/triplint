@@ -192,12 +192,12 @@ jQuery(function($){
             }
         }
     };
+    var canAutoQuery = true;
     EventUtil.addHandler(window, "scroll", function(){
         var rect = getRect(document.body);
         var $loadBtn = $('a.load-btn') ;
-        var canQuery = true;
-        if(canQuery && $loadBtn.css('display') != 'none' && rect.isBottom){
-            canQuery = false;
+        if(canAutoQuery && $loadBtn.css('display') != 'none' && rect.isBottom){
+            canAutoQuery = false;
             var queryData = {
                             page: Math.round(Number($loadBtn.attr('page'))),
                             psize: page_size
@@ -205,8 +205,8 @@ jQuery(function($){
             query(queryData, function(err, json){
                 loadData(err, json, queryData);
                 setTimeout(function(){
-                    canQuery = true;
-                }, 5000);
+                    canAutoQuery = true;
+                }, 10000);
             });
         }
         return true;
