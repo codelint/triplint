@@ -18,7 +18,7 @@ function getDateTime(time, type){
 }
 
 jQuery(function($){
-
+    var page_size = 10;
     var group_id = U.ajax.getUrlParam("group_id");
     $('a.upload-btn').attr('href', 'upload.html?group_id=' + group_id);
     /**
@@ -36,19 +36,25 @@ jQuery(function($){
      *      "like":0
      *  }]
      */
-    function init(callBack){
-        var query = {
-            "group_id": group_id,
-            "page": 1,
-            "pageSize": 10
-        };
+    var minTime = (new Date()).getTime() / 1000;
+    function query(query, callBack){
+        if(!callBack){
+            callBack = query;
+            query = {
+                "group_id": group_id,
+                "page": 1,
+                "psize": page_size
+            };
+        }
+
+        query['group_id'] = group_id;
+
         U.api.checkpoint.list(query, function(err, json){
             if(err){
                 android.alert(err.message);
             }else{
                 // calculate array[].day
                 if(json && json.length){
-                    var minTime = (new Date()).getTime() / 1000;
                     json = _.sortBy(json, function(v){
                         if(v['create_time'] < minTime){
                             minTime = v['create_time'];
@@ -61,7 +67,7 @@ jQuery(function($){
                         arr[k] = v;
                     });
                 }
-                callBack(err, json);
+                callBack(err, json, query);
             }
 
         });
@@ -70,72 +76,100 @@ jQuery(function($){
     /**
      * 初始化页面
      */
-    init(function(err, data){
+    var loadData = (function(){
 
-        if(err){
-            android.alert(err.message);
-            return;
-        }
+        var father = false;
 
-        if(data && data.length){
-            // find father
-            var father = false;
+        return function loadData(err, data, query){
 
-            data = _.each(data, function(v){
-                if(!father){
-                    father = v;
-                }
-
-                if(father['group_id'] == v['id']){
-                    father = v;
-                }
-            });
-
-            if(father){
-                var title = father['comment'].substr(0,6);
-                $('title').text(title);
-                $('div.title').text(title);
+            if(err){
+                android.alert(err.message);
+                return;
             }
 
-            var vm = new Vue({
-                el: '#trip_items',
-                data: {items: []},
-                methods: {
-                    // 查看图片
-                    showImgs: function(event){
-                        getPhotoItems(event.target.alt);
-                    },
-                    // 喜欢
-                    like: function(index){
-                        $.toast("后期开放此功能", "text");
-                        // vm._data.items[index].like = ++(vm._data.items[index].like);
-                    },
-                    // 评论
-                    comment: function(group_id){
-                        location.href = 'trips.html?group_id=' + group_id;
-                        // $.toast("后期开放此功能", "text");
+            if(data && data.length){
+                // find father
+                data = _.each(data, function(v){
+                    if(!father){
+                        father = v;
                     }
-                }
-            });
 
-            function getPhotoItems(initIndex){
-                var len = vm._data.items.length, images = [];
-                for(var i = 0; i < len; i++){
-                    images.push({
-                        image: (U.api.oss.rid2url(vm._data.items[i].photo, 'image/resize,w_1024,h_768')),
-                        caption: vm._data.items[i].comment
-                    });
+                    if(father['group_id'] == v['id']){
+                        father = v;
+                    }
+                });
+
+                data = _.filter(data, function(v){
+                    return father['id'] != v['id'];
+                });
+
+                if(father){
+                    var title = father['comment'].substr(0, 6);
+                    $('title').text(title);
+                    $('div.title').text(title);
                 }
-                ($.photoBrowser({
-                    initIndex: (initIndex < 0) ? 0 : initIndex,
-                    items: images
-                })).open();
+
+                var $elem = $('div.sample.item-list').clone();
+                $elem.attr('id', 'div-' + (new Date()).getTime()).removeClass('sample');
+                if(data.length){
+                    $('a.load-btn').attr('page', query['page']+1);
+                }else{
+                    $('a.load-btn').hide();
+                }
+
+
+                $('section.trip-wps').append($elem);
+
+                var vm = new Vue({
+                    el: '#' + $elem.attr('id'),
+                    data: {items: []},
+                    methods: {
+                        // 查看图片
+                        showImgs: function(event){
+                            getPhotoItems(event.target.alt);
+                        },
+                        // 喜欢
+                        like: function(index){
+                            $.toast("后期开放此功能", "text");
+                            // vm._data.items[index].like = ++(vm._data.items[index].like);
+                        },
+                        // 评论
+                        comment: function(group_id){
+                            location.href = 'trips.html?group_id=' + group_id;
+                            // $.toast("后期开放此功能", "text");
+                        }
+                    }
+                });
+
+                function getPhotoItems(initIndex){
+                    var len = vm._data.items.length, images = [];
+                    for(var i = 0; i < len; i++){
+                        images.push({
+                            image: (U.api.oss.rid2url(vm._data.items[i].photo, 'image/resize,w_1024,h_768')),
+                            caption: vm._data.items[i].comment
+                        });
+                    }
+                    ($.photoBrowser({
+                        initIndex: (initIndex < 0) ? 0 : initIndex,
+                        items: images
+                    })).open();
+                }
+
+                vm._data.items = data;
+            }else{
+                //todo no data process
             }
 
-            vm._data.items = data;
-        }else{
-            //todo no data process
-        }
+        };
+    })();
 
+
+    query(loadData);
+
+    $('a.load-btn').click(function(){
+        query({
+            page: Math.round(Number($('a.load-btn').attr('page'))),
+            psize: page_size
+        },loadData);
     });
 });
