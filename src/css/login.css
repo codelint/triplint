@@ -13,6 +13,9 @@ body {
   background: #faf8ec;
   margin: 0 auto;
 }
+.hide {
+  display: none;
+}
 .iconfont {
   font-family: "iconfont";
   font-size: 26px;

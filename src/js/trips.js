@@ -2,7 +2,7 @@
  * Created by yQiu on 16-10-23.
  */
 
-// 通过时间戳获取年月日十分秒
+// 通过时间戳获取年月日时分秒
 function getDateTime(time, type){
     time = new Date((isNaN(time)) ? time : parseInt(time));
     if(type == "y")

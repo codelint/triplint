@@ -3,6 +3,10 @@
 @import "t-nav";
 @import "icon";
 
+.t-nav .right {
+    font-size: 15px;
+}
+
 .main {
     .box {
         margin: 50px 15px 0;
@@ -25,9 +29,17 @@
             width: 100%;
             .img {
                 position: relative;
-                img {
+                min-height: 100px;
+                text-align: center;
+                line-height: 100px;
+                color: #c9cac5;
+                .temp_picture {
                     width: 100%;
                     display: block;
+                    display: none;
+                    &[src^=http] {
+                        display: block;
+                    }
                 }
                 .photo-mask {
                     bottom: 0;

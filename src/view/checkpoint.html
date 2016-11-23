@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1, user-scalable=no">
     <title>编辑故事</title>
-    <link rel="stylesheet" href="//at.alicdn.com/t/font_ll29t97fsvgc766r.css">
+    <link rel="stylesheet" href="//at.alicdn.com/t/font_ltgrrchdg28d7vi.css">
     <link rel="stylesheet" href="../public/css/swiper-3.3.1.min.css">
     <!--<link rel="stylesheet" href="../public/css/weui.css">-->
     <link rel="stylesheet" href="http://mobile.uzise.com/assets/mob/css/weui.min.css">
@@ -15,7 +15,7 @@
 <div class="t-nav">
     <div class="left on-menu"><i class="iconfont icon-clear"></i></div>
     <div class="title">编辑故事</div>
-    <div class="right"></div>
+    <div class="right commit">发送</div>
 </div>
 
 <div class="main" id="app">
@@ -24,9 +24,20 @@
 
         <div class="img-box">
             <div class="img">
-                <img src="http://note.img-cn-hangzhou.aliyuncs.com/image/1/checkpoint/2d5e8c80c510ac4a2f18bf26fbc9c4fd.jpg?x-oss-process=image/resize,w_1024,h_768"
-                     alt="">
-
+                <form class="hide" id="oss-upload-form" autocomplete="off" action="http://yue.oss-cn-hangzhou.aliyuncs.com/"
+                      method="post" enctype="multipart/form-data" target="hidden_frame">
+                    <iframe name='hidden_frame' id="hidden_frame" style='display: none'></iframe>
+                    <input type="hidden" name="OSSAccessKeyId" value=""/>
+                    <input type="hidden" name="policy" value=""/>
+                    <input type="hidden" name="Signature" value=""/>
+                    <input type="hidden" name="key" value=""/>
+                    <input type="hidden" name="success_action_redirect" value="http://complint.localhost/wap/view/oss_upload_success.html"/>
+                    <input type="file" name="file" class="form-control" id="fileInput" accept="image/*;capture=camera" placeholder="选择文件"/>
+                </form>
+                <input type="hidden" name="id"/>
+                <input type="hidden" name="rid" value=""/>
+                <img class="temp_picture" src="" alt="">
+                <div class="upload-img"><i class="iconfont icon-plus"></i></div>
                 <div class="photo-mask">
                     <div class="photo-mask-left float-left"></div>
                     <div class="photo-mask-arrow-left float-left"></div>
@@ -36,49 +47,253 @@
             </div>
             <div class="map">
                 <i class="iconfont icon-map"></i>
-                故事发生在...
+                <span id="geo-title">故事发生在...</span>
             </div>
         </div>
     </div>
     <div class="weui_cells weui_cells_form">
-        <div class="weui_cell" style="display: none;">
+        <div class="weui_cell hide">
             <div class="weui_cell_hd"><label class="weui_label">上级ID</label></div>
             <div class="weui_cell_bd weui_cell_primary">
-                <input class="weui_input" type="text" value="0">
+                <input name="group_id" class="weui_input" type="text" :value="(U.ajax.getUrlParam('group_id'))" placeholder="请输入上级ID">
             </div>
         </div>
         <div class="weui_cell">
             <div class="weui_cell_hd"><label class="weui_label">摄影时间</label></div>
             <div class="weui_cell_bd weui_cell_primary">
-                <input class="weui_input" type="text" :value="(new Date().getTime()) " placeholder="请输入摄影时间">
+                <input name="create_time" class="weui_input" type="text" :value="(new DateFormat('yyyy-MM-dd HH:mm:ss').format(new Date()))" placeholder="请输入摄影时间">
             </div>
         </div>
-        <div class="weui_cell">
+        <div class="weui_cell hide">
             <div class="weui_cell_hd"><label class="weui_label">经纬度</label></div>
             <div class="weui_cell_bd weui_cell_primary">
-                <input class="weui_input" type="text" value="" placeholder="请输入经纬度">
+                <input name="longitude" class="weui_input" type="text" placeholder="请输入经度">
+                <input name="latitude" class="weui_input" type="text" placeholder="请输入纬度">
             </div>
         </div>
         <div class="weui_cell">
             <div class="weui_cell_hd"><label class="weui_label">海拔</label></div>
             <div class="weui_cell_bd weui_cell_primary">
-                <input class="weui_input" type="text" value="" placeholder="请输入海拔">
+                <input name="altitude" class="weui_input" type="number" value="0" placeholder="请输入海拔">
             </div>
         </div>
         <div class="weui_cell">
             <div class="weui_cell_hd"><label class="weui_label">路标</label></div>
             <div class="weui_cell_bd weui_cell_primary">
-                <input class="weui_input" type="text" value="" placeholder="请输入路标">
+                <input name="mark" class="weui_input" type="text" placeholder="请输入路标，如码农寺">
             </div>
         </div>
     </div>
 </div>
 
-
-<script src="../public/js/jquery-2.1.4.js"></script>
-<script src="../public/js/vue.min.js"></script>
+<script type="text/javascript" src="../public/js/jquery-2.1.4.js"></script>
 <script src="//cdn.bootcss.com/jquery-weui/0.8.0/js/jquery-weui.min.js"></script>
-<!--<script src="../public/js/vue-router.min.js"></script>-->
-<!--<script src="/src/js/check-point.js"></script>-->
+<script type="text/javascript" src="../public/js/vue.min.js"></script>
+<script type="text/javascript" src="../public/js/md5.js"></script>
+<script type="text/javascript" src="../public/js/underscore.js"></script>
+<script type="text/javascript" src="../public/js/exif.js"></script>
+<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=o9CPvMuqXebMhwZvsbYmHW2P"></script>
+<script type="text/javascript" src="../public/js/coordtransform.js"></script>
+
+<script type="text/javascript" src="../js/android.js"></script>
+<script type="text/javascript" src="../js/api.js"></script>
+<script type="text/javascript" src="../js/common/date.js"></script>
+<script type="text/javascript" src="../js/common/ue.js"></script>
+
+<script type="text/javascript">
+    var latitude = U.ajax.getUrlParam('latitude') || false;
+    var longitude = U.ajax.getUrlParam('longitude') || false;
+
+    function adjust_file_input_pos() {
+        var $file = $('input[name="file"]');
+        var $preview = $('img.temp_picture');
+
+        $file.css('width', $preview.css('width'));
+        $file.css('height', $preview.css('height'));
+        $file.css('z-index', 1);
+        $file.css('opacity', 1);
+    }
+
+    function setup_geo(lon, lat) {
+        latitude = lat;
+        longitude = lon;
+        $('input[name="latitude"]').val('1').val(lat);
+        $('input[name="longitude"]').val('1').val(lon);
+        var bd09 = coordtransform.wgs84tobd09(lon, lat);
+        (typeof(BMap) != 'undefined') && (new BMap.Geocoder()).getLocation(new BMap.Point(bd09[0], bd09[1]), function (rs) {
+            var addComp = rs.addressComponents;
+            var streetNumber = addComp.streetNumber;
+            var strGeo = addComp.province + ", " + addComp.city + ", " + addComp.district + ", " + addComp.street + ((streetNumber) ? ", " + streetNumber : "");
+            $('#geo-title').text(strGeo);
+        });
+    }
+
+    function upload_file() {
+        U.api.oss.upload(1, function (err, json) {
+            if (err) {
+                $.alert(err.message);
+            } else {
+                var postData = json['data']['post'];
+                var $form = $('#oss-upload-form');
+                $form.attr('action', 'http://' + postData['host'] + '/');
+                $('input[name="success_action_redirect"]').val(ROOT_URL + '/view/oss_upload_success.html');
+                var $file = $form.find('input[type="file"]');
+                if (!$file.val()) {
+                    return;
+                }
+                $form.find('input[name="OSSAccessKeyId"]').val(postData['accessid']);
+                $form.find('input[name="policy"]').val(postData['policy']);
+                $form.find('input[name="Signature"]').val(postData['signature']);
+                $form.find('input[name="key"]').val(postData['object']);
+
+                U.api.oss.uploadSuccessCallback = (function (info) {
+                    return function () {
+                        // $form.remove();
+                        $(".upload-img").remove();
+                        $.toast('上传成功', 'text');
+                        $('img.temp_picture').attr('src', U.api.oss.rid2url(info['rid'], 'image/resize,w_640,h_480'));
+                        $('input[name="rid"]').val(info['rid']);
+                        setTimeout(adjust_file_input_pos, 2000);
+                    }
+                })(json['data']);
+                $form.submit();
+
+            }
+        });
+    }
+
+    function parse_file(e) {
+        if (!e.target || !e.target.files.length || !e.target.files[0]) {
+            return
+        }
+
+        var _file = e.target.files[0];
+        var passFileType = /^(?:image\/bmp|image\/gif|image\/jpeg|image\/png)$/i;
+
+        if (!passFileType.test(_file.type)) {
+            return
+        }
+
+        (new FileReader()).readAsDataURL(_file);
+
+        EXIF.getData(_file, function () {
+            // var _dataTxt = EXIF.pretty(this);
+            var json = EXIF.getAllTags(this);
+            var latitude = json['GPSLatitude'];
+            var longitude = json['GPSLongitude'];
+            if (latitude && longitude) {
+                latitude = latitude[0] + latitude[1] / 60 + latitude[2] / 3600;
+                longitude = longitude[0] + longitude[1] / 60 + longitude[2] / 3600;
+                setup_geo(longitude.toFixed(8), latitude.toFixed(8));
+            }
+            var time = json['DateTimeOriginal'];
+            var dateFormat = new DateFormat('yyyy:MM:dd HH:mm:ss');
+            if (time && (time = dateFormat.parse(time))) {
+                $('input[name="create_time"]').val(Math.round(time.getTime() / 1000));
+                $('#time-title').text(dateFormat.format(time));
+            }
+        });
+    }
+
+    jQuery(function ($) {
+        // setup by id
+        (function (id) {
+            id = Math.round(Number(id));
+            id && $('#oss-upload-form').hide() && U.api.checkpoint.info(id, function (err, cp) {
+                if (err) {
+                    $.alert(err['message'], '确认', function () {
+                        window.location.href = location.href;
+                        return false;
+                    });
+                } else {
+                    setup_geo(cp['longitude'], cp['latitude']);
+                    $('input[name="id"]').val(cp['id']);
+                    $('input[name="group_id"]').val(cp['group_id']);
+                    $('input[name="mark"]').val(cp['mark']);
+                    $('textarea[name="comment"]').val(cp['comment']);
+                    $('input[name="create_time"]').val(cp['create_time']).trigger('change');
+                    $('img.temp_picture').attr('src', U.api.oss.rid2url(cp['photo'], 'image/resize,w_640,h_480'));
+                }
+            });
+
+        })(U.ajax.getUrlParam('id'));
+        adjust_file_input_pos();
+
+        new Vue({
+            el: "#app"
+        });
+
+        var $group_id = $('input[name="group_id"]');
+        $group_id.val() && $group_id.attr('readonly', 'readonly');
+
+        setTimeout(function () {
+            var longitude = Number($('input[name="longitude"]').val());
+            var latitude = Number($('input[name="latitude"]').val());
+            if (longitude > 0.001 && latitude > 0.001) {
+                setup_geo(longitude, latitude);
+            } else {
+                var gps_info = android.gps();
+                gps_info = gps_info.split(',');
+                if (Number(gps_info[0]) > 0.01) {
+                    setup_geo(Number(gps_info[0]), Number(gps_info[1]));
+                }
+            }
+        }, 2000);
+
+
+        $('textarea[name="comment"]').bind('keydown', function () {
+            $('span.font-number').text($(this).text().length);
+        });
+
+        $('.weui-vcode-btn.map-btn').attr('href', 'map.html' + location.search).click(function () {
+            var lat = Number($('input[name="latitude"]').val());
+            var lon = Number($('input[name="longitude"]').val());
+            $('#map-frame').remove();
+            var $frame = $('<iframe id="map-frame" src="map.html" style="position:fixed;width:100%;height:100%;top:0;left:0;z-index:999;"></iframe>');
+//            location.href = 'map.html?latitude=' + latitude + '&longitude=' + longitude;
+            $frame.attr('src', 'map.html?latitude=' + latitude + '&longitude=' + longitude);
+            $('body').append($frame);
+            return false;
+        });
+
+        $('input[name="create_time"]').change(function () {
+            $('#time-title').text(new DateFormat('yyyy-MM-dd HH:mm:ss').format(new Date()));
+        }).val('1').val(new DateFormat('yyyy-MM-dd HH:mm:ss').format(new Date())).trigger('change');
+
+        $('input[name="file"]').change(upload_file).change(parse_file);
+
+        $(".upload-img").click(function () {
+            $('input[name="file"]').trigger("click");
+        });
+
+        $('.commit').click(function () {
+            var data = {
+                'id': Math.round(Number($('input[name="id"]').val())),
+                'group_id': Number($('input[name="group_id"]').val()),
+                'resource': $('input[name="rid"]').val(),
+                'altitude': Number($('input[name="altitude"]').val()),
+                'longitude': Number($('input[name="longitude"]').val()),
+                'latitude': Number($('input[name="latitude"]').val()),
+                'create_time': new Date($('input[name="create_time"]').val()).getTime(),
+                'comment': $('textarea[name="comment"]').val(),
+                'mark': $('input[name="mark"]').val()
+            };
+            U.api.checkpoint.commit(data, function (err, json) {
+                if (err) {
+                    $.alert(err.message);
+                } else {
+                    $.alert('保存成功');
+                }
+            })
+        });
+
+        $('input[name="create_time"]').datetimePicker();
+
+        $('textarea[name="comment"]').bind('input propertychange', function () {
+            ($(this).val()) ? $(this).addClass("on") : $(this).removeClass("on");
+        });
+    });
+</script>
+
 </body>
 </html>
