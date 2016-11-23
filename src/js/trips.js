@@ -28,7 +28,7 @@ function getRect(ele){
 
 jQuery(function($){
     var page_size = 10;
-    var group_id = U.ajax.getUrlParam("group_id");
+    var group_id = U.ajax.getUrlParam("group_id"), uid = U.ajax.getUrlParam("uid");
     $('a.upload-btn').attr('href', 'upload.html?group_id=' + group_id);
     /**
      * @param callBack function(err, data)
@@ -51,6 +51,7 @@ jQuery(function($){
         if(!callBack){
             callBack = query;
             query = {
+                "traveller_id": uid,
                 "group_id": group_id,
                 "page": 1,
                 "psize": page_size
@@ -91,7 +92,6 @@ jQuery(function($){
         var father = false;
 
         return function loadData(err, data, query){
-
             if(err){
                 android.alert(err.message);
                 return;
