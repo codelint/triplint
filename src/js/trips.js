@@ -194,11 +194,19 @@ jQuery(function($){
     };
     EventUtil.addHandler(window, "scroll", function(){
         var rect = getRect(document.body);
-        if(rect.isBottom){
+        var $loadBtn = $('a.load-btn') ;
+        var canQuery = true;
+        if(canQuery && $loadBtn.css('display') != 'none' && rect.isBottom){
+            canQuery = false;
             query({
-                page: Math.round(Number($('a.load-btn').attr('page'))),
+                page: Math.round(Number($loadBtn.attr('page'))),
                 psize: page_size
-            }, loadData);
+            }, function(err, json){
+                loadData(err, json);
+                setTimeout(function(){
+                    canQuery = true;
+                }, 5000);
+            });
         }
         return true;
     });
