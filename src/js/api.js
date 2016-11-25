@@ -6,7 +6,7 @@ if(typeof String.prototype.endsWith !== 'function'){
 }
 OSS_DOMAIN = 'oss-cn-hangzhou.aliyuncs.com';
 OSS_IMG_DOMAIN = 'img-cn-hangzhou.aliyuncs.com';
-ROOT_URL = 'http://'+location.host+'/wap';
+ROOT_URL = 'http://' + location.host + '/wap';
 U = typeof(U) == 'undefined' ? {} : U;
 
 U.ajax = (function($){
@@ -224,7 +224,7 @@ U.api = (function($){
                 U.ajax.postJson(_url('checkpoint.upload'), {'slot': slot}, callback_filter(cbf));
             },
             uploadTempFile: function(slot, $form, callback){
-                slot = (slot%7 + 1) || 1;
+                slot = (slot % 7 + 1) || 1;
                 // $('body').append($form);
                 U.ajax.postJson(_url('checkpoint.upload'), {'slot': slot}, callback_filter(function(err, json){
                     if(json && json['data'] && json['data']['post']){
@@ -292,14 +292,14 @@ U.api = (function($){
                 }
                 U.ajax.postJson(_url('user.logout'), meta, callback_filter(cbf));
             },
-            'register':function (mobile, nick, password, inviteCode,inviteMobile,cbf) {
+            'register': function(mobile, nick, password, inviteCode, inviteMobile, cbf){
                 U.ajax.postJson(_url('user.register'), {
                     "mobile": mobile,
                     "nick": nick,
                     "password": password,
                     "inviteCode": inviteCode,
                     "inviteMobile": inviteMobile
-                },callback_filter(function (err, json) {
+                }, callback_filter(function(err, json){
                     cbf(err, json);
                 }))
             },
@@ -309,12 +309,12 @@ U.api = (function($){
                     memo = '';
                 }
                 U.ajax.postJson(_url('user.invite'), {
-                    'mobile' : mobile,
+                    'mobile': mobile,
                     'nick': memo
                 }, callback_filter(cbf))
             }
         },
-        'traveller':{
+        'traveller': {
             'apply': function(data, cbf){
                 return U.ajax.postJson(_url('traveller.apply'), data, callback_filter(cbf));
             }
@@ -323,7 +323,7 @@ U.api = (function($){
             'list': function(query, cbf){
                 U.ajax.postJson(_url('checkpoint.list'), query, callback_filter(function(err, json){
                     if(json && json.length > 0){
-                        for(var i = json.length; i --;){
+                        for(var i = json.length; i--;){
                             json[i]['create_time'] = Number(json[i]['create_time']);
                         }
                     }
@@ -360,6 +360,26 @@ U.api = (function($){
                 'contact': '',
                 'description': message
             }, callback_filter(cbf));
+        },
+        'trac': {
+            'list': function(query, cbf){
+                var cbfKey = 'callback' + (new Date()).getTime() + '';
+                var $script = $('<script type="text/javascript"></script>');
+                U.api.trac.list[cbfKey] = function(json){
+                    delete U.api.trac.list[cbfKey];
+                    $script.remove();
+                    (callback_filter(cbf))(null, json);
+                };
+                U.ajax.postJson(_url('trac.api.todo-list'), query, callback_filter(function(err, json){
+                    if(json && json['url']){
+                        var $script = $('<script type="text/javascript"></script>')
+                            .attr('src', json['url'] + '&callback=U.api.trac.list.' + cbfKey);
+                        $('body').append($script);
+                    }else{
+                        cbf(err, json);
+                    }
+                }));
+            }
         }
     }
 })(jQuery);
