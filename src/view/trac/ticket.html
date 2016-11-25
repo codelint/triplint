@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1, user-scalable=no">
+    <title>任务清单</title>
+    <!--<link rel="stylesheet" href="../../pubic/css/font_h5xvumt53vwsif6r.css">-->
+    <link rel="stylesheet" href="../../public/css/swiper-3.3.1.min.css">
+    <link rel="stylesheet" href="../../public/css/weui.css">
+    <style type="text/css">
+        div.sample {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+<div class="weui-tab">
+    <div class="weui-navbar">
+        <div class="weui-navbar__item open weui-bar__item_on">
+            未完成
+        </div>
+        <div class="weui-navbar__item closed">
+            已完成
+        </div>
+        <!--<div class="weui-navbar__item all">-->
+            <!--全部-->
+        <!--</div>-->
+    </div>
+    <div class="weui-tab__panel">
+
+    </div>
+</div>
+<div class="sample">
+    <div class="weui-cells__title">{{ title }}</div>
+    <div class="weui-cells weui-cells_checkbox">
+        <div class="day" v-for="(item, index) in items">
+            <label class="weui-cell weui-check__label" v-bind:for="'ticket_' + item.id">
+                <div class="weui-cell__hd">
+                    <input type="checkbox" class="weui-check" v-bind:name="'ticket_' + item.id "
+                           v-bind:id="'ticket_' + item.id" v-bind:checked="item.status == 'closed'">
+                    <i class="weui-icon-checked"></i>
+                </div>
+                <div class="weui-cell__bd">
+                    <p>{{ item.summary }}(by {{ item.owner }})</p>
+                </div>
+            </label>
+        </div>
+        <!--<a href="javascript:void(0);" class="weui-cell weui-cell_link">-->
+        <!--<div class="weui-cell__bd">添加更多</div>-->
+        <!--</a>-->
+    </div>
+</div>
+</body>
+<script type="text/javascript" src="../../public/js/jquery-2.1.4.js"></script>
+<script type="text/javascript" src="../../public/js/swiper-3.3.1.jquery.min.js"></script>
+<script type="text/javascript" src="../../public/js/vue.min.js"></script>
+<script type="text/javascript" src="../../public/js/md5.js"></script>
+<script type="text/javascript" src="../../public/js/underscore.js"></script>
+<script type="text/javascript" src="../../public/js/exif.js"></script>
+<script type="text/javascript" src="../../public/js/coordtransform.js"></script>
+
+<script type="text/javascript" src="../../js/android.js"></script>
+<script type="text/javascript" src="../../js/api.js"></script>
+<script type="text/javascript" src="../../js/common/date.js"></script>
+<script type="text/javascript" src="../../js/common/ue.js"></script>
+
+<script type="text/javascript">
+    jQuery(function($){
+        function loadData(title, list){
+            var id = 'panel-' + (new Date()).getTime();
+            var $elem = $('div.sample').clone().removeClass('sample');
+            $elem.attr('id', id);
+
+            $('div.weui-tab__panel').empty().append($elem);
+            var vm = new Vue({
+                el: '#' + id,
+                data: {
+                    title: title,
+                    items: list
+                },
+                methods: {
+                }
+            });
+        }
+
+        function loadByType(status){
+            var title = 'unknown';
+            $('.weui-navbar__item').removeClass('weui-bar__item_on');
+            switch(status){
+                case 'closed':
+                    title = '已处理';
+                    $('.weui-navbar__item.closed').addClass('weui-bar__item_on');
+                    break;
+                default:
+                    title = '未处理';
+                    $('.weui-navbar__item.open').addClass('weui-bar__item_on');
+                    status = '-closed';
+            }
+            U.api.trac.list({
+                status: status
+            }, function(err, json){
+                loadData(title, json['data']);
+            });
+        }
+
+        $('.weui-navbar__item.open').click(function(){
+            loadByType('-closed');
+        });
+
+        $('.weui-navbar__item.closed').click(function(){
+            loadByType('closed');
+        });
+
+        loadByType('-closed');
+    })
+</script>
+
+</html>
