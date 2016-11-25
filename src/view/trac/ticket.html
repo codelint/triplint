@@ -68,6 +68,15 @@
 <script type="text/javascript">
     jQuery(function($){
         function loadData(title, list){
+            if(list){
+                android.put('trac.ticket.' + title , list);
+            }else{
+                list = android.get('trac.ticket.' + title);
+                if(!list){
+                    return;
+                }
+            }
+
             var id = 'panel-' + (new Date()).getTime();
             var $elem = $('div.sample').clone().removeClass('sample');
             $elem.attr('id', id);
@@ -97,8 +106,10 @@
                     $('.weui-navbar__item.open').addClass('weui-bar__item_on');
                     status = '-closed';
             }
+            loadData(title);
             U.api.trac.list({
-                status: status
+                status: status,
+                size: 100
             }, function(err, json){
                 loadData(title, json['data']);
             });
