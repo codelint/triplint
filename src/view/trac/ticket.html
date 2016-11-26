@@ -44,7 +44,7 @@
                         <i class="weui-icon-checked"></i>
                     </div>
                     <div class="weui-cell__bd">
-                        <p>{{ item.summary }}(by {{ item.owner }})</p>
+                        <p>[{{ item.type }}] #{{ item.id }} <strong>{{ item.summary }}</strong> @{{ item.time.toString('yy/MM/dd') }}</p>
                     </div>
                 </label>
             </div>
@@ -100,6 +100,8 @@
             $elem.attr('id', id);
             var groups = {};
             _.each(list, function(v){
+                v['time'] = new Date(v['time']/1000);
+                v['changetime'] = new Date(v['changetime']/1000);
                 groups[v['owner']] = groups[v['owner']] || [];
                 groups[v['owner']].push(v);
             });
