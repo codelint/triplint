@@ -24,7 +24,7 @@
             已完成
         </div>
         <!--<div class="weui-navbar__item all">-->
-            <!--全部-->
+        <!--全部-->
         <!--</div>-->
     </div>
     <div class="weui-tab__panel">
@@ -32,24 +32,42 @@
     </div>
 </div>
 <div class="sample">
-    <div class="weui-cells__title">{{ title }}</div>
-    <div class="weui-cells weui-cells_checkbox">
-        <div class="day" v-for="(item, index) in items">
-            <label class="weui-cell weui-check__label" v-bind:for="'ticket_' + item.id">
-                <div class="weui-cell__hd">
-                    <input type="checkbox" class="weui-check" v-bind:name="'ticket_' + item.id "
-                           v-bind:id="'ticket_' + item.id" v-bind:checked="item.status == 'closed'">
-                    <i class="weui-icon-checked"></i>
-                </div>
-                <div class="weui-cell__bd">
-                    <p>{{ item.summary }}(by {{ item.owner }})</p>
-                </div>
-            </label>
+
+    <div class="day" v-for="(list, group) in groups">
+        <div class="weui-cells__title">{{ group }}</div>
+        <div class="weui-cells weui-cells_checkbox">
+            <div class="day" v-for="(item, index) in groups[group]">
+                <label class="weui-cell weui-check__label" v-bind:for="'ticket_' + item.id">
+                    <div class="weui-cell__hd">
+                        <input type="checkbox" class="weui-check" v-bind:name="'ticket_' + item.id "
+                               v-bind:id="'ticket_' + item.id" v-bind:checked="item.status == 'closed'">
+                        <i class="weui-icon-checked"></i>
+                    </div>
+                    <div class="weui-cell__bd">
+                        <p>{{ item.summary }}(by {{ item.owner }})</p>
+                    </div>
+                </label>
+            </div>
         </div>
-        <!--<a href="javascript:void(0);" class="weui-cell weui-cell_link">-->
-        <!--<div class="weui-cell__bd">添加更多</div>-->
-        <!--</a>-->
     </div>
+    <!--<div class="weui-cells__title">{{ title }}</div>-->
+    <!--<div class="weui-cells weui-cells_checkbox">-->
+        <!--<div class="day" v-for="(item, index) in items">-->
+            <!--<label class="weui-cell weui-check__label" v-bind:for="'ticket_' + item.id">-->
+                <!--<div class="weui-cell__hd">-->
+                    <!--<input type="checkbox" class="weui-check" v-bind:name="'ticket_' + item.id "-->
+                           <!--v-bind:id="'ticket_' + item.id" v-bind:checked="item.status == 'closed'">-->
+                    <!--<i class="weui-icon-checked"></i>-->
+                <!--</div>-->
+                <!--<div class="weui-cell__bd">-->
+                    <!--<p>{{ item.summary }}(by {{ item.owner }})</p>-->
+                <!--</div>-->
+            <!--</label>-->
+        <!--</div>-->
+        <!--&lt;!&ndash;<a href="javascript:void(0);" class="weui-cell weui-cell_link">&ndash;&gt;-->
+        <!--&lt;!&ndash;<div class="weui-cell__bd">添加更多</div>&ndash;&gt;-->
+        <!--&lt;!&ndash;</a>&ndash;&gt;-->
+    <!--</div>-->
 </div>
 </body>
 <script type="text/javascript" src="../../public/js/jquery-2.1.4.js"></script>
@@ -69,7 +87,7 @@
     jQuery(function($){
         function loadData(title, list){
             if(list){
-                android.put('trac.ticket.' + title , list);
+                android.put('trac.ticket.' + title, list);
             }else{
                 list = android.get('trac.ticket.' + title);
                 if(!list){
@@ -80,13 +98,19 @@
             var id = 'panel-' + (new Date()).getTime();
             var $elem = $('div.sample').clone().removeClass('sample');
             $elem.attr('id', id);
+            var groups = {};
+            _.each(list, function(v){
+                groups[v['owner']] = groups[v['owner']] || [];
+                groups[v['owner']].push(v);
+            });
 
             $('div.weui-tab__panel').empty().append($elem);
             var vm = new Vue({
                 el: '#' + id,
                 data: {
                     title: title,
-                    items: list
+                    items: list,
+                    groups: groups
                 },
                 methods: {
                 }
