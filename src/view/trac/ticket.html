@@ -40,7 +40,7 @@
                 <label class="weui-cell weui-check__label" v-bind:for="'ticket_' + item.id">
                     <div class="weui-cell__hd">
                         <input type="checkbox" class="weui-check" v-bind:name="'ticket_' + item.id "
-                               v-bind:id="'ticket_' + item.id" v-bind:checked="item.status == 'closed'">
+                               v-bind:id="'ticket_' + item.id" v-bind:checked="item.status == 'closed'" v-on:click="select(item)">
                         <i class="weui-icon-checked"></i>
                     </div>
                     <div class="weui-cell__bd">
@@ -115,6 +115,15 @@
                     groups: groups
                 },
                 methods: {
+                    select: function(ticket){
+//                        U.api.trac.modify({
+//                            'id' : ticket['id'],
+//                            'status': 'closed',
+//                            'resolution': 'fixed'
+//                        }, function(err, json){
+//                            alert(JSON.stringify(arguments));
+//                        })
+                    }
                 }
             });
         }
@@ -132,7 +141,7 @@
                     $('.weui-navbar__item.open').addClass('weui-bar__item_on');
                     status = '-closed';
             }
-            loadData(title);
+//            loadData(title);
             U.api.trac.list({
                 status: status,
                 size: 100

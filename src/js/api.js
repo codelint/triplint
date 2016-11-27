@@ -373,17 +373,27 @@ U.api = (function($){
             }, callback_filter(cbf));
         },
         'trac': {
-            'sign': function(cbf){
-                U.ajax.postJson(_url('trac.api.signature'), {}, callback_filter(cbf));
+            'sign': function(data, cbf){
+                U.ajax.postJson(_url('trac.api.signature'), data, callback_filter(cbf));
             },
             'list': function(query, cbf){
-                U.ajax.postJson(_url('trac.api.todo-list'), query, callback_filter(function(err, json){
-                    if(json && json['url']){
-                        U.ajax.jsonp(json['url'], {}, callback_filter(cbf));
-                    }else{
-                        cbf(err, json);
+                this.sign(query, callback_filter(function(err, json){
+                    if(json && json['endpoints']){
+                        U.ajax.jsonp(json['endpoints']['search'], {}, callback_filter(cbf));
                     }
-                }));
+                }))
+            },
+            'modify': function(query, cbf){
+                query['id'] = Math.floor(Number(query['id'] || 0));
+                if(!query['id']){
+                    cbf({'message': 'lack of info'}, null);
+                    return;
+                }
+                this.sign(query, callback_filter(function(err, json){
+                    if(json && json['endpoints']){
+                        U.ajax.jsonp(json['endpoints']['modify'], {}, callback_filter(cbf));
+                    }
+                }))
             }
         }
     }
