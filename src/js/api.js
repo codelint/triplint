@@ -94,6 +94,17 @@ U.ajax = (function($){
                 dataType: "json"
             });
         },
+        jsonp: function(url, data, callback, tries){
+            tries = tries || retryTimes;
+            var cbfKey = 'callback' + (new Date()).getTime() + '';
+            var $script = $('<script type="text/javascript"></script>');
+            U.ajax.jsonp[cbfKey] = function(json){
+                $script.remove();
+                callback(null, json);
+            };
+            $script.attr('src', url + '&callback=U.ajax.jsonp.' + cbfKey);
+            $('body').append($script);
+        },
         postRawData: function(url, data, callback, tries){
             var postData = arguments.callee;
             tries = tries || retryTimes;
@@ -362,19 +373,13 @@ U.api = (function($){
             }, callback_filter(cbf));
         },
         'trac': {
+            'sign': function(cbf){
+                U.ajax.postJson(_url('trac.api.signature'), {}, callback_filter(cbf));
+            },
             'list': function(query, cbf){
-                var cbfKey = 'callback' + (new Date()).getTime() + '';
-                var $script = $('<script type="text/javascript"></script>');
-                U.api.trac.list[cbfKey] = function(json){
-                    delete U.api.trac.list[cbfKey];
-                    $script.remove();
-                    (callback_filter(cbf))(null, json);
-                };
                 U.ajax.postJson(_url('trac.api.todo-list'), query, callback_filter(function(err, json){
                     if(json && json['url']){
-                        var $script = $('<script type="text/javascript"></script>')
-                            .attr('src', json['url'] + '&callback=U.api.trac.list.' + cbfKey);
-                        $('body').append($script);
+                        U.ajax.jsonp(json['url'], {}, callback_filter(cbf));
                     }else{
                         cbf(err, json);
                     }
