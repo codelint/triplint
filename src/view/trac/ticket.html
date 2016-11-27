@@ -41,7 +41,7 @@
                     <div class="weui-cell__hd">
                         <input type="checkbox" class="weui-check" v-bind:name="'ticket_' + item.id "
                                v-bind:id="'ticket_' + item.id" v-bind:checked="item.status == 'closed'"
-                               v-on:click="select(item, $event)">
+                               v-on:click="select(item, $event)" v-bind:disabled="item.status == 'closed'">
                         <i class="weui-icon-checked"></i>
                     </div>
                     <div class="weui-cell__bd">
@@ -150,15 +150,19 @@
                                 U.api.trac.modify({
                                     'id': ticket['id'],
                                     'status': 'closed',
-                                    'resolution': result
+                                    'resolution': result && result[0]
                                 }, function(err, json){
                                     if(err){
                                         android.alert(err['message']);
-                                    }else{
-                                        $('#ticket_' + ticket['id']).attr('disabled', 'disabled');
+                                        return;
+                                    }
+                                    if(json && json['status'] == 'ok'){
+                                        var $checkbox = $('#ticket_' + ticket['id']);
+                                        $checkbox.attr('disabled', 'disabled');
+                                        $checkbox[0].checked = true;
+                                        android.alert('success');
                                     }
                                 });
-                                alert(result);
                             },
                             onCancel: function(){
                                 alert('hello');
