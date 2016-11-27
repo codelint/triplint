@@ -40,11 +40,13 @@
                 <label class="weui-cell weui-check__label" v-bind:for="'ticket_' + item.id">
                     <div class="weui-cell__hd">
                         <input type="checkbox" class="weui-check" v-bind:name="'ticket_' + item.id "
-                               v-bind:id="'ticket_' + item.id" v-bind:checked="item.status == 'closed'" v-on:click="select(item)">
+                               v-bind:id="'ticket_' + item.id" v-bind:checked="item.status == 'closed'"
+                               v-on:click="select(item, $event)">
                         <i class="weui-icon-checked"></i>
                     </div>
                     <div class="weui-cell__bd">
-                        <p>[{{ item.type }}] #{{ item.id }} <strong>{{ item.summary }}</strong> @{{ item.time.toString('yy/MM/dd') }}</p>
+                        <p>[{{ item.type }}] #{{ item.id }} <strong>{{ item.summary }}</strong> @{{
+                            item.time.toString('yy/MM/dd') }}</p>
                     </div>
                 </label>
             </div>
@@ -52,23 +54,24 @@
     </div>
     <!--<div class="weui-cells__title">{{ title }}</div>-->
     <!--<div class="weui-cells weui-cells_checkbox">-->
-        <!--<div class="day" v-for="(item, index) in items">-->
-            <!--<label class="weui-cell weui-check__label" v-bind:for="'ticket_' + item.id">-->
-                <!--<div class="weui-cell__hd">-->
-                    <!--<input type="checkbox" class="weui-check" v-bind:name="'ticket_' + item.id "-->
-                           <!--v-bind:id="'ticket_' + item.id" v-bind:checked="item.status == 'closed'">-->
-                    <!--<i class="weui-icon-checked"></i>-->
-                <!--</div>-->
-                <!--<div class="weui-cell__bd">-->
-                    <!--<p>{{ item.summary }}(by {{ item.owner }})</p>-->
-                <!--</div>-->
-            <!--</label>-->
-        <!--</div>-->
-        <!--&lt;!&ndash;<a href="javascript:void(0);" class="weui-cell weui-cell_link">&ndash;&gt;-->
-        <!--&lt;!&ndash;<div class="weui-cell__bd">添加更多</div>&ndash;&gt;-->
-        <!--&lt;!&ndash;</a>&ndash;&gt;-->
+    <!--<div class="day" v-for="(item, index) in items">-->
+    <!--<label class="weui-cell weui-check__label" v-bind:for="'ticket_' + item.id">-->
+    <!--<div class="weui-cell__hd">-->
+    <!--<input type="checkbox" class="weui-check" v-bind:name="'ticket_' + item.id "-->
+    <!--v-bind:id="'ticket_' + item.id" v-bind:checked="item.status == 'closed'">-->
+    <!--<i class="weui-icon-checked"></i>-->
+    <!--</div>-->
+    <!--<div class="weui-cell__bd">-->
+    <!--<p>{{ item.summary }}(by {{ item.owner }})</p>-->
+    <!--</div>-->
+    <!--</label>-->
+    <!--</div>-->
+    <!--&lt;!&ndash;<a href="javascript:void(0);" class="weui-cell weui-cell_link">&ndash;&gt;-->
+    <!--&lt;!&ndash;<div class="weui-cell__bd">添加更多</div>&ndash;&gt;-->
+    <!--&lt;!&ndash;</a>&ndash;&gt;-->
     <!--</div>-->
 </div>
+
 </body>
 <script type="text/javascript" src="../../public/js/jquery-2.1.4.js"></script>
 <script type="text/javascript" src="../../public/js/swiper-3.3.1.jquery.min.js"></script>
@@ -77,6 +80,7 @@
 <script type="text/javascript" src="../../public/js/underscore.js"></script>
 <script type="text/javascript" src="../../public/js/exif.js"></script>
 <script type="text/javascript" src="../../public/js/coordtransform.js"></script>
+<script type="text/javascript" src="../../public/js/weui.min.js"></script>
 
 <script type="text/javascript" src="../../js/android.js"></script>
 <script type="text/javascript" src="../../js/api.js"></script>
@@ -100,8 +104,8 @@
             $elem.attr('id', id);
             var groups = {};
             _.each(list, function(v){
-                v['time'] = new Date(v['time']/1000);
-                v['changetime'] = new Date(v['changetime']/1000);
+                v['time'] = new Date(v['time'] / 1000);
+                v['changetime'] = new Date(v['changetime'] / 1000);
                 groups[v['owner']] = groups[v['owner']] || [];
                 groups[v['owner']].push(v);
             });
@@ -115,14 +119,53 @@
                     groups: groups
                 },
                 methods: {
-                    select: function(ticket){
-//                        U.api.trac.modify({
-//                            'id' : ticket['id'],
-//                            'status': 'closed',
-//                            'resolution': 'fixed'
-//                        }, function(err, json){
-//                            alert(JSON.stringify(arguments));
-//                        })
+                    select: function(ticket, event){
+                        weui.picker([
+                            {
+                                label: '重复',
+                                value: 'duplicate'
+                            },
+                            {
+                                label: '无效',
+                                value: 'invalid'
+                            },
+                            {
+                                label: '完成',
+                                value: 'fixed'
+                            },
+                            {
+                                label: '帮我做吧',
+                                disabled: true,
+                                value: 'worksforme'
+                            },
+                            {
+                                label: '不处理',
+                                value: 'wontfix'
+                            }
+                        ], {
+                            onChange: function(result){
+                                console.log(result);
+                            },
+                            onConfirm: function(result){
+                                U.api.trac.modify({
+                                    'id': ticket['id'],
+                                    'status': 'closed',
+                                    'resolution': result
+                                }, function(err, json){
+                                    if(err){
+                                        android.alert(err['message']);
+                                    }else{
+                                        $('#ticket_' + ticket['id']).attr('disabled', 'disabled');
+                                    }
+                                });
+                                alert(result);
+                            },
+                            onCancel: function(){
+                                alert('hello');
+                            }
+                        });
+                        event.stopPropagation();
+                        event.preventDefault();
                     }
                 }
             });
