@@ -239,11 +239,20 @@ jQuery(function($){
                     switch(ticket['status']){
                         case 'new':
                         case 'reassign':
-                            accept(ticket, function(ticket){
-                                var $checkbox = $('#ticket_' + ticket['id']);
-                                $checkbox.attr('disabled', 'disabled');
-                                $checkbox[0].checked = true;
-                            });
+                            android.select([
+                                {
+                                    'name': '处理它',
+                                    'callback': function(next){
+                                        accept(ticket, function(ticket){
+                                            var $checkbox = $('#ticket_' + ticket['id']);
+                                            $checkbox.attr('disabled', 'disabled');
+                                            $checkbox[0].checked = true;
+                                            next();
+                                        });
+                                    }
+                                }
+                            ]);
+
                             break;
                         case 'accepted':
                             done(ticket, function(ticket){

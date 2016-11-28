@@ -96,6 +96,57 @@ android = (function(){
                 alert(msg);
             }
         },
+        "select": function(opts){
+            opts = opts || [
+                {
+                    'name': 'confirm',
+                    'text': '确认',
+                    'callback': function(next){return next();}
+                }
+            ];
+            var html = '<div>' +
+                '<div class="weui-mask" id="iosMask" style="display: none"></div>' +
+                '<div class="weui-actionsheet" id="iosActionsheet">' +
+                '<div class="weui-actionsheet__menu">' +
+                '</div>' +
+                '<div class="weui-actionsheet__action">' +
+                '<div class="weui-actionsheet__cell cancel" id="iosActionsheetCancel">取消</div>' +
+                '</div></div></div>';
+
+            var $html = $(html);
+            var len = opts.length;
+            var $item = false;
+            var option = {};
+
+            $('body').append($html);
+            function closeIt(){
+                $html.find('#iosActionsheet').removeClass('weui-actionsheet_toggle');
+                $html.find('.weui-mask').fadeOut(500);
+                setTimeout(function(){
+                    $html.remove();
+                }, 500);
+            }
+            $html.find('.cancel').click(function(){
+                $html.find('#iosActionsheet').removeClass('weui-actionsheet_toggle');
+                $html.find('.weui-mask').fadeOut(500);
+                setTimeout(function(){
+                    $html.remove();
+                }, 500);
+            });
+
+            for(var i = 0; i< len; i++){
+                option = opts[i];
+                $item = $('<div class="weui-actionsheet__cell"></div>').text(option['text'] || option['name']);
+                $item.click((function(cbf){
+                    return function(){
+                        cbf(closeIt)
+                    }
+                })(option['callback']));
+                $html.find('.weui-actionsheet__menu').append($item);
+            }
+            $html.find('.weui-mask').fadeIn(200);
+            $html.find('#iosActionsheet').addClass('weui-actionsheet_toggle');
+        },
         // 应用后台任务提示
         "notify": function(title, msg){
             //todo
