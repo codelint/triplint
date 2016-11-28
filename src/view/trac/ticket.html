@@ -307,7 +307,7 @@ jQuery(function($){
         loadByType('done');
     });
 
-    loadByType(location.hash == '#done' ? 'done' : 'undo');
+    loadByType(location.hash ? location.hash.slice(1) : 'undo');
 })
 </script>
 
