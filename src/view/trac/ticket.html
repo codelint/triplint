@@ -204,17 +204,23 @@
                 case 'closed':
                     title = '已处理';
                     $('.weui-navbar__item.closed').addClass('weui-bar__item_on');
+                    location.hash = '#done';
                     break;
                 default:
                     title = '未处理';
                     $('.weui-navbar__item.open').addClass('weui-bar__item_on');
                     status = '-closed';
+                    location.hash = '#undo';
             }
             loadData(title);
-            U.api.trac.list({
+            var cond = {
                 status: status,
                 size: 100
-            }, function(err, json){
+            };
+            if(status == 'closed'){
+                cond['resolution'] = 'fixed'
+            }
+            U.api.trac.list(cond, function(err, json){
                 var user = json['user'];
                 var list = json['data'];
                 if(user){
@@ -235,7 +241,7 @@
             loadByType('closed');
         });
 
-        loadByType('-closed');
+        loadByType( location.hash == '#done' ? 'closed' : '-closed');
     })
 </script>
 
