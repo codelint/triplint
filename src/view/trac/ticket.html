@@ -17,10 +17,13 @@
 
 <div class="weui-tab">
     <div class="weui-navbar">
-        <div class="weui-navbar__item open weui-bar__item_on">
-            未完成
+        <div class="weui-navbar__item undo weui-bar__item_on">
+            待处理
         </div>
-        <div class="weui-navbar__item closed">
+        <div class="weui-navbar__item doing">
+            正处理
+        </div>
+        <div class="weui-navbar__item done">
             已完成
         </div>
         <!--<div class="weui-navbar__item all">-->
@@ -104,145 +107,208 @@
 <script type="text/javascript" src="../../js/common/ue.js"></script>
 
 <script type="text/javascript">
-    jQuery(function($){
-        function loadData(title, list){
-            if(list){
-                android.put('trac.ticket.' + title, list);
-            }else{
-                list = android.get('trac.ticket.' + title);
-                if(!list){
-                    return;
-                }
+jQuery(function($){
+
+    function done(ticket, callback){
+        weui.picker([
+            {
+                label: '重复',
+                value: 'duplicate'
+            },
+            {
+                label: '无效',
+                value: 'invalid'
+            },
+            {
+                label: '完成',
+                value: 'fixed'
+            },
+            {
+                label: '帮我做吧',
+                disabled: true,
+                value: 'worksforme'
+            },
+            {
+                label: '不处理',
+                value: 'wontfix'
             }
-
-            var id = 'panel-' + (new Date()).getTime();
-            var $elem = $('div.sample').clone().removeClass('sample');
-            $elem.attr('id', id);
-            var groups = {};
-            var mine = [];
-            _.each(list, function(v){
-                v['time'] = new Date(v['time'] / 1000);
-                v['changetime'] = new Date(v['changetime'] / 1000);
-                if(v['isMine']){
-                    mine.push(v);
-                }else{
-                    groups[v['owner']] = groups[v['owner']] || [];
-                    groups[v['owner']].push(v);
-                }
-            });
-
-            $('div.weui-tab__panel').empty().append($elem);
-            var vm = new Vue({
-                el: '#' + id,
-                data: {
-                    title: title,
-                    items: list,
-                    groups: groups,
-                    mine: mine
-                },
-                methods: {
-                    select: function(ticket, event){
-                        weui.picker([
-                            {
-                                label: '重复',
-                                value: 'duplicate'
-                            },
-                            {
-                                label: '无效',
-                                value: 'invalid'
-                            },
-                            {
-                                label: '完成',
-                                value: 'fixed'
-                            },
-                            {
-                                label: '帮我做吧',
-                                disabled: true,
-                                value: 'worksforme'
-                            },
-                            {
-                                label: '不处理',
-                                value: 'wontfix'
-                            }
-                        ], {
-                            onChange: function(result){
-                                console.log(result);
-                            },
-                            onConfirm: function(result){
-                                U.api.trac.modify({
-                                    'id': ticket['id'],
-                                    'status': 'closed',
-                                    'resolution': result && result[0]
-                                }, function(err, json){
-                                    if(err){
-                                        android.alert(err['message']);
-                                        return;
-                                    }
-                                    if(json && json['status'] == 'ok'){
-                                        var $checkbox = $('#ticket_' + ticket['id']);
-                                        $checkbox.attr('disabled', 'disabled');
-                                        $checkbox[0].checked = true;
-                                        android.alert('success');
-                                    }
-                                });
-                            },
-                            onCancel: function(){
-                                alert('hello');
-                            }
-                        });
-                        event.stopPropagation();
-                        event.preventDefault();
+        ], {
+            onChange: function(result){
+                console.log(result);
+            },
+            onConfirm: function(result){
+                U.api.trac.modify({
+                    'id': ticket['id'],
+                    'status': 'closed',
+                    'resolution': result && result[0]
+                }, function(err, json){
+                    if(err){
+                        android.alert(err['message']);
+                        return;
                     }
-                }
-            });
+                    if(json && json['status'] == 'ok'){
+                        callback && callback(ticket);
+                    }
+                });
+            },
+            onCancel: function(){
+                alert('hello');
+            }
+        });
+
+    }
+
+    function accept(ticket, callback){
+        U.api.trac.modify({
+            'id': ticket['id'],
+            'status': 'accepted'
+        }, function(err, json){
+            if(err){
+                android.alert(err['message']);
+                return;
+            }
+            if(json && json['status'] == 'ok'){
+                var $checkbox = $('#ticket_' + ticket['id']);
+                $checkbox.attr('disabled', 'disabled');
+                $checkbox[0].checked = true;
+                callback && callback(ticket);
+            }
+        });
+    }
+
+    function reassign(ticket, callback){
+        U.api.trac.modify({
+            'id': ticket['id'],
+            'status': 'reassign',
+            'owner': ticket['owner']
+        }, function(err, json){
+            if(err){
+                android.alert(err['message']);
+                return;
+            }
+            if(json && json['status'] == 'ok'){
+                var $checkbox = $('#ticket_' + ticket['id']);
+                $checkbox.attr('disabled', 'disabled');
+                $checkbox[0].checked = true;
+                callback && callback(ticket);
+            }
+        });
+    }
+
+    function loadData(title, list){
+        if(list){
+            android.put('trac.ticket.' + title, list);
+        }else{
+            list = android.get('trac.ticket.' + title);
+            if(!list){
+                return;
+            }
         }
 
-        function loadByType(status){
-            var title = 'unknown';
-            $('.weui-navbar__item').removeClass('weui-bar__item_on');
-            switch(status){
-                case 'closed':
-                    title = '已处理';
-                    $('.weui-navbar__item.closed').addClass('weui-bar__item_on');
-                    location.hash = '#done';
-                    break;
-                default:
-                    title = '未处理';
-                    $('.weui-navbar__item.open').addClass('weui-bar__item_on');
-                    status = '-closed';
-                    location.hash = '#undo';
+        var id = 'panel-' + (new Date()).getTime();
+        var $elem = $('div.sample').clone().removeClass('sample');
+        $elem.attr('id', id);
+        var groups = {};
+        var mine = [];
+        _.each(list, function(v){
+            v['time'] = new Date(v['time'] / 1000);
+            v['changetime'] = new Date(v['changetime'] / 1000);
+            if(v['isMine']){
+                mine.push(v);
+            }else{
+                groups[v['owner']] = groups[v['owner']] || [];
+                groups[v['owner']].push(v);
             }
-            loadData(title);
-            var cond = {
-                status: status,
-                size: 100
-            };
-            if(status == 'closed'){
-                cond['resolution'] = 'fixed'
-            }
-            U.api.trac.list(cond, function(err, json){
-                var user = json['user'];
-                var list = json['data'];
-                if(user){
-                    _.each(list, function(v, k){
-                        v['isMine'] = v['owner'] == user['name'];
-                        list[k] = v;
-                    })
+        });
+
+        $('div.weui-tab__panel').empty().append($elem);
+        var vm = new Vue({
+            el: '#' + id,
+            data: {
+                title: title,
+                items: list,
+                groups: groups,
+                mine: mine
+            },
+            methods: {
+                select: function(ticket, event){
+                    switch(ticket['status']){
+                        case 'new':
+                        case 'reassign':
+                            accept(ticket, function(ticket){
+                                var $checkbox = $('#ticket_' + ticket['id']);
+                                $checkbox.attr('disabled', 'disabled');
+                                $checkbox[0].checked = true;
+                            });
+                            break;
+                        case 'accepted':
+                            done(ticket, function(ticket){
+                                var $checkbox = $('#ticket_' + ticket['id']);
+                                $checkbox.attr('disabled', 'disabled');
+                                $checkbox[0].checked = true;
+                            });
+                            break;
+                        case 'closed':
+                            break;
+                        default:
+                    }
+                    event.stopPropagation();
+                    event.preventDefault();
                 }
+            }
+        });
+    }
+
+    function loadByType(status){
+        var title = status;
+        $('.weui-navbar__item').removeClass('weui-bar__item_on');
+        $('.weui-navbar__item.' + status).addClass('weui-bar__item_on');
+        location.hash = '#' + status;
+        loadData(title);
+        var cond = {
+            size: 100
+        };
+        switch(status){
+            case 'doing':
+                cond['status'] = 'accepted';
+                break;
+            case 'done':
+                cond['status'] = 'closed';
+                cond['resolution'] = 'fixed';
+                break;
+            case 'undo':
+            default:
+                cond['status'] = '-closed,accepted';
+        }
+        U.api.trac.list(cond, function(err, json){
+            var user = json['user'];
+            var list = json['data'];
+            if(user){
+                _.each(list, function(v, k){
+                    v['isMine'] = v['owner'] == user['name'];
+                    list[k] = v;
+                })
+            }
+            if($('.weui-navbar__item.' + status).hasClass('weui-bar__item_on')){
                 loadData(title, list);
-            });
-        }
-
-        $('.weui-navbar__item.open').click(function(){
-            loadByType('-closed');
+            }
         });
+    }
 
-        $('.weui-navbar__item.closed').click(function(){
-            loadByType('closed');
-        });
+    $('.weui-navbar__item.undo').click(function(){
+        loadByType('undo');
+    });
 
-        loadByType( location.hash == '#done' ? 'closed' : '-closed');
-    })
+    $('.weui-navbar__item.doing').click(function(){
+        loadByType('doing');
+    });
+
+    $('.weui-navbar__item.done').click(function(){
+        loadByType('done');
+    });
+
+    loadByType(location.hash == '#done' ? 'done' : 'undo');
+})
 </script>
 
 </html>
