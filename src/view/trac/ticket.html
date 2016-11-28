@@ -140,10 +140,11 @@ jQuery(function($){
                     'id': ticket['id'],
                     'status': 'closed'
                 };
+                result = result && result[0];
                 if(result == 'reassign'){
                     data['status'] = result;
                 }else{
-                    data['resolution'] = result && result[0];
+                    data['resolution'] = result;
                 }
                 U.api.trac.modify(data, function(err, json){
                     if(err){

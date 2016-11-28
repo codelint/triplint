@@ -94,8 +94,8 @@ U.ajax = (function($){
                 dataType: "json"
             });
         },
-        jsonp: function(url, data, callback, tries){
-            tries = tries || retryTimes;
+        jsonp: function(url, data, callback){
+            // tries = tries || retryTimes;
             var cbfKey = 'callback' + (new Date()).getTime() + '';
             var $script = $('<script type="text/javascript"></script>');
             U.ajax.jsonp[cbfKey] = function(json){
