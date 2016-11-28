@@ -32,8 +32,24 @@
     </div>
 </div>
 <div class="sample">
-
-    <div class="day" v-for="(list, group) in groups">
+    <div class="weui-cells__title">我的</div>
+    <div class="weui-cells weui-cells_checkbox">
+        <div class="day" v-for="(item, index) in mine">
+            <label class="weui-cell weui-check__label" v-bind:for="'ticket_' + item.id">
+                <div class="weui-cell__hd">
+                    <input type="checkbox" class="weui-check" v-bind:name="'ticket_' + item.id "
+                           v-bind:id="'ticket_' + item.id" v-bind:checked="item.status == 'closed'"
+                           v-on:click="select(item, $event)" v-bind:disabled="item.status == 'closed'">
+                    <i class="weui-icon-checked"></i>
+                </div>
+                <div class="weui-cell__bd">
+                    <p>[{{ item.type }}] #{{ item.id }} <strong>{{ item.summary }}</strong> @{{
+                        item.time.toString('yy/MM/dd') }}</p>
+                </div>
+            </label>
+        </div>
+    </div>
+    <div v-for="(list, group) in groups">
         <div class="weui-cells__title">{{ group }}</div>
         <div class="weui-cells weui-cells_checkbox">
             <div class="day" v-for="(item, index) in groups[group]">
@@ -103,11 +119,16 @@
             var $elem = $('div.sample').clone().removeClass('sample');
             $elem.attr('id', id);
             var groups = {};
+            var mine = [];
             _.each(list, function(v){
                 v['time'] = new Date(v['time'] / 1000);
                 v['changetime'] = new Date(v['changetime'] / 1000);
-                groups[v['owner']] = groups[v['owner']] || [];
-                groups[v['owner']].push(v);
+                if(v['isMine']){
+                    mine.push(v);
+                }else{
+                    groups[v['owner']] = groups[v['owner']] || [];
+                    groups[v['owner']].push(v);
+                }
             });
 
             $('div.weui-tab__panel').empty().append($elem);
@@ -116,7 +137,8 @@
                 data: {
                     title: title,
                     items: list,
-                    groups: groups
+                    groups: groups,
+                    mine: mine
                 },
                 methods: {
                     select: function(ticket, event){
@@ -193,7 +215,15 @@
                 status: status,
                 size: 100
             }, function(err, json){
-                loadData(title, json['data']);
+                var user = json['user'];
+                var list = json['data'];
+                if(user){
+                    _.each(list, function(v, k){
+                        v['isMine'] = v['owner'] == user['name'];
+                        list[k] = v;
+                    })
+                }
+                loadData(title, list);
             });
         }
 
