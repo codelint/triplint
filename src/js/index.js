@@ -52,6 +52,7 @@ jQuery(function($){
                     }else{
                         json = _.each(json, function(v){
                             v['image'] = v['photo'];
+                            v['link'] = ROOT_URL + '/view/trips.html?group_id=' + v['id'];
                         });
                         setup(err, json);
                     }
