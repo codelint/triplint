@@ -12,10 +12,61 @@ U = typeof(U) == 'undefined' ? {} : U;
 U.ajax = (function($){
     var retryInterval = 500;
     var retryTimes = 3;
+    var lastCallTime = {};
+    var noop = function(){};
+
+    var loading_tip = function (){
+        var html = '<div id="">' +
+            '<div class="weui-mask_transparent"></div>' +
+            '<div class="weui-toast">' +
+            '<i class="weui-loading weui-icon_toast"></i>' +
+            '<p class="weui-toast__content">数据加载中</p>' +
+            '</div></div></div>';
+        var $html = $(html);
+        $('body').append($html);
+        return $html;
+    };
+
+    var $loading_pop = [];
+
+    var before_call_var = function(url, data){
+        $loading_pop.push(loading_tip());
+    };
+
+    var before_callback = function(err, json){
+        $loading_pop.length && $loading_pop.pop().remove();
+    };
+
+    var after_callback = noop;
+
+    function before_call(url, data, callback, tries){
+        callback = callback || noop;
+        try{
+            var str = url  + '&data_len=' + JSON.stringify(data).length + '&tries=' + tries;
+            var now = (new Date()).getTime() ;
+            if(lastCallTime[str] && (now - lastCallTime[str]) < 3000){
+                return false;
+            }else{
+                lastCallTime[str] = now;
+            }
+            before_call_var(url, data);
+            return function(err, json){
+                before_callback(err, json);
+                var res = callback(err, json);
+                after_callback(err, json);
+                return res;
+            }
+        }catch(e){
+            return callback;
+        }
+    }
 
     return {
         url: function(uri){
             return ROOT_URL + uri;
+        },
+        setLoadingTip: function(loading_func){
+            loading_tip = loading_func;
         },
         getUrlParam: function(name, default_val){
             var reg = new RegExp('(^|&)' + name + '=([^&]*)(&|$)', 'i'),
@@ -29,11 +80,12 @@ U.ajax = (function($){
         ajaxHtml: function(url, callback, tries){
             var ajaxHtml = arguments.callee;
             tries = tries || retryTimes;
-            $.ajax({
+            var fallback = before_call(url, {}, callback, tries);
+            fallback && $.ajax({
                 type: "get",
                 url: url,
                 success: function(html){
-                    callback(null, html);
+                    fallback(null, html);
                 },
                 error: function(e){
                     tries--;
@@ -42,7 +94,7 @@ U.ajax = (function($){
                             ajaxHtml(url, callback, tries);
                         }, retryInterval);
                     }else{
-                        callback(e, null);
+                        fallback(e, null);
                     }
                 }
             })
@@ -50,12 +102,13 @@ U.ajax = (function($){
         postForm: function(url, data, callback, tries){
             var postJson = arguments.callee;
             tries = tries || retryTimes;
-            $.ajax({
+            var fallback = before_call(url, data, callback,tries);
+            fallback && $.ajax({
                 type: "post",
                 url: url,
                 data: data,
                 success: function(json){
-                    callback(null, json);
+                    fallback(null, json);
                 },
                 error: function(e){
                     tries--;
@@ -64,7 +117,7 @@ U.ajax = (function($){
                             postJson(url, data, callback, tries);
                         }, retryInterval);
                     }else{
-                        callback(e, null);
+                        fallback(e, null);
                     }
                 },
                 contentType: 'application/x-www-form-urlencoded'
@@ -73,12 +126,13 @@ U.ajax = (function($){
         postJson: function(url, data, callback, tries){
             var postJson = arguments.callee;
             tries = tries || retryTimes;
-            $.ajax({
+            var fallback = before_call(url, data, callback, tries);
+            fallback && $.ajax({
                 type: "post",
                 url: url,
                 data: JSON.stringify(data),
                 success: function(json){
-                    callback(null, json);
+                    fallback(null, json);
                 },
                 error: function(e){
                     tries--;
@@ -87,7 +141,7 @@ U.ajax = (function($){
                             postJson(url, data, callback, tries);
                         }, retryInterval);
                     }else{
-                        callback(e, null);
+                        fallback(e, null);
                     }
                 },
                 contentType: "application/json",
@@ -98,6 +152,10 @@ U.ajax = (function($){
             // tries = tries || retryTimes;
             var cbfKey = 'callback' + (new Date()).getTime() + '';
             var $script = $('<script type="text/javascript"></script>');
+            callback = before_call(url, data, callback, 1);
+            if(!callback){
+                return;
+            }
             U.ajax.jsonp[cbfKey] = function(json){
                 $script.remove();
                 callback(null, json);
@@ -108,12 +166,13 @@ U.ajax = (function($){
         postRawData: function(url, data, callback, tries){
             var postData = arguments.callee;
             tries = tries || retryTimes;
-            $.ajax({
+            var fallback = before_call(url, data, callback, tries);
+            fallback && $.ajax({
                 type: "post",
                 url: url,
                 data: data,
                 success: function(json){
-                    callback(null, json);
+                    fallback(null, json);
                 },
                 error: function(e){
                     tries--;
@@ -122,7 +181,7 @@ U.ajax = (function($){
                             postData(url, data, callback, tries);
                         }, retryInterval);
                     }else{
-                        callback(e, null);
+                        fallback(e, null);
                     }
                 },
                 contentType: "application/x-www-form-urlencoded"
@@ -131,11 +190,12 @@ U.ajax = (function($){
         getJson: function(url, callback, tries){
             var getJson = arguments.callee;
             tries = tries || retryTimes;
-            $.ajax({
+            var fallback = before_call(url, {}, callback, tries);
+            fallback && $.ajax({
                 type: "get",
                 url: url,
                 success: function(json){
-                    callback(null, json);
+                    fallback(null, json);
                 },
                 error: function(e){
                     tries--;
@@ -144,7 +204,7 @@ U.ajax = (function($){
                             getJson(url, callback, tries);
                         }, retryInterval);
                     }else{
-                        callback(e, null);
+                        fallback(e, null);
                     }
                 },
                 contentType: "application/json",
