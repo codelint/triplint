@@ -13,9 +13,10 @@ U.ajax = (function($){
     var retryInterval = 500;
     var retryTimes = 3;
     var lastCallTime = {};
-    var noop = function(){};
+    var noop = function(){
+    };
 
-    var loading_tip = function (){
+    var loading_tip = function(){
         var html = '<div id="">' +
             '<div class="weui-mask_transparent"></div>' +
             '<div class="weui-toast">' +
@@ -49,8 +50,8 @@ U.ajax = (function($){
 
         try{
             var str = url.replace(/(^|&)timestamp=([^&]*)(&|$)/g, '&').replace(/(^|&)sign=([^&]*)(&|$)/g, '&')
-                + '&data=' + JSON.stringify(data).replace(new RegExp('{|}|"|:','g'), '') + '&tries=' + tries;
-            var now = (new Date()).getTime() ;
+                + '&data=' + JSON.stringify(data).replace(new RegExp('{|}|"|:', 'g'), '') + '&tries=' + tries;
+            var now = (new Date()).getTime();
             lastCallTime[str] = lastCallTime[str] || 0;
             console.log(str);
             // console.log(str);
@@ -115,7 +116,7 @@ U.ajax = (function($){
         postForm: function(url, data, callback, tries){
             var postJson = arguments.callee;
             tries = tries || retryTimes;
-            var fallback = before_call(url, data, callback,tries);
+            var fallback = before_call(url, data, callback, tries);
             fallback && $.ajax({
                 type: "post",
                 url: url,
@@ -285,11 +286,11 @@ U.api = (function($){
      * @param rid
      * @param style string image/resize,m_fixed,h_100,w_100,m_fill,color_FF0000
      *  m_lfit:  等比缩放，限制在设定在指定w与h的矩形内的最大图片。(默认)
-        m_mfit:  等比缩放，延伸出指定w与h的矩形框外的最小图片。
-        m_fill:  固定宽高，将延伸出指定w与h的矩形框外的最小图片进行居中裁剪。
-        m_pad:   固定宽高，缩略填充
-        m_fixed: 固定宽高，强制缩略
-        color_*: 当缩放模式选择为pad（缩略填充）时，可以选择填充的颜色(默认是白色)参数的填写方式：采用16进制颜色嘛表示，如#00FF00#（绿色）
+     m_mfit:  等比缩放，延伸出指定w与h的矩形框外的最小图片。
+     m_fill:  固定宽高，将延伸出指定w与h的矩形框外的最小图片进行居中裁剪。
+     m_pad:   固定宽高，缩略填充
+     m_fixed: 固定宽高，强制缩略
+     color_*: 当缩放模式选择为pad（缩略填充）时，可以选择填充的颜色(默认是白色)参数的填写方式：采用16进制颜色嘛表示，如#00FF00#（绿色）
      * @returns {*}
      */
     function rid2url(rid, style){
@@ -455,6 +456,11 @@ U.api = (function($){
                 'contact': '',
                 'description': message
             }, callback_filter(cbf));
+        },
+        'ad': {
+            'list': function(type, cbf){
+                U.ajax.postJson(_url('ad.list'), {'type': type}, callback_filter(cbf));
+            }
         },
         'trac': {
             'sign': function(data, cbf){
