@@ -24,6 +24,14 @@ android = (function(){
         app_name: function(){
             return 'triplint';
         },
+        current_user: function(user){
+            user && android.put('user.current', user);
+            user = android.get('user.current');
+            if(!user){
+                location.href = ROOT_URL + '/view/login.html?success_cbf=' + encodeURIComponent(location.pathname + location.search + location.hash);
+            }
+            return user;
+        },
         // 获得存储值
         "get": function(key){
             return JSON.parse(sessionStorage[key] || '""');

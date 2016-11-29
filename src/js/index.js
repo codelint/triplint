@@ -19,17 +19,14 @@ function setup_geo(lon, lat, index) {
 jQuery(function ($) {
 
     function loadBarData(callback) {
-//        callback(false, [
-//            {
-//                'src': '../images/img.jpg?oss_image_style=1024w_480h_4e_250-248-236bgc',
-//                'href': '../images/img.jpg?oss_image_style=1024w_480h_4e_250-248-236bgc'
-//            }
-//        ]);
-        var user = android.get('user.current');
-
+        var user = android.current_user();
+        if(!user){
+            location.href = ROOT_URL + '/view/login.html?success_cbf=' + encodeURIComponent(location.pathname + location.search + location.hash);
+        }
         var traveller_id = (user && Number(user['source']) > 0.01) ? user['source'] : user['id'];
+        var query = {'group_id': 0, 'traveller_id': traveller_id};
 
-        U.api.checkpoint.list({'group_id': 0, 'traveller_id': traveller_id}, function (err, json) {
+        U.api.checkpoint.list(query, function (err, json) {
             var arr = [];
             var checkpoint;
             if (err) {

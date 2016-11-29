@@ -46,15 +46,18 @@ U.ajax = (function($){
 
     function before_call(url, data, callback, tries){
         callback = callback || noop;
+
         try{
             var str = url.replace(/(^|&)timestamp=([^&]*)(&|$)/g, '&').replace(/(^|&)sign=([^&]*)(&|$)/g, '&')
-                + '&data_len=' + JSON.stringify(data).length + '&tries=' + tries;
+                + '&data=' + JSON.stringify(data).replace(new RegExp('{|}|"|:','g'), '') + '&tries=' + tries;
             var now = (new Date()).getTime() ;
             lastCallTime[str] = lastCallTime[str] || 0;
+            console.log(str);
             // console.log(str);
             // console.log('time: ' + (now - lastCallTime[str]));
+
             if(lastCallTime[str] && (now - lastCallTime[str]) < 1000){
-                // console.log("Can't repeat call in 3 second");
+                // console.log("Can't repeat call in 3 second: " + str);
                 return false;
             }else{
                 lastCallTime[str] = now;
@@ -278,6 +281,17 @@ U.api = (function($){
         }
     }
 
+    /**
+     * @param rid
+     * @param style string image/resize,m_fixed,h_100,w_100,m_fill,color_FF0000
+     *  m_lfit:  等比缩放，限制在设定在指定w与h的矩形内的最大图片。(默认)
+        m_mfit:  等比缩放，延伸出指定w与h的矩形框外的最小图片。
+        m_fill:  固定宽高，将延伸出指定w与h的矩形框外的最小图片进行居中裁剪。
+        m_pad:   固定宽高，缩略填充
+        m_fixed: 固定宽高，强制缩略
+        color_*: 当缩放模式选择为pad（缩略填充）时，可以选择填充的颜色(默认是白色)参数的填写方式：采用16进制颜色嘛表示，如#00FF00#（绿色）
+     * @returns {*}
+     */
     function rid2url(rid, style){
         style = style || 'image/resize,w_640';
         // rid += style.indexOf('@') < 0 ? ('@' + style) : style;
