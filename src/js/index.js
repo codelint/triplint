@@ -178,4 +178,9 @@ jQuery(function($){
         alert("ok");
         // location.href = "http://192.168.1.106:8050/src/view/";
     });
+
+    var user = android.current_user();
+    if(user['traveller']){
+        $('#upload-a').show();
+    }
 });
