@@ -22,8 +22,11 @@ U.ajax = (function($){
             '<i class="weui-loading weui-icon_toast"></i>' +
             '<p class="weui-toast__content">数据加载中</p>' +
             '</div></div></div>';
-        var $html = $(html);
+        var $html = $(html).hide();
         $('body').append($html);
+        setTimeout(function(){
+            $html.show();
+        }, 500);
         return $html;
     };
 
@@ -34,7 +37,9 @@ U.ajax = (function($){
     };
 
     var before_callback = function(err, json){
-        $loading_pop.length && $loading_pop.pop().remove();
+        setTimeout(function(){
+            $loading_pop.length && $loading_pop.pop().remove();
+        }, 500);
     };
 
     var after_callback = noop;
@@ -42,9 +47,14 @@ U.ajax = (function($){
     function before_call(url, data, callback, tries){
         callback = callback || noop;
         try{
-            var str = url  + '&data_len=' + JSON.stringify(data).length + '&tries=' + tries;
+            var str = url.replace(/(^|&)timestamp=([^&]*)(&|$)/g, '&').replace(/(^|&)sign=([^&]*)(&|$)/g, '&')
+                + '&data_len=' + JSON.stringify(data).length + '&tries=' + tries;
             var now = (new Date()).getTime() ;
-            if(lastCallTime[str] && (now - lastCallTime[str]) < 3000){
+            lastCallTime[str] = lastCallTime[str] || 0;
+            // console.log(str);
+            // console.log('time: ' + (now - lastCallTime[str]));
+            if(lastCallTime[str] && (now - lastCallTime[str]) < 1000){
+                // console.log("Can't repeat call in 3 second");
                 return false;
             }else{
                 lastCallTime[str] = now;
