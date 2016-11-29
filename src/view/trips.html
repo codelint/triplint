@@ -46,9 +46,9 @@
 
 </div>
 <div class="banner">
-        <a class="trip-photo">
-        <img :src="(U.api.oss.rid2url(father['photo']))" :alt="banner">
-        </a>
+    <a class="trip-photo">
+    <img :src="(U.api.oss.rid2url(father['photo'], 'image/resize,w_640'))" alt="banner">
+    </a>
 </div>
 <div class="trip" id="trip_items">
     <section class="trip-wps">
@@ -64,7 +64,7 @@
                     <div class="photo-ctn">
                         <a href="javascript:;" class="trip-photo" v-on:click="showImgs">
                             <!--item.photo-->
-                            <img :src="(U.api.oss.rid2url(item.photo))" :alt="index">
+                            <img :src="(U.api.oss.rid2url(item.photo, 'image/resize,w_640'))" :alt="index">
                         </a>
                         <div class="photo-mask">
                             <div class="photo-mask-left float-left"></div>

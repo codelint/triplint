@@ -279,7 +279,7 @@ U.api = (function($){
     }
 
     function rid2url(rid, style){
-        style = style || 'image/resize,w_1024,h_768';
+        style = style || 'image/resize,w_640';
         // rid += style.indexOf('@') < 0 ? ('@' + style) : style;
 
         if(rid && rid.indexOf('oss://') == 0){
