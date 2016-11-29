@@ -46,7 +46,7 @@ jQuery(function($){
                 setup(err, json);
             }else{
                 var traveller_id = (user && Number(user['source']) > 0.01) ? user['source'] : user['id'];
-                U.api.checkpoint.list({'group_id': 0, 'traveller_id': 0}, function(err, json){
+                U.api.checkpoint.list({'group_id': 0, 'traveller_id': traveller_id}, function(err, json){
                     if(err){
                         android.alert(err.message);
                     }else{
