@@ -45,6 +45,11 @@
     <!--<div class="right">退出</div>-->
 
 </div>
+<div class="banner">
+        <a class="trip-photo">
+        <img :src="(U.api.oss.rid2url(father['photo']))" :alt="banner">
+        </a>
+</div>
 <div class="trip" id="trip_items">
     <section class="trip-wps">
         <div class="sample item-list">

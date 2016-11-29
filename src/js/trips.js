@@ -118,6 +118,10 @@ jQuery(function($){
                     var title = father['comment'].substr(0, 6);
                     $('title').text(title);
                     $('div.title').text(title);
+                    new Vue({
+                        el : 'div.banner',
+                        data: {father:father}
+                    })
                 }
 
                 var $elem = $('div.sample.item-list').clone().removeClass('sample');
