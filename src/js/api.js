@@ -26,7 +26,7 @@ U.ajax = (function($){
         $('body').append($html);
         setTimeout(function(){
             $html.show();
-        }, 500);
+        }, 0);
         return $html;
     };
 
@@ -39,7 +39,7 @@ U.ajax = (function($){
     var before_callback = function(err, json){
         setTimeout(function(){
             $loading_pop.length && $loading_pop.pop().remove();
-        }, 500);
+        }, 0);
     };
 
     var after_callback = noop;
