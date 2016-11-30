@@ -49,10 +49,15 @@
 <script type="text/javascript">
     var LoginReg = true;
     jQuery(function ($) {
-        var success_cbf = U.ajax.getUrlParam('success_cbf') || '/wap/view';
+        var wechat_id = U.ajax.getUrlParam('wechat_id') || false;
+        var success_cbf = U.ajax.getUrlParam('success_cbf') || 'index.html';
 
         var old_login_name = android.get('user.login_name');
         var old_login_pass = android.get('user.login_password');
+
+        if(wechat_id){
+            //todo use wechat_id to login
+        }
 
         function loginReg() {
             $(".main").toggleClass("main-reg");
@@ -72,7 +77,7 @@
             if (phone && password) {
                 android.put('user.login_name', phone);
                 android.put('user.login_password', '');
-                U.api.user.login(phone, password, function (err, json) {
+                U.api.user.login(phone, password, wechat_id, function (err, json) {
                     if (err) {
                         android.alert(err['message']);
                     } else {

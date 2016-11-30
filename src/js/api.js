@@ -373,8 +373,17 @@ U.api = (function($){
                 uid = uid || 0;
                 U.ajax.postJson(_url('user.info'), {'user_id': uid}, callback_filter(callback));
             },
-            'login': function(mobile, password, cbf){
-                U.ajax.postJson(_url('user.login'), {'login_name': mobile, 'password': password}, callback_filter(function(err, user){
+            'login': function(mobile, password, wechat_id, cbf){
+                var login_info = {'login_name': mobile, 'password': password};
+                if(!cbf){
+                    cbf = wechat_id;
+                }else{
+                    if(wechat_id){
+                        login_info['wechat_id'] = wechat_id;
+                    }
+                }
+
+                U.ajax.postJson(_url('user.login'), login_info, callback_filter(function(err, user){
                     if(user && user['id'] && user['api_token']){
                         setup_user_auth(user);
                     }
