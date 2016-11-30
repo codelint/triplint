@@ -143,13 +143,14 @@ jQuery(function($){
                             getPhotoItems(event.target.alt);
                         },
                         // 喜欢
-                        like: function(index){
-                            $.toast("后期开放此功能", "text");
+                        edit: function(checkpoint){
+                            // $.toast("后期开放此功能", "text");
+                            location.href = 'upload.html?id=' + checkpoint['id'];
                             // vm._data.items[index].like = ++(vm._data.items[index].like);
                         },
                         // 评论
-                        comment: function(group_id){
-                            location.href = 'trips.html?group_id=' + group_id;
+                        detail: function(checkpoint){
+                            location.href = 'trips.html?group_id=' + checkpoint['id'];
                             // $.toast("后期开放此功能", "text");
                         }
                     }

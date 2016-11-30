@@ -73,14 +73,14 @@
                             <div class="photo-mask-right float-left"></div>
                         </div>
                         <div class="wp-btns">
-                            <a class="comment-btn" href="javascript:void(0)" v-on:click="comment(item.id)">
-                                <i class="iconfont icon-msg"></i>
-                                <span v-cloak>{{ item.comment_count }}</span>
+                            <a class="comment-btn" href="javascript:void(0)" v-on:click="detail(item)" >
+                                <i class="iconfont icon-more"></i>
+                                <!--<span v-cloak>{{ item.comment_count }}</span>-->
                             </a>
-                            <i class="icon-btnbg"></i>
-                            <a href="javascript:void(0)" class="like-btn" v-on:click="like(index)">
-                                <i class="iconfont icon-aixin2"></i>
-                                <span v-cloak>{{ item.like }}</span>
+                            <i v-if="item.user_id && item.user_id == android.current_user()['id']" class="icon-btnbg"></i>
+                            <a v-if="item.user_id && item.user_id == android.current_user()['id']" href="javascript:void(0)" class="like-btn" v-on:click="edit(item)">
+                                <i class="iconfont icon-camera"></i>
+                                <!--<span v-cloak>{{ item.like }}</span>-->
                             </a>
                         </div>
                     </div>
