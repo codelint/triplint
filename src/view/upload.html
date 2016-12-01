@@ -260,7 +260,7 @@
             $('#map-frame').remove();
             var $frame = $('<iframe id="map-frame" src="map.html" style="position:fixed;width:100%;height:100%;top:0;left:0;z-index:999;"></iframe>');
 //            location.href = 'map.html?latitude=' + latitude + '&longitude=' + longitude;
-            $frame.attr('src', 'map.html?latitude=' + latitude + '&longitude=' + longitude);
+            $frame.attr('src', 'map.html?latitude=' + lat + '&longitude=' + lon);
             $('body').append($frame);
             return false;
         });
@@ -288,6 +288,13 @@
                     android.alert(err.message);
                 }else{
                     android.alert('保存成功');
+                    if(data['group_id'] < 0){
+                        location.href='trips.html?group_id=' + json['id'];
+                    }else if(data['group_id'] > 0){
+                        location.href='trips.html?group_id=' + data['id'];
+                    }else{
+                        location.href='index.html';
+                    }
                 }
             })
         });
