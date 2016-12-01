@@ -156,9 +156,10 @@ body {
   margin: 0 auto;
 }
 div.banner {
-  padding-top: 50px;
+  margin-top: 50px;
 }
 div.banner img {
+  width: 100%;
   max-width: 640px;
 }
 .trip {
