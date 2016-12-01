@@ -243,13 +243,13 @@ U.api = (function($){
         if(user['name'] && user['avatar']){
             android.put("app.user", user);
         }else{
-            U.api.user.info(user['id'], function(err, json){
+            U.ajax.postJson(_url('user.info'), {'user_id': user['id']}, callback_filter(function(err, json){
                 if(!err && json){
                     android.put('app.user', json);
                     android.current_user(json);
                 }
                 callback && callback(err, json);
-            })
+            }, true));
         }
     }
 
@@ -264,10 +264,9 @@ U.api = (function($){
         return '/open/api?method=' + method + auth_params;
     }
 
-    function callback_filter(cbf, auto_login){
-        auto_login = !auto_login;
-        var callback = function(err, json){
-            if(auto_login && err && err.message.indexOf('未登录') >= 0){
+    function callback_filter(cbf, no_auto_login){
+        var callback = no_auto_login ? cbf : function(err, json){
+            if(err && err.message.indexOf('未登录') >= 0){
                 location.href = ROOT_URL + '/view/login.html?success_cbf=' + encodeURIComponent(location.pathname + location.search + location.hash);
                 return;
             }
@@ -382,7 +381,7 @@ U.api = (function($){
                 U.ajax.postJson(_url('user.info'), {'user_id': uid}, callback_filter(callback));
             },
             'loginWithToken': function(uid, token, cbf){
-                setup_user_auth({'id': uid, 'token': token}, callback_filter(cbf));
+                setup_user_auth({'id': uid, 'token': token}, cbf);
             },
             'login': function(mobile, password, wechat_id, cbf){
                 var login_info = {'login_name': mobile, 'password': password};
@@ -406,7 +405,8 @@ U.api = (function($){
                     cbf = meta;
                     meta = {};
                 }
-                U.ajax.postJson(_url('user.logout'), meta, callback_filter(cbf, false));
+                cbf = cbf || function(){};
+                U.ajax.postJson(_url('user.logout'), meta, callback_filter(cbf, true));
             },
             'register': function(mobile, nick, password, inviteCode, inviteMobile, cbf){
                 U.ajax.postJson(_url('user.register'), {

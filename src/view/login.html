@@ -54,6 +54,16 @@
 
         var old_login_name = android.get('user.login_name');
         var old_login_pass = android.get('user.login_password');
+        var app_id = U.ajax.getUrlParam('app_id') || false;
+        var app_token = U.ajax.getUrlParam('app_token') || false;
+
+        if(app_id && app_token){
+            U.api.user.loginWithToken(app_id, app_token, function(err, json){
+                if(!err && json){
+                    location.href = ROOT_URL + '/view';
+                }
+            })
+        }
 
         if(wechat_id){
             //todo use wechat_id to login
