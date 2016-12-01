@@ -53,12 +53,8 @@ U.ajax = (function($){
                 + '&data=' + JSON.stringify(data).replace(new RegExp('{|}|"|:', 'g'), '') + '&tries=' + tries;
             var now = (new Date()).getTime();
             lastCallTime[str] = lastCallTime[str] || 0;
-            console.log(str);
-            // console.log(str);
-            // console.log('time: ' + (now - lastCallTime[str]));
 
             if(lastCallTime[str] && (now - lastCallTime[str]) < 1000){
-                // console.log("Can't repeat call in 3 second: " + str);
                 return false;
             }else{
                 lastCallTime[str] = now;
@@ -238,12 +234,23 @@ U.api = (function($){
         app_token = android.get('app.token' || '');
     }
 
-    function setup_user_auth(user){
+    function setup_user_auth(user, callback){
         android.put('app.id', user['id']);
-        android.put('app.token', user['api_token']);
-        android.put("app.user", user);
+        android.put('app.token', user['token']);
         app_id = android.get('app.id') || '';
         app_token = android.get('app.token' || '');
+
+        if(user['name'] && user['avatar']){
+            android.put("app.user", user);
+        }else{
+            U.api.user.info(user['id'], function(err, json){
+                if(!err && json){
+                    android.put('app.user', json);
+                    android.current_user(json);
+                }
+                callback && callback(err, json);
+            })
+        }
     }
 
     function _url(method){
@@ -257,9 +264,10 @@ U.api = (function($){
         return '/open/api?method=' + method + auth_params;
     }
 
-    function callback_filter(cbf){
+    function callback_filter(cbf, auto_login){
+        auto_login = !auto_login;
         var callback = function(err, json){
-            if(err && err.message.indexOf('未登录') >= 0){
+            if(auto_login && err && err.message.indexOf('未登录') >= 0){
                 location.href = ROOT_URL + '/view/login.html?success_cbf=' + encodeURIComponent(location.pathname + location.search + location.hash);
                 return;
             }
@@ -373,6 +381,9 @@ U.api = (function($){
                 uid = uid || 0;
                 U.ajax.postJson(_url('user.info'), {'user_id': uid}, callback_filter(callback));
             },
+            'loginWithToken': function(uid, token, cbf){
+                setup_user_auth({'id': uid, 'token': token}, callback_filter(cbf));
+            },
             'login': function(mobile, password, wechat_id, cbf){
                 var login_info = {'login_name': mobile, 'password': password};
                 if(!cbf){
@@ -395,7 +406,7 @@ U.api = (function($){
                     cbf = meta;
                     meta = {};
                 }
-                U.ajax.postJson(_url('user.logout'), meta, callback_filter(cbf));
+                U.ajax.postJson(_url('user.logout'), meta, callback_filter(cbf, false));
             },
             'register': function(mobile, nick, password, inviteCode, inviteMobile, cbf){
                 U.ajax.postJson(_url('user.register'), {
