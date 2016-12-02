@@ -109,6 +109,16 @@
 <script type="text/javascript">
 jQuery(function($){
 
+    var app_id = U.ajax.getUrlParam('app_id') || false;
+    var app_token = U.ajax.getUrlParam('app_token') || false;
+    if(app_id && app_token){
+        U.api.user.loginWithToken(app_id, app_token, function(err, json){
+            if(!err && json){
+                location.href = ROOT_URL + '/view';
+            }
+        })
+    }
+
     function done(ticket, callback){
         weui.picker([
             {
@@ -322,6 +332,8 @@ jQuery(function($){
     });
 
     loadByType(location.hash ? location.hash.slice(1) : 'undo');
+
+
 })
 </script>
 
