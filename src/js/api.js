@@ -265,6 +265,7 @@ U.api = (function($){
     }
 
     function callback_filter(cbf, no_auto_login){
+        no_auto_login = !!no_auto_login;
         var callback = no_auto_login ? cbf : function(err, json){
             if(err && err.message.indexOf('未登录') >= 0){
                 location.href = ROOT_URL + '/view/login.html?success_cbf=' + encodeURIComponent(location.pathname + location.search + location.hash);
@@ -428,6 +429,17 @@ U.api = (function($){
                     'mobile': mobile,
                     'nick': memo
                 }, callback_filter(cbf))
+            },
+            'update': function(user, cbf){
+                user['id'] = Math.round(Number(user['id']));
+                if(user['id']){
+                    U.ajax.postJson(_url('user.update'), user, callback_filter(cbf));
+                }else{
+                    cbf({
+                        'message': '参数错误'
+                    }, null);
+                }
+
             }
         },
         'traveller': {

@@ -10,18 +10,41 @@
     <link rel="stylesheet" href="../public/css/flex.css">
     <link rel="stylesheet" href="../css/member.min.css">
     <link rel="stylesheet" href="../public/css/weui.css">
+    <style type="text/css">
+        input[name='file'] {
+            position: absolute;
+            left: 15px;
+            top: 10px;
+            opacity: 0;
+            /*z-index:999;*/
+        }
+    </style>
 </head>
 <body>
 <div class="t-nav">
     <a href="javascript:window.history.back();" class="left on-menu"><i class="iconfont icon-left"></i></a>
+
     <div class="title"></div>
     <div class="right" style="display: none"><i class="iconfont icon-more"></i></div>
 </div>
 <div class="member">
+    <form id="oss-upload-form" autocomplete="off" action="http://yue.oss-cn-hangzhou.aliyuncs.com/"
+          method="post" enctype="multipart/form-data" target="hidden_frame">
+        <iframe name='hidden_frame' id="hidden_frame" style='display: none'></iframe>
+        <input type="hidden" name="OSSAccessKeyId" value=""/>
+        <input type="hidden" name="policy" value=""/>
+        <input type="hidden" name="Signature" value=""/>
+        <input type="hidden" name="key" value=""/>
+        <input type="hidden" name="success_action_redirect"
+               value="http://complint.localhost/wap/view/oss_upload_success.html"/>
+        <input type="file" name="file" class="form-control" id="fileInput" accept="image/*;capture=camera"
+               placeholder="选择文件"/>
+    </form>
     <div class="box">
         <div flex="main:center cross:center" class="info">
             <div class="fans">
                 <p class="number">0</p>
+
                 <p class="desc">粉丝</p>
             </div>
             <div class="user">
@@ -29,11 +52,13 @@
             </div>
             <div class="attention">
                 <p class="number">0</p>
+
                 <p class="desc">关注</p>
             </div>
             <div class="level">Lv.1</div>
         </div>
         <p class="name">Triplint</p>
+
         <div class="msg">
             消息
         </div>
@@ -45,12 +70,14 @@
     <div class="list">
         <a :href="'trips.html?uid='+U.ajax.getUrlParam('uid')+'&group_id='+list.id" class="info" v-for="list in lists">
             <p v-cloak class="title">{{ list.title }}</p>
+
             <div class="time-didian">
                 <p v-cloak>{{ list.dateTime}} {{ list.day }}天 {{ list.browse }} 次浏览</p>
                 <i v-cloak>{{ list.place }}</i>
             </div>
             <div class="user">
                 <img v-cloak :src="list.portrait" :alt="list.by">
+
                 <p v-cloak>by {{ list.by }}</p>
             </div>
             <img v-cloak :src="list.img" :alt="list.title">
