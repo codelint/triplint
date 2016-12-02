@@ -70,6 +70,7 @@ jQuery(function($){
                 $form.find('input[name="Signature"]').val(postData['signature']);
                 $form.find('input[name="key"]').val(postData['object']);
 
+                $('input[name="file"]').css('z-index', -1);
                 U.api.oss.uploadSuccessCallback = (function(info){
                     return function(){
                         // $('img.avatar').attr('src', U.api.oss.rid2url(info['rid'], 'image/resize,w_128,h_128'));
@@ -77,6 +78,7 @@ jQuery(function($){
                             'id': uid,
                             'avatar': info['rid']
                         }, function(err, json){
+                            $('input[name="file"]').css('z-index', 1);
                             if(err){
                                 android.alert(err.message);
                             }else{
