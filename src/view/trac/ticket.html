@@ -111,13 +111,6 @@ jQuery(function($){
 
     var app_id = U.ajax.getUrlParam('app_id') || false;
     var app_token = U.ajax.getUrlParam('app_token') || false;
-    if(app_id && app_token){
-        U.api.user.loginWithToken(app_id, app_token, function(err, json){
-            if(!err && json){
-                window.location.href = location.href;
-            }
-        })
-    }
 
     function done(ticket, callback){
         weui.picker([
@@ -331,7 +324,15 @@ jQuery(function($){
         loadByType('done');
     });
 
-    loadByType(location.hash ? location.hash.slice(1) : 'undo');
+
+    if(app_id && app_token){
+        U.api.user.loginWithToken(app_id, app_token, function(){
+            loadByType(location.hash ? location.hash.slice(1) : 'undo');
+        });
+    }else{
+        loadByType(location.hash ? location.hash.slice(1) : 'undo');
+    }
+
 
 
 })
