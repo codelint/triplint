@@ -114,7 +114,7 @@ jQuery(function($){
     if(app_id && app_token){
         U.api.user.loginWithToken(app_id, app_token, function(err, json){
             if(!err && json){
-                location.href = ROOT_URL + '/view';
+                window.location.href = location.href;
             }
         })
     }
