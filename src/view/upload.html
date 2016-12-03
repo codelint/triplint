@@ -286,7 +286,7 @@
         $('a.commit').click(function(){
             var dateFormat = new DateFormat('yyyy-MM-dd HH:mm');
             var create_time = Math.round(Number(dateFormat.parse($('input[name="create_time"]').val()).getTime()/1000));
-            
+
             var data = {
                 'id': Math.round(Number($('input[name="id"]').val())),
                 'group_id': Number($('input[name="group_id"]').val()),
