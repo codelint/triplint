@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="//at.alicdn.com/t/font_h5xvumt53vwsif6r.css">
     <link rel="stylesheet" href="../public/css/swiper-3.3.1.min.css">
     <link rel="stylesheet" href="../public/css/weui.css">
+    <link rel="stylesheet" href="../public/jquery-weui/0.8.0/jquery-weui.min.css">
     <style type="text/css">
         img.temp_picture {
             max-width: 100%;
@@ -23,6 +24,7 @@
 
 <div class="weui-cells weui-cells_form">
     <input type="hidden" name="id"/>
+
     <div class="weui-cells__title">选择图片</div>
     <div class="weui-cell">
         <div class="weui-cell__bd">
@@ -102,6 +104,7 @@
 
 </body>
 <script type="text/javascript" src="../public/js/jquery-2.1.4.js"></script>
+<script src="../public/jquery-weui/0.8.0/jquery-weui.min.js"></script>
 <script type="text/javascript" src="../public/js/swiper-3.3.1.jquery.min.js"></script>
 <script type="text/javascript" src="../public/js/vue.min.js"></script>
 <script type="text/javascript" src="../public/js/md5.js"></script>
@@ -109,6 +112,7 @@
 <script type="text/javascript" src="../public/js/exif.js"></script>
 <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=o9CPvMuqXebMhwZvsbYmHW2P"></script>
 <script type="text/javascript" src="../public/js/coordtransform.js"></script>
+<script type="text/javascript" src="../public/js/weui.min.js"></script>
 
 <script type="text/javascript" src="../js/android.js"></script>
 <script type="text/javascript" src="../js/api.js"></script>
@@ -202,8 +206,8 @@
             var time = json['DateTimeOriginal'];
             var dateFormat = new DateFormat('yyyy:MM:dd HH:mm:ss');
             if(time && (time = dateFormat.parse(time))){
-                $('input[name="create_time"]').val(Math.round(time.getTime() / 1000));
-                $('#time-title').text(dateFormat.format(time));
+                $('input[name="create_time"]').val(time.toString('yyyy-MM-dd HH:mm'));
+                $('#time-title').text(time.toString());
             }
         });
     }
@@ -224,7 +228,7 @@
                     $('input[name="group_id"]').val(cp['group_id']);
                     $('input[name="mark"]').val(cp['mark']);
                     $('textarea[name="comment"]').val(cp['comment']);
-                    $('input[name="create_time"]').val(cp['create_time']).trigger('change');
+                    $('input[name="create_time"]').val(new Date(cp['create_time']*1000).toString()).trigger('change');
                     $('img.temp_picture').attr('src', U.api.oss.rid2url(cp['photo'], 'image/resize,w_640,h_480'));
                 }
             });
@@ -265,13 +269,24 @@
             return false;
         });
 
-        $('input[name="create_time"]').change(function(){
-            $('#time-title').text(new DateFormat('yyyy-MM-dd HH:mm:ss').format(new Date($('input[name="create_time"]').val() * 1000)));
-        }).val('1').val(Math.round((new Date()).getTime() / 1000)).trigger('change');
+        $('input[name="create_time"]').datetimePicker({
+            'min': '1986-09-08',
+            'onConfirm': function(result){
+                android.alert(result);
+            },
+            'onChange': function(){
+
+            }
+        }).change(function(){
+            $('#time-title').text($('input[name="create_time"]').val());
+        }).val('1').val(new Date().toString('yyyy-MM-dd HH:mm')).trigger('change');
 
         $('input[name="file"]').change(upload_file).change(parse_file);
 
         $('a.commit').click(function(){
+            var dateFormat = new DateFormat('yyyy-MM-dd HH:mm');
+            var create_time = Math.round(Number(dateFormat.parse($('input[name="create_time"]').val()).getTime()/1000));
+            
             var data = {
                 'id': Math.round(Number($('input[name="id"]').val())),
                 'group_id': Number($('input[name="group_id"]').val()),
@@ -279,7 +294,7 @@
                 'altitude': Number($('input[name="altitude"]').val()),
                 'longitude': Number($('input[name="longitude"]').val()),
                 'latitude': Number($('input[name="latitude"]').val()),
-                'create_time': Number($('input[name="create_time"]').val()),
+                'create_time': create_time,
                 'comment': $('textarea[name="comment"]').val(),
                 'mark': $('input[name="mark"]').val()
             };
@@ -289,15 +304,16 @@
                 }else{
                     android.alert('保存成功');
                     if(data['group_id'] < 0){
-                        location.href='trips.html?group_id=' + json['id'];
+                        location.href = 'trips.html?group_id=' + json['id'];
                     }else if(data['group_id'] > 0){
-                        location.href='trips.html?group_id=' + data['id'];
+                        window.history.back();
                     }else{
-                        location.href='index.html';
+                        window.history.back();
                     }
                 }
             })
         });
+
     });
 </script>
 
