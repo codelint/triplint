@@ -50,6 +50,9 @@ function combine_js()
         code_text=${line#*:}
         src_val=$(echo $code_text | sed 's@.* src="\([^"]*\)".*@\1@')
         local_src_file="${html_dir}/${src_val}"
+        if [ -f $(echo "$local_src_file" | sed 's@\.js@.min.js@') ];then
+            local_src_file=$(echo "$local_src_file" | sed 's@\.js@.min.js@')
+        fi
         if [ ! -f "$local_src_file" ];then
             log_info "[error] file[$local_src_file] not exist"
             return 1;

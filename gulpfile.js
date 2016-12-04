@@ -9,7 +9,10 @@ var gulp = require('gulp'),
     rename = require('gulp-rename');
 
 
-gulp.task('dist', ['less', 'minify-css', 'copy', 'copy-public'], function(){
+gulp.task('dist', ['minify-css', 'copy', 'copy-public'], function(){
+});
+
+gulp.task('prod', ['minify-css', 'copy', 'copy-public', 'uglify-js', 'uglify-public-js'], function(){
 });
 // 编译less
 gulp.task('less', function(){
@@ -48,10 +51,17 @@ gulp.task('concat', ['minify-css'], function(){
 });
 
 gulp.task('uglify-js', function(){
-    return gulp.src(['src/js/*.js'])
+    return gulp.src(['src/js/**'])
         .pipe(uglify())
         .pipe(rename({suffix: '.min'}))
         .pipe(gulp.dest('dist/js'));
+});
+
+gulp.task('uglify-public-js', function(){
+    return gulp.src(['public/js/*.js'])
+        .pipe(uglify())
+        .pipe(rename({suffix: '.min'}))
+        .pipe(gulp.dest('dist/public/js'));
 });
 
 // 检查js
