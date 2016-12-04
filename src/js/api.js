@@ -480,6 +480,9 @@ U.api = (function($){
             },
             'info': function(id, cbf){
                 U.ajax.postJson(_url('checkpoint.info'), {'id': id}, callback_filter(cbf));
+            },
+            'remove': function(id, cbf){
+                U.ajax.postJson(_url('checkpoint.remove'), {'id': id}, callback_filter(cbf));
             }
         },
         'feedback': function(message, cbf){

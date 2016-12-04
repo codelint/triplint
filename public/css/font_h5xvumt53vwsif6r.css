@@ -35,3 +35,5 @@
 .icon-edit:before { content: "\e614"; }
 
 .icon-map:before { content: "\e61a"; }
+
+.icon-delete:before { content: "\e628"; }

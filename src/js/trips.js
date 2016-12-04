@@ -152,6 +152,18 @@ jQuery(function($){
                         detail: function(checkpoint){
                             location.href = 'trips.html?group_id=' + checkpoint['id'];
                             // $.toast("后期开放此功能", "text");
+                        },
+                        'remove': function(checkpoint){
+                            if(confirm('确定要删除么？')){
+                                U.api.checkpoint.remove(checkpoint['id'], function(err, json){
+                                    if(err){
+                                        alert(err.message);
+                                    }else{
+                                        alert(json['message']);
+                                        $('#checkpoint-div-' + checkpoint['id']).remove();
+                                    }
+                                });
+                            }
                         }
                     }
                 });
