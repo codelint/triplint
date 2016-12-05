@@ -28,7 +28,7 @@ script_to_js_src "$WORKSPACE/dist/view/trac/ticket.html"
 
 $gulp_cmd prod
 if [ $? -gt 0 ];then
-    return 1
+    exit 1
 fi
 
 # combine js
@@ -39,6 +39,6 @@ combile_dist_js "$WORKSPACE/dist/view/trac/ticket.html"
 
 else
 $gulp_cmd prod
-return $?
+exit $?
 fi
 
