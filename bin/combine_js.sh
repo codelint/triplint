@@ -191,7 +191,7 @@ function combine_once()
     return $?
 }
 
-function main()
+function combile_dist_js()
 {
     if [ -z "$1" ];then
         log_info 'lack parameter'
