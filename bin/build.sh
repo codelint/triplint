@@ -20,6 +20,10 @@ esac
 SELF=$(readlink -f $0)
 DIR=$(dirname "$SELF")
 
+. "$DIR/combile_js.sh"
+
+if [ -f "$DIR/combile_js.sh" ];then
+
 script_to_js_src "$WORKSPACE/dist/view/trac/ticket.html"
 
 $gulp_cmd prod
@@ -32,4 +36,9 @@ combile_dist_js "$WORKSPACE/dist/view/upload.html"
 combile_dist_js "$WORKSPACE/dist/view/index.html"
 combile_dist_js "$WORKSPACE/dist/view/trips.html"
 combile_dist_js "$WORKSPACE/dist/view/trac/ticket.html"
+
+else
+$gulp_cmd prod
+return $?
+fi
 
