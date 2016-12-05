@@ -242,6 +242,7 @@ jQuery(function($){
                 select: function(ticket, event){
                     switch(ticket['status']){
                         case 'new':
+                        case 'reopen':
                         case 'reassign':
                             android.select([
                                 {
@@ -295,7 +296,7 @@ jQuery(function($){
                 break;
             case 'undo':
             default:
-                cond['status'] = '-closed,accepted';
+                cond['status'] = '-closed,accepted,reopen';
         }
         U.api.trac.list(cond, function(err, json){
             var user = json['user'];
