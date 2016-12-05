@@ -51,7 +51,7 @@ gulp.task('concat', ['minify-css'], function(){
 });
 
 gulp.task('uglify-js', function(){
-    return gulp.src(['src/js/**'])
+    return gulp.src(['src/js/**/*.js'])
         .pipe(uglify())
         .pipe(rename({suffix: '.min'}))
         .pipe(gulp.dest('dist/js'));
