@@ -66,7 +66,12 @@ function script_to_js_src()
         mv -v "$tmp_js_file"  "$js_dir/$(echo $(md5sum "$tmp_js_file" | cut -f 1 -d ' ')).js"
 
         replace_js_with_combine_js "$html_file" "$start_line" "$end_line" "${js_prefix}/${js_file_name}"
-        return $?
+        if [ $? -eq 0 ];then
+            script_to_js_src "$html_file"
+            return 0
+        else
+            return $?
+        fi
     else
         return 3
     fi
