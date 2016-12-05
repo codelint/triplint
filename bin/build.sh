@@ -20,7 +20,7 @@ esac
 SELF=$(readlink -f $0)
 DIR=$(dirname "$SELF")
 
-. "$DIR/combile_js.sh"
+. "$DIR/combine_js.sh"
 
 if [ -f "$DIR/combile_js.sh" ];then
 
