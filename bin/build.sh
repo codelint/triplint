@@ -22,9 +22,9 @@ DIR=$(dirname "$SELF")
 
 . "$DIR/combine_js.sh"
 
-if [ -f "$DIR/combile_js.sh" ];then
+if [ -f "$DIR/combine_js.sh" ];then
 
-script_to_js_src "$WORKSPACE/dist/view/trac/ticket.html"
+script_to_js_src "$WORKSPACE/src/view/trac/ticket.html"
 
 $gulp_cmd prod
 if [ $? -gt 0 ];then

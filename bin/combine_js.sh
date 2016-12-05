@@ -12,6 +12,9 @@ case $(uname | tr [A-Z] [a-z]) in
         function sed(){
             gsed "$@"
         }
+        function md5sum(){
+            md5 -r "$@"
+        }
         ;;
     *)
         ;;
