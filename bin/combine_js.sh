@@ -17,6 +17,61 @@ case $(uname | tr [A-Z] [a-z]) in
         ;;
 esac
 
+function script_to_js_src()
+{
+    local html_file=$(readlink -f "$1")
+    local html_dir=$(dirname "$html_file")
+    local target=${html_file##*/}
+    local base_dir=$(readlink -f "$html_dir")
+    local js_prefix="js/gen"
+
+    while [ ! -d "${base_dir}/js" ]
+    do
+        base_dir=$(readlink -f "${base_dir}/..")
+        js_prefix="../${js_prefix}"
+        if [ "$base_dir" == '/' ];then
+            return 1
+        fi
+    done
+    local js_dir="${base_dir}/js/gen/${target}"
+
+    if [ ! -d "$js_dir" ];then
+        mkdir -pv "$js_dir"
+    fi
+
+    local start_line=$(cat "$html_file" | grep -n ' *<script type="text/javascript">' | head -1)
+    start_line=${start_line%%:*}
+    local end_line=0
+    local line_num=0
+    local tmp_js_file="${js_dir}/tmp.js"
+
+    end_line=$(cat "$html_file" | grep -n '^ *</script>' | while read line
+    do
+        line_num=${line%%:*}
+        if [ "$((line_num-start_line))" -gt 0 -a "$end_line" -eq 0 ]
+        then
+            end_line="$line_num"
+            echo "${end_line}"
+            break;
+        fi
+    done)
+
+    if [ -z "$start_line" -o -z "$end_line" ];then
+        return 2
+    fi
+
+    if [ "$start_line" -gt 0 -a "$end_line" -gt 0 ];then
+        cat "$html_file" | sed -n "$((start_line + 1)),$((end_line - 1))p" > "$tmp_js_file"
+        local js_file_name="$(echo $(md5sum "$tmp_js_file" | cut -f 1 -d ' ')).js"
+        mv -v "$tmp_js_file"  "$js_dir/$(echo $(md5sum "$tmp_js_file" | cut -f 1 -d ' ')).js"
+
+        replace_js_with_combine_js "$html_file" "$start_line" "$end_line" "${js_prefix}/${js_file_name}"
+        return $?
+    else
+        return 3
+    fi
+}
+
 function combine_js()
 {
     local last_line_num=0
