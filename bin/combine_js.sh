@@ -23,7 +23,7 @@ function script_to_js_src()
     local html_dir=$(dirname "$html_file")
     local target=${html_file##*/}
     local base_dir=$(readlink -f "$html_dir")
-    local js_prefix="js/gen"
+    local js_prefix="js/gen/${target}"
 
     while [ ! -d "${base_dir}/js" ]
     do
@@ -87,8 +87,21 @@ function combine_js()
     local html_file=$(readlink -f "$1")
     local html_dir=$(dirname "$html_file")
     local target=${html_file##*/}
-    local js_prefix="../js/$target"
-    local js_dir="$html_dir/$js_prefix"
+    # local js_prefix="../js/$target"
+    # local js_dir="$html_dir/$js_prefix"
+    local base_dir=$(readlink -f "$html_dir")
+    local js_prefix="js/${target}"
+
+    while [ ! -d "${base_dir}/js" ]
+    do
+        base_dir=$(readlink -f "${base_dir}/..")
+        js_prefix="../${js_prefix}"
+        if [ "$base_dir" == '/' ];then
+            return 1
+        fi
+    done
+    local js_dir="${base_dir}/js/${target}"
+    log_info "js_dir: $js_dir"
 
     if [ ! -d "$js_dir" ];then
         mkdir -v "$js_dir"
@@ -198,4 +211,4 @@ function main()
     done
 }
 
-main "$1"
+# main "$1"
