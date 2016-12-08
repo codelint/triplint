@@ -60,7 +60,7 @@ function script_to_js_src()
     done)
 
     if [ -z "$start_line" -o -z "$end_line" ];then
-        return 2
+        return 0
     fi
 
     if [ "$start_line" -gt 0 -a "$end_line" -gt 0 ];then

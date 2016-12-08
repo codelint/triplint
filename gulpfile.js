@@ -8,7 +8,8 @@ var gulp = require('gulp'),
     watch = require('gulp-watch'),
     rename = require('gulp-rename'),
     through2 = require('through2'),
-    exec = require('child_process').exec;
+    exec = require('child_process').exec,
+    fs = require('fs');
 
 
 gulp.task('dist', ['minify-css', 'copy', 'copy-public'], function(){
@@ -70,18 +71,22 @@ gulp.task('uglify-public-js', function(){
 gulp.task('script-to-src', function(){
     console.log(process.cwd());
     return gulp.src(['src/**/*.html']).pipe(through2.obj(function(file, enc, next){
+        var stats = fs.statSync(file.path);
         
-        exec('test -f ./bin/combine_js.sh && source ./bin/combine_js.sh && script_to_js_src ' + file.path, (error, stdout, stderr) => {
-            if (error) {
-                console.error(`exec error: ${error}`);
-                return;
-            }
-            console.log(`stdout: ${stdout}`);
-            console.log(`stderr: ${stderr}`);
-        });
+        if(stats.isFile() && fs.existsSync('./bin/combine_js.sh')){
+            exec('source ./bin/combine_js.sh && script_to_js_src ' + file.path, function(error, stdout, stderr){
+                if(error){
+                    console.error(`exec error: ${error}`);
+                    return;
+                }
+                // console.log(`stdout: ${stdout}`);
+                // console.log(`stderr: ${stderr}`);
+            });
+        }
+
         next();
     })).pipe(gulp.dest('/test.dest'));
-})
+});
 
 // 检查js
 /*gulp.task('lint', function () {
