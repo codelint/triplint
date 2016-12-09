@@ -98,7 +98,7 @@ function combine_js()
     # local js_prefix="../js/$target"
     # local js_dir="$html_dir/$js_prefix"
     local base_dir=$(readlink -f "$html_dir")
-    local js_prefix="js/${target}"
+    local js_prefix="js/gen/${target}"
 
     while [ ! -d "${base_dir}/js" ]
     do
