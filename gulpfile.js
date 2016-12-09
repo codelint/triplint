@@ -73,7 +73,7 @@ gulp.task('script-to-src', function(){
         var stats = fs.statSync(file.path);
         
         if(stats.isFile() && fs.existsSync('./bin/combine_js.sh')){
-            exec('source ./bin/combine_js.sh && script_to_js_src ' + file.path, function(error, stdout, stderr){
+            exec('. ./bin/combine_js.sh && script_to_js_src ' + file.path, function(error, stdout, stderr){
                 if(error){
                     console.error(`exec error: ${error}`);
                     return;
@@ -92,7 +92,7 @@ gulp.task('combine-js-src', function(){
         var stats = fs.statSync(file.path);
         
         if(stats.isFile() && fs.existsSync('./bin/combine_js.sh')){
-            exec('source ./bin/combine_js.sh && combine_dist_js ' + file.path, function(error, stdout, stderr){
+            exec('. ./bin/combine_js.sh && combine_dist_js ' + file.path, function(error, stdout, stderr){
                 if(error){
                     console.error(`exec error: ${error}`);
                     return;
