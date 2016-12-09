@@ -162,7 +162,8 @@ function combine_js()
         cat "$local_src_file" >> "${js_dir}/tmp.js"
         last_line_num=$line_num
     done
-    if [ -z "$start_line" -o -z "$line_num" ];then
+    
+    if [ -z "$start_line" -o -z "$line_num" -o $((line_num + start_line)) -eq 0 ];then
         return 1
     fi
     cat "${js_dir}/tmp.js" > "${js_dir}/${js_num}.js"
