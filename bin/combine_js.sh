@@ -219,4 +219,9 @@ function combine_dist_js()
     done
 }
 
-# main "$1"
+cmd="$1"
+type "$cmd" 2>/dev/null 1>/dev/null
+if [ $? -eq 0 ];then
+shift
+$cmd "$@"
+fi
