@@ -162,7 +162,7 @@ function combine_js()
         cat "$local_src_file" >> "${js_dir}/tmp.js"
         last_line_num=$line_num
     done
-    if [ -z "$start_line" -o -z "$end_line" ];then
+    if [ -z "$start_line" -o -z "$line_num" ];then
         return 1
     fi
     cat "${js_dir}/tmp.js" > "${js_dir}/${js_num}.js"
@@ -178,7 +178,7 @@ function replace_js_with_combine_js()
     local src_js=$4
     local ret=0
 
-    if [ $((last_line_num - $start_line)) -eq 0 ];then
+    if [ $((end_line - start_line)) -eq 0 ];then
         return 1
     fi
 
