@@ -108,11 +108,11 @@ function combine_js()
             return 1
         fi
     done
-    local js_dir="${base_dir}/js/${target}"
+    local js_dir="${base_dir}/js/gen/${target}"
     log_info "js_dir: $js_dir"
 
     if [ ! -d "$js_dir" ];then
-        mkdir -v "$js_dir"
+        mkdir -pv "$js_dir"
     fi
 
     if [ ! -f "$html_file" ];then
@@ -194,7 +194,7 @@ function combine_once()
     return $?
 }
 
-function combile_dist_js()
+function combine_dist_js()
 {
     if [ -z "$1" ];then
         log_info 'lack parameter'

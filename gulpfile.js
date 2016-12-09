@@ -15,7 +15,7 @@ var gulp = require('gulp'),
 gulp.task('dist', ['minify-css', 'copy', 'copy-public'], function(){
 });
 
-gulp.task('prod', ['minify-css', 'copy', 'copy-public', 'uglify-js', 'uglify-public-js'], function(){
+gulp.task('prod', ['script-to-src', 'minify-css', 'copy', 'copy-public', 'uglify-js', 'uglify-public-js'], function(){
 });
 // 编译less
 gulp.task('less', function(){
@@ -69,7 +69,6 @@ gulp.task('uglify-public-js', function(){
 
 
 gulp.task('script-to-src', function(){
-    console.log(process.cwd());
     return gulp.src(['src/**/*.html']).pipe(through2.obj(function(file, enc, next){
         var stats = fs.statSync(file.path);
         
@@ -86,6 +85,25 @@ gulp.task('script-to-src', function(){
 
         next();
     })).pipe(gulp.dest('/test.dest'));
+});
+
+gulp.task('combine-js-src', function(){
+    return gulp.src(['dist/view/**/*.html']).pipe(through2.obj(function(file, enc, next){
+        var stats = fs.statSync(file.path);
+        
+        if(stats.isFile() && fs.existsSync('./bin/combine_js.sh')){
+            exec('source ./bin/combine_js.sh && combine_dist_js ' + file.path, function(error, stdout, stderr){
+                if(error){
+                    console.error(`exec error: ${error}`);
+                    return;
+                }
+                console.log(`stdout: ${stdout}`);
+                console.log(`stderr: ${stderr}`);
+            });
+        }
+
+        next();
+    }));
 });
 
 // 检查js
