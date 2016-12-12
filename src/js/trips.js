@@ -76,6 +76,7 @@ jQuery(function($){
                     _.each(json, function(v, k, arr){
                         v['day'] = Math.round((Number(v['create_time']) - minTime) / 86400 + 1);
                         v['location'] = v['mark'] || (v['longitude'] + ',' + v['latitude']);
+                        v['htmlComment'] = WikiEngine.toHtml(v['comment']);
                         arr[k] = v;
                     });
                 }

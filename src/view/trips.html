@@ -105,8 +105,7 @@
                                     </a>
                                 </div>
                             </div>
-                            <p v-cloak class="text" style="padding-top: 10px">
-                                {{ item.comment }}
+                            <p v-cloak class="text" style="padding-top: 10px" v-html="item['htmlComment'] || item.comment">
                             </p>
 
                             <div class="wp-stats">
@@ -140,5 +139,6 @@
 
 <script type="text/javascript" src="../js/android.js"></script>
 <script type="text/javascript" src="../js/api.js"></script>
+<script type="text/javascript" src="../js/common/wiki.js"></script>
 <script type="text/javascript" src="../js/trips.js"></script>
 </html>
