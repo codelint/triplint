@@ -118,6 +118,7 @@
 <script type="text/javascript" src="../js/api.js"></script>
 <script type="text/javascript" src="../js/common/date.js"></script>
 <script type="text/javascript" src="../js/common/ue.js"></script>
+<script type="text/javascript" src="../js/wechat/emoji-fix.js"></script>
 
 <script type="text/javascript">
     var latitude = U.ajax.getUrlParam('latitude') || false;
@@ -256,7 +257,7 @@
 
         $('textarea[name="comment"]').bind('keydown', function(){
             $('span.font-number').text($(this).text().length);
-        });
+        })[0].wxImeEmojiFix();
 
         $('.weui-vcode-btn.map-btn').attr('href', 'map.html' + location.search).click(function(){
             var lat = Number($('input[name="latitude"]').val());
