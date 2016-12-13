@@ -15,7 +15,7 @@ var gulp = require('gulp'),
 gulp.task('dist', ['minify-css', 'copy', 'copy-public'], function(){
 });
 
-gulp.task('prod', ['script-to-src', 'minify-css', 'copy', 'copy-public', 'uglify-js', 'uglify-public-js'], function(){
+gulp.task('prod', ['minify-css', 'copy', 'copy-public', 'uglify-js', 'uglify-public-js'], function(){
 });
 // 编译less
 gulp.task('less', function(){
@@ -78,8 +78,8 @@ gulp.task('script-to-src', function(){
                     console.error(`exec error: ${error}`);
                     return;
                 }
-                console.log(`stdout: ${stdout}`);
-                console.log(`stderr: ${stderr}`);
+                // console.log(`stdout: ${stdout}`);
+                // console.log(`stderr: ${stderr}`);
             });
         }
 
