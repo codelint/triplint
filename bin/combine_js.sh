@@ -47,6 +47,7 @@ function script_to_js_src()
     local end_line=0
     local line_num=0
     local tmp_js_file="${js_dir}/tmp.js"
+    local js_file_name="tmp.js"
 
     end_line=$(cat "$html_file" | grep -n '^ *</script>' | while read line
     do
@@ -65,8 +66,10 @@ function script_to_js_src()
 
     if [ "$start_line" -gt 0 -a "$end_line" -gt 0 ];then
         cat "$html_file" | sed -n "$((start_line + 1)),$((end_line - 1))p" > "$tmp_js_file"
-        local js_file_name="$(echo $(md5sum "$tmp_js_file" | cut -f 1 -d ' ')).js"
-        mv -v "$tmp_js_file"  "$js_dir/$(echo $(md5sum "$tmp_js_file" | cut -f 1 -d ' ')).js"
+        js_file_name="$(echo $(md5sum "$tmp_js_file" | cut -f 1 -d ' ')).js"
+
+        log_info "$tmp_js_file => ${js_dir}/${js_file_name}"
+        mv -v "$tmp_js_file"  "${js_dir}/${js_file_name}"
 
         replace_js_with_combine_js "$html_file" "$start_line" "$end_line" "${js_prefix}/${js_file_name}"
         if [ $? -eq 0 ];then
