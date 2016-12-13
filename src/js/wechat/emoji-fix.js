@@ -19,12 +19,12 @@ Element.prototype.wxImeEmojiFix = function(){
             _wxEmojiDetect: function(){
                 // get the input string and find out emoji code
                 var val = escape(wxief._textarea.value),
-                    patt = /%uE[0-5][0-5][0-9A-F]%20/g;
+                    patt = /%u(E[0-5][0-5][0-9A-F])(%20|)/g;
                 // replace the emojis
-                val = val.replace(patt, function(matchedStr){
-                    var str = matchedStr.substr(2, matchedStr.length - 5).toUpperCase();
-                    if(wxief._emojis[str])
-                        return wxief._emojis[str];
+                val = val.replace(patt, function(matchedStr, code){
+                    // var str = matchedStr.substr(2, matchedStr.length - 5).toUpperCase();
+                    if(wxief._emojis[code])
+                        return wxief._emojis[code];
                     else
                         return matchedStr;
                 });

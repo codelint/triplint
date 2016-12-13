@@ -256,9 +256,9 @@
         }, 2000);
 
 
-        $('textarea[name="comment"]').bind('keydown', function(){
-            $('span.font-number').text($(this).text().length);
-        })[0].wxImeEmojiFix();
+        $('textarea[name="comment"]').keydown(function(){
+            $('span.font-number').text($(this).val().length);
+        });
 
         $('.weui-vcode-btn.map-btn').attr('href', 'map.html' + location.search).click(function(){
             var lat = Number($('input[name="latitude"]').val());
