@@ -11,7 +11,8 @@
         div.sample {
             display: none;
         }
-        div.more-area{
+
+        div.more-area {
             display: none;
         }
     </style>
@@ -77,6 +78,7 @@
         var loadData = false;
 
         function loadFollowsData(page, callback){
+            location.hash = '#follows';
             U.api.user.follows(page, function(err, json){
                 var data = [];
                 if(err){
@@ -102,6 +104,7 @@
         }
 
         function loadFansData(page, callback){
+            location.hash = '#fans';
             U.api.user.fans(page, function(err, json){
                 var data = [];
                 if(err){
@@ -151,24 +154,28 @@
             load(1);
         }
 
-        setup({
-            'loader': loadFollowsData,
-            'tabClass': 'follows'
-        });
+        var $followTab = $('div.weui-navbar__item.follows');
+        var $fanTab = $('div.weui-navbar__item.fans');
 
-        $('div.weui-navbar__item.fans').click(function(){
+        $fanTab.click(function(){
             setup({
                 'loader': loadFansData,
                 'tabClass': 'fans'
             });
         });
 
-        $('div.weui-navbar__item.follows').click(function(){
+        $followTab.click(function(){
             setup({
                 'loader': loadFollowsData,
                 'tabClass': 'follows'
             });
         });
+
+        if(location.hash == '#fans'){
+            $fanTab.trigger('click');
+        }else{
+            $followTab.trigger('click');
+        }
     })
 </script>
 
