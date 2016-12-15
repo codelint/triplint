@@ -78,14 +78,13 @@ jQuery(function($){
 //                portrait: '../images/img.jpg?oss_image_style=1024w'
 //            }
 //        ]);
-        U.api.checkpoint.list({'group_id': 0}, function(err, json){
-            var arr = [];
+        var data = [];
+        function push(list){
             var checkpoint;
-            if(json){
-
-                for(var i = json.length; i--;){
-                    checkpoint = json[i];
-                    arr.push({
+            if(list){
+                for(var i = list.length; i--;){
+                    checkpoint = list[i];
+                    data.push({
                         'id': checkpoint['id'],
                         'title': checkpoint['comment'],
                         'dateTime': (new Date(checkpoint['create_time'] * 1000).toString()),
@@ -99,8 +98,22 @@ jQuery(function($){
                         'latitude': checkpoint['latitude']
                     });
                 }
-                callback(err, arr);
             }
+        }
+        U.api.checkpoint.list({'group_id': 0}, function(err, json){
+            push(json);
+            U.api.user.follows(1, function(err, json){
+                if(json && json['follows']){
+                    U.api.checkpoint.list({
+                        'traveller_id': json['follows'][0]['follow_id']
+                    }, function(err, json){
+                        push(json);
+                        callback(err, data);
+                    })
+                }else{
+                    callback(err, data);
+                }
+            });
         })
     }
 

@@ -320,6 +320,10 @@ U.api = (function($){
         }
     }
 
+    function apiCall(method, data, callback){
+        return U.ajax.postJson(_url(method), data, callback_filter(callback));
+    }
+
     return {
         apiUrl: _url,
         'oss': {
@@ -439,7 +443,10 @@ U.api = (function($){
                         'message': '参数错误'
                     }, null);
                 }
-
+            },
+            'follows': function(page, cbf){
+                page = Math.round(Number(page));
+                apiCall('user.follows', {'page': page}, cbf);
             }
         },
         'traveller': {
@@ -449,6 +456,7 @@ U.api = (function($){
         },
         'checkpoint': {
             'list': function(query, cbf){
+                query['group_id'] = query['group_id'] || 0;
                 U.ajax.postJson(_url('checkpoint.list'), query, callback_filter(function(err, json){
                     if(json && json.length > 0){
                         for(var i = json.length; i--;){
