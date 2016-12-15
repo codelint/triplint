@@ -447,6 +447,10 @@ U.api = (function($){
             'follows': function(page, cbf){
                 page = Math.round(Number(page));
                 apiCall('user.follows', {'page': page}, cbf);
+            },
+            'fans': function(page, cbf){
+                page = Math.round(Number(page));
+                apiCall('user.fans', {'page': page}, cbf);
             }
         },
         'traveller': {

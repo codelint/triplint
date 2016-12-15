@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1, user-scalable=no">
+    <title>圈子</title>
+    <!--<link rel="stylesheet" href="../../pubic/css/font_h5xvumt53vwsif6r.css">-->
+    <link rel="stylesheet" href="../public/css/swiper-3.3.1.min.css">
+    <link rel="stylesheet" href="../public/css/weui.css">
+    <style type="text/css">
+        div.sample {
+            display: none;
+        }
+        div.more-area{
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+<div class="weui-tab">
+    <div class="weui-navbar">
+        <div class="weui-navbar__item follows weui-bar__item_on">
+            关注
+        </div>
+        <div class="weui-navbar__item fans">
+            粉丝
+        </div>
+        <!--<div class="weui-navbar__item all">-->
+        <!--全部-->
+        <!--</div>-->
+    </div>
+    <div class="weui-tab__panel">
+
+    </div>
+</div>
+<div class="weui-cells__title">共&nbsp;<span class="total">0</span>&nbsp;人</div>
+<div class="weui-cells sample">
+    <div class="list" v-for="(item, index) in list">
+        <div class="weui-cell">
+            <div class="weui-cell__hd">
+                <!--<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAC4AAAAuCAMAAABgZ9sFAAAAVFBMVEXx8fHMzMzr6+vn5+fv7+/t7e3d3d2+vr7W1tbHx8eysrKdnZ3p6enk5OTR0dG7u7u3t7ejo6PY2Njh4eHf39/T09PExMSvr6+goKCqqqqnp6e4uLgcLY/OAAAAnklEQVRIx+3RSRLDIAxE0QYhAbGZPNu5/z0zrXHiqiz5W72FqhqtVuuXAl3iOV7iPV/iSsAqZa9BS7YOmMXnNNX4TWGxRMn3R6SxRNgy0bzXOW8EBO8SAClsPdB3psqlvG+Lw7ONXg/pTld52BjgSSkA3PV2OOemjIDcZQWgVvONw60q7sIpR38EnHPSMDQ4MjDjLPozhAkGrVbr/z0ANjAF4AcbXmYAAAAASUVORK5CYII=" alt="" style="width:20px;margin-right:5px;display:block">-->
+                <img :src="U.api.oss.rid2url(item.avatar, 'image/resize,w_20,h_20')" alt=""
+                     style="width:20px;margin-right:5px;display:block">
+            </div>
+            <div class="weui-cell__bd">
+                <p>{{ item['nick'] || item['name'] }}</p>
+            </div>
+            <div class="weui-cell__ft"><a href="#" v-on:click="followOrNot(item)">{{ item.isFollow ? '取消关注' : '关注'
+                }}</a></div>
+        </div>
+    </div>
+</div>
+<div class="content">
+
+</div>
+
+<div class="weui-cells more-area">
+    <a href="javascript:;" class="weui-btn weui-btn_default">更多</a>
+</div>
+
+
+</body>
+<script type="text/javascript" src="../public/js/jquery-2.1.4.js"></script>
+<script type="text/javascript" src="../public/js/swiper-3.3.1.jquery.min.js"></script>
+<script type="text/javascript" src="../public/js/vue.min.js"></script>
+<script type="text/javascript" src="../public/js/md5.js"></script>
+<script type="text/javascript" src="../public/js/underscore.js"></script>
+<script type="text/javascript" src="../public/js/weui.min.js"></script>
+
+<script type="text/javascript" src="../js/android.js"></script>
+<script type="text/javascript" src="../js/api.js"></script>
+<script type="text/javascript" src="../js/common/date.js"></script>
+<script type="text/javascript" src="../js/common/ue.js"></script>
+<script type="text/javascript">
+    jQuery(function($){
+        var loadData = false;
+
+        function loadFollowsData(page, callback){
+            U.api.user.follows(page, function(err, json){
+                var data = [];
+                if(err){
+                    android.alert(err.message);
+                    return;
+                }
+                if(json){
+                    _.each(json['follows'], function(v){
+                        data.push({
+                            id: v['follow_id'],
+                            nick: v['follow_nick'],
+                            name: v['follow_nick'],
+                            avatar: v['follow_avatar'] || '../images/logo.png',
+                            isFollow: true
+                        });
+                    });
+                    $('span.total').text(json['total'] || json['follows'].length);
+
+                    callback(data);
+                }
+
+            });
+        }
+
+        function loadFansData(page, callback){
+            U.api.user.fans(page, function(err, json){
+                var data = [];
+                if(err){
+                    android.alert(err.message);
+                    return;
+                }
+                if(json){
+                    _.each(json['fans'], function(v){
+                        data.push({
+                            id: v['user_id'],
+                            nick: v['user_nick'],
+                            name: v['user_nick'],
+                            avatar: v['user_avatar'] || '../images/logo.png',
+                            isFollow: false
+                        });
+                    });
+                    $('span.total').text(json['total'] || json['fans'].length);
+                    callback(data);
+                }
+            });
+        }
+
+        function load(page){
+            loadData(page, function(data){
+                var elemId = 'div-' + (new Date()).getTime();
+                var $elem = $('div.sample').clone().removeClass('sample').attr('id', elemId);
+                $('div.content').append($elem);
+                new Vue({
+                    el: '#' + elemId,
+                    data: {
+                        list: data
+                    },
+                    methods: {
+                        followOrNot: function(item){
+                            android.alert('暂不支持');
+                        }
+                    }
+                })
+            })
+        }
+
+        function setup(opt){
+            loadData = opt['loader'];
+            $('div.content').empty();
+            $('.weui-navbar__item').removeClass('weui-bar__item_on');
+            $('.weui-navbar__item.' + opt['tabClass']).addClass('weui-bar__item_on');
+            load(1);
+        }
+
+        setup({
+            'loader': loadFollowsData,
+            'tabClass': 'follows'
+        });
+
+        $('div.weui-navbar__item.fans').click(function(){
+            setup({
+                'loader': loadFansData,
+                'tabClass': 'fans'
+            });
+        });
+
+        $('div.weui-navbar__item.follows').click(function(){
+            setup({
+                'loader': loadFollowsData,
+                'tabClass': 'follows'
+            });
+        });
+    })
+</script>
+
+</html>
