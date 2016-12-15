@@ -26,7 +26,7 @@ jQuery(function($){
                 for(var i = 0; i < json.length; i++){
                     item = json[i];
                     arr.push({
-                        'src': U.api.oss.rid2url(item['image'], 'image/resize,w_1024,h_480,m_fill,color_FAF8EC'),
+                        'src': U.api.oss.rid2url(item['image'], 'image/resize,w_1024,h_576,m_pad,color_FAF8EC'),
                         'href': item['link']
                     });
                 }
