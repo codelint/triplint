@@ -456,6 +456,9 @@ U.api = (function($){
         'traveller': {
             'apply': function(data, cbf){
                 return U.ajax.postJson(_url('traveller.apply'), data, callback_filter(cbf));
+            },
+            'follows': function(page, cbf){
+                apiCall('traveller.follows', {'page': page}, cbf);
             }
         },
         'checkpoint': {
