@@ -18,6 +18,9 @@
             opacity: 0;
             /*z-index:999;*/
         }
+        a{
+            color: white;
+        }
     </style>
 </head>
 <body>
@@ -43,23 +46,25 @@
     <div class="box">
         <div flex="main:center cross:center" class="info">
             <div class="fans">
-                <p class="number">0</p>
-
+                <a id="fan-a" href="#">
+                <p class="number fanCount">0</p>
                 <p class="desc">粉丝</p>
+                </a>
             </div>
             <div class="user">
                 <img class="avatar" src="../images/logo.png" alt="">
             </div>
             <div class="attention">
-                <p class="number">0</p>
-
+                <a id="follow-a" href="#">
+                <p class="number followCount">0</p>
                 <p class="desc">关注</p>
+                </a>
             </div>
-            <div class="level">Lv.1</div>
+            <div class="level" style="display: none">Lv.1</div>
         </div>
         <p class="name">Triplint</p>
 
-        <div class="msg">
+        <div class="msg" style="display: none">
             消息
         </div>
     </div>

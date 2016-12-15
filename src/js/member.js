@@ -11,6 +11,8 @@ jQuery(function($){
             var $avatar = $('img.avatar');
             $avatar.attr('src', U.api.oss.rid2url(user['avatar'], 'image/resize,w_128,h_128&timestamp=' + (new Date()).getTime()));
             $('p.name').text(user['nick']);
+            $('p.fanCount').text(user['fanCount'] || 0);
+            $('p.followCount').text(user['followCount'] || 0);
 
             var $file = $('input[name="file"]');
             $file.css('width', $avatar.width())
