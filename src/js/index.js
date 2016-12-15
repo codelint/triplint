@@ -96,18 +96,23 @@ jQuery(function($){
         }
         U.api.checkpoint.list({'group_id': 0}, function(err, json){
             push(json);
-            U.api.user.follows(1, function(err, json){
-                if(json && json['follows'] && json['follows'][0]){
-                    U.api.checkpoint.list({
-                        'traveller_id': json['follows'][0]['follow_id']
-                    }, function(err, json){
-                        push(json);
+            if(json){
+                callback(err, data);
+            }else{
+                U.api.user.follows(1, function(err, json){
+                    if(json && json['follows'] && json['follows'][0]){
+                        var follow_id = json['follows'][0];
+                        U.api.checkpoint.list({
+                            'traveller_id': follow_id
+                        }, function(err, json){
+                            push(json);
+                            callback(err, data);
+                        })
+                    }else{
                         callback(err, data);
-                    })
-                }else{
-                    callback(err, data);
-                }
-            });
+                    }
+                });
+            }
         })
     }
 
