@@ -1,13 +1,6 @@
 /**
  * Created by Qiu on 16-10-3.
  */
-var vue = new Vue({
-    el: '.list',
-    data: {
-        lists: {}
-    }
-});
-
 function setup_geo(lon, lat, index){
     typeof(BMap) != 'undefined' && (new BMap.Geocoder()).getLocation(new BMap.Point(lon, lat), function(result){
         if(result){
@@ -91,6 +84,7 @@ jQuery(function($){
                         'day': 4,
                         'browse': 0,
                         'by': checkpoint['user']['nick'],
+                        'user_id': checkpoint['user_id'],
                         'img': U.api.oss.rid2url(checkpoint['photo'], 'image/resize,w_1024,h_768'),
                         'portrait': U.api.oss.rid2url(checkpoint['user']['avatar'], 'image/resize,w_128,h_128'),
                         'place': checkpoint['mark'] || (checkpoint['longitude'] + ',' + checkpoint['latitude']),
@@ -103,7 +97,7 @@ jQuery(function($){
         U.api.checkpoint.list({'group_id': 0}, function(err, json){
             push(json);
             U.api.user.follows(1, function(err, json){
-                if(json && json['follows']){
+                if(json && json['follows'] && json['follows'][0]){
                     U.api.checkpoint.list({
                         'traveller_id': json['follows'][0]['follow_id']
                     }, function(err, json){
@@ -126,7 +120,22 @@ jQuery(function($){
 //        for (var i = 0; i < data.length; i++) {
 //            setup_geo(data[i]['longitude'], data[i]['latitude'], i);
 //        }
-        vue._data.lists = data;
+        new Vue({
+            el: '.list',
+            data: {
+                lists: data
+            },
+            methods: {
+                showMember: function(item, event){
+                    if(event){
+                        event.preventDefault()
+                    }
+                    location.href = "member.html?uid=" + item['user_id'];
+                    return false;
+                }
+            }
+        });
+//        vue._data.lists = data;
     });
 
     loadBarData(function(err, data){

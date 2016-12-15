@@ -33,7 +33,7 @@
             <p v-cloak>{{ list.dateTime}} {{ list.day }}天 {{ list.browse }} 次浏览</p>
             <i v-cloak>{{ list.place }}</i>
         </div>
-        <div class="user">
+        <div class="user" v-on:click="showMember(list, $event)">
             <img v-cloak :src="list.portrait" :alt="list.by">
             <p v-cloak>by {{ list.by }}</p>
         </div>
