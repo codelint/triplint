@@ -122,202 +122,217 @@
 <script type="text/javascript" src="../js/wechat/emoji-fix.js"></script>
 
 <script type="text/javascript">
-    var latitude = U.ajax.getUrlParam('latitude') || false;
-    var longitude = U.ajax.getUrlParam('longitude') || false;
+var latitude = U.ajax.getUrlParam('latitude') || false;
+var longitude = U.ajax.getUrlParam('longitude') || false;
 
-    function adjust_file_input_pos(){
-        var $file = $('input[name="file"]');
-        var $preview = $('img.temp_picture');
+function adjust_file_input_pos(){
+    var $file = $('input[name="file"]');
+    var $preview = $('img.temp_picture');
 
-        $file.css('width', $preview.css('width'));
-        $file.css('height', $preview.css('height'));
-        $file.css('z-index', 1);
-        $file.css('opacity', 0);
-    }
+    $file.css('width', $preview.css('width'));
+    $file.css('height', $preview.css('height'));
+    $file.css('z-index', 1);
+    $file.css('opacity', 0);
+}
 
-    function setup_geo(lon, lat){
-        latitude = lat;
-        longitude = lon;
-        $('input[name="latitude"]').val('1').val(lat);
-        $('input[name="longitude"]').val('1').val(lon);
-        var bd09 = coordtransform.wgs84tobd09(lon, lat);
-        (typeof(BMap) != 'undefined') && (new BMap.Geocoder()).getLocation(new BMap.Point(bd09[0], bd09[1]), function(rs){
-            var addComp = rs.addressComponents;
-            var strGeo = addComp.province + ", " + addComp.city + ", " + addComp.district + ", " + addComp.street + ", " + addComp.streetNumber;
-            $('#geo-title').text(strGeo);
+function setup_geo(lon, lat, alt){
+    latitude = lat;
+    longitude = lon;
+
+    $('input[name="latitude"]').val('1').val(lat);
+    $('input[name="longitude"]').val('1').val(lon);
+    var bd09 = coordtransform.wgs84tobd09(lon, lat);
+    (typeof(BMap) != 'undefined') && (new BMap.Geocoder()).getLocation(new BMap.Point(bd09[0], bd09[1]), function(rs){
+        var addComp = rs.addressComponents;
+        var strGeo = addComp.province + ", " + addComp.city + ", " + addComp.district + ", " + addComp.street + ", " + addComp.streetNumber;
+        $('#geo-title').text(strGeo);
+    });
+    if(alt){
+        $('input[name="altitude"]').val(Number(alt).toFixed(2));
+    }else{
+        U.api.apiCall('checkpoint.altitude', {
+            latitude: lat,
+            longitude: lon
+        }, function(err, json){
+            if(json && json['altitude']){
+                $('input[name="altitude"]').val(Number(json['altitude']).toFixed(2));
+            }
         });
     }
 
-    function upload_file(){
-        U.api.oss.upload(1, function(err, json){
+    // U.ajax.getJson('http://ditu.google.cn/maps/api/elevation/json?locations=30.7561,90.8205')
+}
+
+function upload_file(){
+    U.api.oss.upload(1, function(err, json){
+        if(err){
+            android.alert(err.message);
+        }else{
+            var postData = json['data']['post'];
+            var $form = $('#oss-upload-form');
+            $form.attr('action', 'http://' + postData['host'] + '/');
+            $('input[name="success_action_redirect"]').val(ROOT_URL + '/view/oss_upload_success.html');
+            var $file = $form.find('input[type="file"]');
+            if(!$file.val()){
+                return;
+            }
+            $form.find('input[name="OSSAccessKeyId"]').val(postData['accessid']);
+            $form.find('input[name="policy"]').val(postData['policy']);
+            $form.find('input[name="Signature"]').val(postData['signature']);
+            $form.find('input[name="key"]').val(postData['object']);
+
+            U.api.oss.uploadSuccessCallback = (function(info){
+                return function(){
+                    // $form.remove();
+                    android.alert('上传成功');
+                    $('img.temp_picture').attr('src', U.api.oss.rid2url(info['rid'], 'image/resize,w_640,h_480'));
+                    $('input[name="rid"]').val(info['rid']);
+                    setTimeout(adjust_file_input_pos, 2000);
+                }
+            })(json['data']);
+            $form.submit();
+
+        }
+    });
+}
+
+function parse_file(e){
+    if(!e.target || !e.target.files.length || !e.target.files[0]){
+        return
+    }
+
+    var _file = e.target.files[0];
+    var passFileType = /^(?:image\/bmp|image\/gif|image\/jpeg|image\/png)$/i;
+
+    if(!passFileType.test(_file.type)){
+        return
+    }
+
+    (new FileReader()).readAsDataURL(_file);
+
+    EXIF.getData(_file, function(){
+        // var _dataTxt = EXIF.pretty(this);
+        var json = EXIF.getAllTags(this);
+        var latitude = json['GPSLatitude'];
+        var longitude = json['GPSLongitude'];
+        if(latitude && longitude){
+            latitude = latitude[0] + latitude[1] / 60 + latitude[2] / 3600;
+            longitude = longitude[0] + longitude[1] / 60 + longitude[2] / 3600;
+            setup_geo(longitude.toFixed(8), latitude.toFixed(8));
+        }
+        var time = json['DateTimeOriginal'];
+        var dateFormat = new DateFormat('yyyy:MM:dd HH:mm:ss');
+        if(time && (time = dateFormat.parse(time))){
+            $('input[name="create_time"]').val(time.toString('yyyy-MM-dd HH:mm'));
+            $('#time-title').text(time.toString());
+        }
+    });
+}
+
+jQuery(function($){
+    // setup by id
+    (function(id){
+        id = Math.round(Number(id));
+        id && $('#oss-upload-form').hide() && U.api.checkpoint.info(id, function(err, cp){
             if(err){
-                android.alert(err.message);
+                android.alert(err['message'], '确认', function(){
+                    window.location.href = location.href;
+                    return false;
+                });
             }else{
-                var postData = json['data']['post'];
-                var $form = $('#oss-upload-form');
-                $form.attr('action', 'http://' + postData['host'] + '/');
-                $('input[name="success_action_redirect"]').val(ROOT_URL + '/view/oss_upload_success.html');
-                var $file = $form.find('input[type="file"]');
-                if(!$file.val()){
-                    return;
-                }
-                $form.find('input[name="OSSAccessKeyId"]').val(postData['accessid']);
-                $form.find('input[name="policy"]').val(postData['policy']);
-                $form.find('input[name="Signature"]').val(postData['signature']);
-                $form.find('input[name="key"]').val(postData['object']);
-
-                U.api.oss.uploadSuccessCallback = (function(info){
-                    return function(){
-                        // $form.remove();
-                        android.alert('上传成功');
-                        $('img.temp_picture').attr('src', U.api.oss.rid2url(info['rid'], 'image/resize,w_640,h_480'));
-                        $('input[name="rid"]').val(info['rid']);
-                        setTimeout(adjust_file_input_pos, 2000);
-                    }
-                })(json['data']);
-                $form.submit();
-
+                setup_geo(cp['longitude'], cp['latitude'], cp['altitude']);
+                $('input[name="id"]').val(cp['id']);
+                $('input[name="group_id"]').val(cp['group_id']);
+                $('input[name="mark"]').val(cp['mark']);
+                $('textarea[name="comment"]').val(cp['comment']);
+                $('input[name="create_time"]').val(new Date(cp['create_time'] * 1000).toString()).trigger('change');
+                $('img.temp_picture').attr('src', U.api.oss.rid2url(cp['photo'], 'image/resize,w_640,h_480'));
             }
         });
-    }
 
-    function parse_file(e){
-        if(!e.target || !e.target.files.length || !e.target.files[0]){
-            return
-        }
-
-        var _file = e.target.files[0];
-        var passFileType = /^(?:image\/bmp|image\/gif|image\/jpeg|image\/png)$/i;
-
-        if(!passFileType.test(_file.type)){
-            return
-        }
-
-        (new FileReader()).readAsDataURL(_file);
-
-        EXIF.getData(_file, function(){
-            // var _dataTxt = EXIF.pretty(this);
-            var json = EXIF.getAllTags(this);
-            var latitude = json['GPSLatitude'];
-            var longitude = json['GPSLongitude'];
-            if(latitude && longitude){
-                latitude = latitude[0] + latitude[1] / 60 + latitude[2] / 3600;
-                longitude = longitude[0] + longitude[1] / 60 + longitude[2] / 3600;
-                setup_geo(longitude.toFixed(8), latitude.toFixed(8));
-            }
-            var time = json['DateTimeOriginal'];
-            var dateFormat = new DateFormat('yyyy:MM:dd HH:mm:ss');
-            if(time && (time = dateFormat.parse(time))){
-                $('input[name="create_time"]').val(time.toString('yyyy-MM-dd HH:mm'));
-                $('#time-title').text(time.toString());
-            }
-        });
-    }
-
-    jQuery(function($){
-        // setup by id
-        (function(id){
-            id = Math.round(Number(id));
-            id && $('#oss-upload-form').hide() && U.api.checkpoint.info(id, function(err, cp){
-                if(err){
-                    android.alert(err['message'], '确认', function(){
-                        window.location.href = location.href;
-                        return false;
-                    });
-                }else{
-                    setup_geo(cp['longitude'], cp['latitude']);
-                    $('input[name="id"]').val(cp['id']);
-                    $('input[name="group_id"]').val(cp['group_id']);
-                    $('input[name="mark"]').val(cp['mark']);
-                    $('textarea[name="comment"]').val(cp['comment']);
-                    $('input[name="create_time"]').val(new Date(cp['create_time']*1000).toString()).trigger('change');
-                    $('img.temp_picture').attr('src', U.api.oss.rid2url(cp['photo'], 'image/resize,w_640,h_480'));
-                }
-            });
-
-        })(U.ajax.getUrlParam('id'));
-        adjust_file_input_pos();
+    })(U.ajax.getUrlParam('id'));
+    adjust_file_input_pos();
 
 //        var $group_id = $('input[name="group_id"]');
 //        $group_id.val() && $group_id.attr('readonly', 'readonly');
 
-        setTimeout(function(){
-            var longitude = Number($('input[name="longitude"]').val());
-            var latitude = Number($('input[name="latitude"]').val());
-            if(longitude > 0.001 && latitude > 0.001){
-                setup_geo(longitude, latitude);
-            }else{
-                var gps_info = android.gps();
-                gps_info = gps_info.split(',');
-                if(Number(gps_info[0]) > 0.01){
-                    setup_geo(Number(gps_info[0]), Number(gps_info[1]));
-                }
+    setTimeout(function(){
+        var longitude = Number($('input[name="longitude"]').val());
+        var latitude = Number($('input[name="latitude"]').val());
+        if(longitude > 0.001 && latitude > 0.001){
+            setup_geo(longitude, latitude);
+        }else{
+            var gps_info = android.gps();
+            gps_info = gps_info.split(',');
+            if(Number(gps_info[0]) > 0.01){
+                setup_geo(Number(gps_info[0]), Number(gps_info[1]));
             }
-        }, 2000);
+        }
+    }, 2000);
 
 
-        $('textarea[name="comment"]').keydown(function(){
-            $('span.font-number').text($(this).val().length);
-        })[0].wxImeEmojiFix();
+    $('textarea[name="comment"]').keydown(function(){
+        $('span.font-number').text($(this).val().length);
+    })[0].wxImeEmojiFix();
 
 
-        $('.weui-vcode-btn.map-btn').attr('href', 'map.html' + location.search).click(function(){
-            var lat = Number($('input[name="latitude"]').val());
-            var lon = Number($('input[name="longitude"]').val());
-            $('#map-frame').remove();
-            var $frame = $('<iframe id="map-frame" src="map.html" style="position:fixed;width:100%;height:100%;top:0;left:0;z-index:999;"></iframe>');
+    $('.weui-vcode-btn.map-btn').attr('href', 'map.html' + location.search).click(function(){
+        var lat = Number($('input[name="latitude"]').val());
+        var lon = Number($('input[name="longitude"]').val());
+        $('#map-frame').remove();
+        var $frame = $('<iframe id="map-frame" src="map.html" style="position:fixed;width:100%;height:100%;top:0;left:0;z-index:999;"></iframe>');
 //            location.href = 'map.html?latitude=' + latitude + '&longitude=' + longitude;
-            $frame.attr('src', 'map.html?latitude=' + lat + '&longitude=' + lon);
-            $('body').append($frame);
-            return false;
-        });
-
-        $('input[name="create_time"]').datetimePicker({
-            'min': '1986-09-08',
-            'onConfirm': function(result){
-                android.alert(result);
-            },
-            'onChange': function(){
-
-            }
-        }).change(function(){
-            $('#time-title').text($('input[name="create_time"]').val());
-        }).val('1').val(new Date().toString('yyyy-MM-dd HH:mm')).trigger('change');
-
-        $('input[name="file"]').change(upload_file).change(parse_file);
-
-        $('a.commit').click(function(){
-            var dateFormat = new DateFormat('yyyy-MM-dd HH:mm');
-            var create_time = Math.round(Number(dateFormat.parse($('input[name="create_time"]').val()).getTime()/1000));
-
-            var data = {
-                'id': Math.round(Number($('input[name="id"]').val())),
-                'group_id': Number($('input[name="group_id"]').val()),
-                'resource': $('input[name="rid"]').val(),
-                'altitude': Number($('input[name="altitude"]').val()),
-                'longitude': Number($('input[name="longitude"]').val()),
-                'latitude': Number($('input[name="latitude"]').val()),
-                'create_time': create_time,
-                'comment': $('textarea[name="comment"]').val(),
-                'mark': $('input[name="mark"]').val()
-            };
-            U.api.checkpoint.commit(data, function(err, json){
-                if(err){
-                    android.alert(err.message);
-                }else{
-                    android.alert('保存成功');
-                    if(data['group_id'] < 0){
-                        location.href = 'trips.html?group_id=' + json['id'];
-                    }else if(data['group_id'] > 0){
-                        window.history.back();
-                    }else{
-                        window.history.back();
-                    }
-                }
-            })
-        });
-
+        $frame.attr('src', 'map.html?latitude=' + lat + '&longitude=' + lon);
+        $('body').append($frame);
+        return false;
     });
+
+    $('input[name="create_time"]').datetimePicker({
+        'min': '1986-09-08',
+        'onConfirm': function(result){
+            android.alert(result);
+        },
+        'onChange': function(){
+
+        }
+    }).change(function(){
+        $('#time-title').text($('input[name="create_time"]').val());
+    }).val('1').val(new Date().toString('yyyy-MM-dd HH:mm')).trigger('change');
+
+    $('input[name="file"]').change(upload_file).change(parse_file);
+
+    $('a.commit').click(function(){
+        var dateFormat = new DateFormat('yyyy-MM-dd HH:mm');
+        var create_time = Math.round(Number(dateFormat.parse($('input[name="create_time"]').val()).getTime() / 1000));
+
+        var data = {
+            'id': Math.round(Number($('input[name="id"]').val())),
+            'group_id': Number($('input[name="group_id"]').val()),
+            'resource': $('input[name="rid"]').val(),
+            'altitude': Number($('input[name="altitude"]').val()),
+            'longitude': Number($('input[name="longitude"]').val()),
+            'latitude': Number($('input[name="latitude"]').val()),
+            'create_time': create_time,
+            'comment': $('textarea[name="comment"]').val(),
+            'mark': $('input[name="mark"]').val()
+        };
+        U.api.checkpoint.commit(data, function(err, json){
+            if(err){
+                android.alert(err.message);
+            }else{
+                android.alert('保存成功');
+                if(data['group_id'] < 0){
+                    location.href = 'trips.html?group_id=' + json['id'];
+                }else if(data['group_id'] > 0){
+                    window.history.back();
+                }else{
+                    window.history.back();
+                }
+            }
+        })
+    });
+
+});
 </script>
 
 </html>

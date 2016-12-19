@@ -321,6 +321,10 @@ U.api = (function($){
     }
 
     function apiCall(method, data, callback){
+        if(!callback){
+            callback = data;
+            data = {};
+        }
         return U.ajax.postJson(_url(method), data, callback_filter(callback));
     }
 
@@ -455,10 +459,10 @@ U.api = (function($){
         },
         'traveller': {
             'apply': function(data, cbf){
-                return U.ajax.postJson(_url('traveller.apply'), data, callback_filter(cbf));
+                return apiCall('traveller.apply', data, cbf);
             },
             'follows': function(page, cbf){
-                apiCall('traveller.follows', {'page': page}, cbf);
+                return apiCall('traveller.follows', {'page': page}, cbf);
             }
         },
         'checkpoint': {
@@ -535,6 +539,7 @@ U.api = (function($){
                     }
                 }))
             }
-        }
+        },
+        'apiCall': apiCall
     }
 })(jQuery);
