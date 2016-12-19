@@ -259,8 +259,9 @@ jQuery(function($){
     setTimeout(function(){
         var longitude = Number($('input[name="longitude"]').val());
         var latitude = Number($('input[name="latitude"]').val());
+        var altitude = Number($('input[name="altitude"]').val());
         if(longitude > 0.001 && latitude > 0.001){
-            setup_geo(longitude, latitude);
+            setup_geo(longitude, latitude, altitude);
         }else{
             var gps_info = android.gps();
             gps_info = gps_info.split(',');
