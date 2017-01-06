@@ -10,6 +10,13 @@ android = (function(){
         return user;
     }
 
+    function getOrSetToken(_token){
+        if(_token){
+            token = _token;
+        }
+        return token;
+    }
+
     if(typeof(android) != 'undefined'){
         android.get = function(key){
             return JSON.parse(android._get(key) || '""');
@@ -18,6 +25,7 @@ android = (function(){
             return android._put(k, JSON.stringify(v));
         };
         android.current_user = current_user;
+        android.token = getOrSetToken;
         return android;
     }
 
@@ -166,14 +174,6 @@ android = (function(){
             //todo
             alert(title + ": " + msg);
         },
-        "uploadAvatar": function(isStylist){
-            return false;
-        },
-        "token": function(_token){
-            if(_token){
-                token = _token;
-            }
-            return token;
-        }
+        "token": getOrSetToken
     }
 })();
