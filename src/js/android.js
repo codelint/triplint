@@ -1,6 +1,15 @@
 android = (function(){
     var token = '';
 
+    function current_user(user){
+        user && android.put('user.current', user);
+        user = android.get('user.current');
+        if(!user){
+            location.href = ROOT_URL + '/view/login.html?success_cbf=' + encodeURIComponent(location.pathname + location.search + location.hash);
+        }
+        return user;
+    }
+
     if(typeof(android) != 'undefined'){
         android.get = function(key){
             return JSON.parse(android._get(key) || '""');
@@ -8,6 +17,7 @@ android = (function(){
         android.put = function(k, v){
             return android._put(k, JSON.stringify(v));
         };
+        android.current_user = current_user;
         return android;
     }
 
@@ -24,14 +34,7 @@ android = (function(){
         app_name: function(){
             return 'triplint';
         },
-        current_user: function(user){
-            user && android.put('user.current', user);
-            user = android.get('user.current');
-            if(!user){
-                location.href = ROOT_URL + '/view/login.html?success_cbf=' + encodeURIComponent(location.pathname + location.search + location.hash);
-            }
-            return user;
-        },
+        current_user: current_user,
         // 获得存储值
         "get": function(key){
             return JSON.parse(sessionStorage[key] || '""');
@@ -109,7 +112,9 @@ android = (function(){
                 {
                     'name': 'confirm',
                     'text': '确认',
-                    'callback': function(next){return next();}
+                    'callback': function(next){
+                        return next();
+                    }
                 }
             ];
             var html = '<div>' +
@@ -134,6 +139,7 @@ android = (function(){
                     $html.remove();
                 }, 500);
             }
+
             $html.find('.cancel').click(function(){
                 $html.find('#iosActionsheet').removeClass('weui-actionsheet_toggle');
                 $html.find('.weui-mask').fadeOut(500);
@@ -142,7 +148,7 @@ android = (function(){
                 }, 500);
             });
 
-            for(var i = 0; i< len; i++){
+            for(var i = 0; i < len; i++){
                 option = opts[i];
                 $item = $('<div class="weui-actionsheet__cell"></div>').text(option['text'] || option['name']);
                 $item.click((function(cbf){
