@@ -19,7 +19,11 @@ android = (function(){
 
     if(typeof(android) != 'undefined'){
         android.get = function(key){
-            return JSON.parse(android._get(key) || '""');
+            try{
+                return JSON.parse(android._get(key) || '""');
+            }catch(e){
+                return '';
+            }
         };
         android.put = function(k, v){
             return android._put(k, JSON.stringify(v));

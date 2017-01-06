@@ -236,7 +236,7 @@ U.api = (function($){
 
     function setup_user_auth(user, callback){
         android.put('app.id', user['id']);
-        android.put('app.token', user['token']);
+        android.put('app.token', user['api_token']);
         app_id = android.get('app.id') || '';
         app_token = android.get('app.token' || '');
 
