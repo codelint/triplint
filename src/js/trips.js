@@ -119,7 +119,7 @@ jQuery(function($){
                 });
 
                 if(father){
-                    var title = father['comment'].substr(0, 6);
+                    var title = father['comment'];
                     $('title').text(title);
                     $('div.title').text(title);
                     new Vue({
