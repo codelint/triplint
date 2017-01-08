@@ -123,6 +123,7 @@ body {
   font-size: 15px;
   font-weight: bold;
   line-height: 50px;
+  padding: 0 60px;
   overflow: hidden;
   -webkit-box-flex: 1;
   -webkit-flex: 1;
