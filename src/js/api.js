@@ -414,7 +414,9 @@ U.api = (function($){
                     cbf = meta;
                     meta = {};
                 }
-                cbf = cbf || function(){};
+                cbf = cbf || function(){
+                    location.href = 'login.html';
+                };
                 U.ajax.postJson(_url('user.logout'), meta, callback_filter(cbf, true));
             },
             'register': function(mobile, nick, password, inviteCode, inviteMobile, cbf){
