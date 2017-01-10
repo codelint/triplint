@@ -20,6 +20,10 @@
         .t-nav{
             position: relative!important;
         }
+
+        div.weui-cell__ft a{
+            color: lightcoral;
+        }
     </style>
 </head>
 <body>
@@ -147,7 +151,7 @@
                     },
                     methods: {
                         followOrNot: function(item){
-                            android.alert('暂不支持');
+                            android.alert('暂不支持: ' + item['id']);
                         }
                     }
                 })
