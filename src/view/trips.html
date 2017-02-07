@@ -62,7 +62,7 @@
         <div class="sample item-list">
             <div class="day" v-for="(item, index) in items">
                 <div :id="'checkpoint-div-'+item.id">
-                    <div :class="'day-div-' + item.day">
+                    <div v-if="item.dayshow">
                     <p v-cloak class="day-marker">
                         <i class="circle circle-first"></i>
                         第{{ item.day }}天 {{ (new Date(item.create_time*1000).getMonth() + 1) }}月{{ (new
