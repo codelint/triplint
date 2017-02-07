@@ -47,6 +47,7 @@ jQuery(function($){
      *  }]
      */
     var minTime = (new Date()).getTime() / 1000;
+    var vshow = {};
 
     function query(query, callBack){
         if(!callBack){
@@ -72,12 +73,11 @@ jQuery(function($){
                         }
                         return v['create_time'];
                     });
-                    var tmp = {};
 
                     _.each(json, function(v, k, arr){
-                        v['day'] = Math.floor((Number(v['create_time'])+28800)/86400) - Math.floor((minTime+28800)/86400);
-                        v['dayshow'] = !tmp[v['day']];
-                        tmp[v['day']] = tmp[v['day']] || 1;
+                        v['day'] = Math.floor((Number(v['create_time'])+28800)/86400) - Math.floor((minTime+28800)/86400) + 1;
+                        v['dayshow'] = !vshow[v['day']];
+                        vshow[v['day']] = vshow[v['day']] || 1;
 //                        v['day'] = v['create_time'];
                         v['location'] = v['mark'] || (v['longitude'] + ',' + v['latitude']);
                         if(Number(v['altitude']) > 0){
