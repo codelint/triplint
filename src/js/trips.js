@@ -74,7 +74,8 @@ jQuery(function($){
                     });
 
                     _.each(json, function(v, k, arr){
-                        v['day'] = Math.round((Number(v['create_time']) - minTime) / 86400 + 1);
+                        v['day'] = Math.floor((Number(v['create_time'])+28800)/86400) - Math.floor((minTime+28800)/86400);
+//                        v['day'] = v['create_time'];
                         v['location'] = v['mark'] || (v['longitude'] + ',' + v['latitude']);
                         if(Number(v['altitude']) > 0){
                             v['location'] += '(' + Math.round(Number(v['altitude'])) + '米)';
