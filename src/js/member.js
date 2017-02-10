@@ -9,7 +9,7 @@ jQuery(function($){
         }else{
             var currentUser = android.current_user();
             var $avatar = $('img.avatar');
-            $avatar.attr('src', U.api.oss.rid2url(user['avatar'], 'image/resize,w_128,h_128&timestamp=' + (new Date()).getTime()));
+            $avatar.attr('src', U.api.oss.rid2url(user['avatar'], 'style/resize_128x128&timestamp=' + (new Date()).getTime()));
             $('p.name').text(user['nick']);
             $('p.fanCount').text(user['fanCount'] || 0);
             $('p.followCount').text(user['followCount'] || 0);
@@ -44,8 +44,8 @@ jQuery(function($){
                         'day': 4,
                         'browse': 0,
                         'by': checkpoint['user']['nick'],
-                        'img': U.api.oss.rid2url(checkpoint['photo'], 'image/resize,w_1024,h_768'),
-                        'portrait': U.api.oss.rid2url(checkpoint['user']['avatar'], 'image/resize,w_128,h_128'),
+                        'img': U.api.oss.rid2url(checkpoint['photo'], 'style/resize_1024x768'),
+                        'portrait': U.api.oss.rid2url(checkpoint['user']['avatar'], 'style/resize_128x128'),
                         'place': checkpoint['longitude'] + ',' + checkpoint['latitude']
                     });
                 }
@@ -75,7 +75,7 @@ jQuery(function($){
                 $('input[name="file"]').css('z-index', -1);
                 U.api.oss.uploadSuccessCallback = (function(info){
                     return function(){
-                        // $('img.avatar').attr('src', U.api.oss.rid2url(info['rid'], 'image/resize,w_128,h_128'));
+                        // $('img.avatar').attr('src', U.api.oss.rid2url(info['rid'], 'style/resize_128x128'));
                         info['rid'] && U.api.user.update({
                             'id': uid,
                             'avatar': info['rid']
@@ -84,7 +84,7 @@ jQuery(function($){
                             if(err){
                                 android.alert(err.message);
                             }else{
-                                $('img.avatar').attr('src', U.api.oss.rid2url(json['avatar'], 'image/resize,w_128,h_128&timestamp=' + (new Date()).getTime()));
+                                $('img.avatar').attr('src', U.api.oss.rid2url(json['avatar'], 'style/resize_128x128&timestamp=' + (new Date()).getTime()));
                             }
                         })
                     }

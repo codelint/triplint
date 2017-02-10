@@ -180,7 +180,7 @@ jQuery(function($){
                     var len = vm._data.items.length, images = [];
                     for(var i = 0; i < len; i++){
                         images.push({
-                            image: (U.api.oss.rid2url(vm._data.items[i].photo, 'image/resize,w_1024,h_768')),
+                            image: (U.api.oss.rid2url(vm._data.items[i].photo, 'style/resize_1024x768')),
                             caption: vm._data.items[i].comment
                         });
                     }

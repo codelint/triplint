@@ -302,7 +302,7 @@ U.api = (function($){
      * @returns {*}
      */
     function rid2url(rid, style){
-        style = style || 'image/resize,w_640';
+        style = style || 'style/resize_w_640';
         // rid += style.indexOf('@') < 0 ? ('@' + style) : style;
 
         if(rid && rid.indexOf('oss://') == 0){

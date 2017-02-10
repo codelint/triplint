@@ -9,7 +9,7 @@ jQuery(function($){
         var user = android.get('user.current');
 
         function load_user_info(user){
-            $menu.find('img.avatar').attr('src', U.api.oss.rid2url(user['avatar'], 'image/resize,w_128,h_128'));
+            $menu.find('img.avatar').attr('src', U.api.oss.rid2url(user['avatar'], 'style/resize_128x128'));
             $menu.find('p.name').text(user['nick']);
             $menu.find('a[href="member.html"]').attr('href', 'member.html?uid=' + user['id']);
         }
