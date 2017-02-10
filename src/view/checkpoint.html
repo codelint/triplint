@@ -242,6 +242,8 @@
 
         $('textarea[name="comment"]').bind('keydown', function () {
             $('span.font-number').text($(this).text().length);
+        }).bind('input propertychange', function () {
+            ($(this).val()) ? $(this).addClass("on") : $(this).removeClass("on");
         });
 
         $('.weui-vcode-btn.map-btn').attr('href', 'map.html' + location.search).click(function () {
@@ -249,13 +251,12 @@
             var lon = Number($('input[name="longitude"]').val());
             $('#map-frame').remove();
             var $frame = $('<iframe id="map-frame" src="map.html" style="position:fixed;width:100%;height:100%;top:0;left:0;z-index:999;"></iframe>');
-//            location.href = 'map.html?latitude=' + latitude + '&longitude=' + longitude;
             $frame.attr('src', 'map.html?latitude=' + latitude + '&longitude=' + longitude);
             $('body').append($frame);
             return false;
         });
 
-        $('input[name="create_time"]').change(function () {
+        $('input[name="create_time"]').datetimePicker().change(function () {
             $('#time-title').text(new DateFormat('yyyy-MM-dd HH:mm:ss').format(new Date()));
         }).val('1').val(new DateFormat('yyyy-MM-dd HH:mm:ss').format(new Date())).trigger('change');
 
@@ -284,12 +285,6 @@
                     $.alert('保存成功');
                 }
             })
-        });
-
-        $('input[name="create_time"]').datetimePicker();
-
-        $('textarea[name="comment"]').bind('input propertychange', function () {
-            ($(this).val()) ? $(this).addClass("on") : $(this).removeClass("on");
         });
     });
 </script>
