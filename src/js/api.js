@@ -293,6 +293,10 @@ U.api = (function($){
     /**
      * @param rid
      * @param style string image/resize,m_fixed,h_100,w_100,m_fill,color_FF0000
+     *      style/resize_w_640  => image/resize,w_640
+     *      style/resize_128x128 => image/resize,w_128,h_128
+     *      style/resize_20x20 => image/resize,w_20,h_20
+     *      style/resize_1024x768 => image/resize,w_1024,h_768,limit_0/auto-orient,0/quality,q_90
      *  m_lfit:  等比缩放，限制在设定在指定w与h的矩形内的最大图片。(默认)
      m_mfit:  等比缩放，延伸出指定w与h的矩形框外的最小图片。
      m_fill:  固定宽高，将延伸出指定w与h的矩形框外的最小图片进行居中裁剪。
