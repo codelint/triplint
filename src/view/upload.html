@@ -185,7 +185,7 @@ function upload_file(){
                 return function(){
                     // $form.remove();
                     android.alert('上传成功');
-                    $('img.temp_picture').attr('src', U.api.oss.rid2url(info['rid'], 'image/resize,w_640,h_480'));
+                    $('img.temp_picture').attr('src', U.api.oss.rid2url(info['rid'], 'style/wap_upload_preview'));
                     $('input[name="rid"]').val(info['rid']);
                     setTimeout(adjust_file_input_pos, 2000);
                 }
@@ -246,7 +246,7 @@ jQuery(function($){
                 $('input[name="mark"]').val(cp['mark']);
                 $('textarea[name="comment"]').val(cp['comment']);
                 $('input[name="create_time"]').val(new Date(cp['create_time'] * 1000).toString()).trigger('change');
-                $('img.temp_picture').attr('src', U.api.oss.rid2url(cp['photo'], 'image/resize,w_640,h_480'));
+                $('img.temp_picture').attr('src', U.api.oss.rid2url(cp['photo'], 'style/wap_upload_preview'));
             }
         });
 

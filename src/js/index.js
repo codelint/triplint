@@ -26,7 +26,7 @@ jQuery(function($){
                 for(var i = 0; i < json.length; i++){
                     item = json[i];
                     arr.push({
-                        'src': U.api.oss.rid2url(item['image'], 'image/resize,w_1024,h_576,m_pad,color_FAF8EC'),
+                        'src': U.api.oss.rid2url(item['image'], 'style/index_bar_photo'),
                         'href': item['link']
                     });
                 }
@@ -85,8 +85,8 @@ jQuery(function($){
                         'browse': 0,
                         'by': checkpoint['user']['nick'],
                         'user_id': checkpoint['user_id'],
-                        'img': U.api.oss.rid2url(checkpoint['photo'], 'image/resize,w_1024,h_768'),
-                        'portrait': U.api.oss.rid2url(checkpoint['user']['avatar'], 'image/resize,w_128,h_128'),
+                        'img': U.api.oss.rid2url(checkpoint['photo'], 'style/index_checkpoint_photo'),
+                        'portrait': U.api.oss.rid2url(checkpoint['user']['avatar'], 'style/menu_avatar'),
                         'place': checkpoint['mark'] || (checkpoint['longitude'] + ',' + checkpoint['latitude']),
                         'longitude': checkpoint['longitude'],
                         'latitude': checkpoint['latitude']
@@ -175,7 +175,7 @@ jQuery(function($){
         var user = android.get('user.current');
 
         function load_user_info(user){
-            $menu.find('img.avatar').attr('src', U.api.oss.rid2url(user['avatar'], 'image/resize,w_128,h_128'));
+            $menu.find('img.avatar').attr('src', U.api.oss.rid2url(user['avatar'], 'style/menu_avatar'));
             $menu.find('p.name').text(user['nick']);
             $menu.find('a[href="member.html"]').attr('href', 'member.html?uid=' + user['id']);
         }
