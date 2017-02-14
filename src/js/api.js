@@ -472,6 +472,9 @@ U.api = (function($){
             }
         },
         'checkpoint': {
+            'index': function(page, cbf){
+                return apiCall('checkpoint.index', {'page': page}, cbf);
+            },
             'list': function(query, cbf){
                 query['group_id'] = query['group_id'] || 0;
                 U.ajax.postJson(_url('checkpoint.list'), query, callback_filter(function(err, json){

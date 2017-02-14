@@ -94,7 +94,7 @@ jQuery(function($){
                 }
             }
         }
-        U.api.checkpoint.list({'group_id': 0}, function(err, json){
+        U.api.checkpoint.index(1, function(err, json){
             push(json);
             if(data.length > 0){
                 callback(err, data);
