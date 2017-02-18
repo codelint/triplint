@@ -7,6 +7,7 @@ if(typeof String.prototype.endsWith !== 'function'){
 OSS_DOMAIN = 'oss-cn-hangzhou.aliyuncs.com';
 OSS_IMG_DOMAIN = 'img-cn-hangzhou.aliyuncs.com';
 ROOT_URL = 'http://' + location.host + '/wap';
+REST_BASE = 'http://' + location.host;
 U = typeof(U) == 'undefined' ? {} : U;
 
 U.ajax = (function($){
@@ -261,7 +262,7 @@ U.api = (function($){
             var sign = CryptoJS.MD5(signStr);
             auth_params = '&app_id=' + app_id + '&timestamp=' + now + '&sign=' + sign;
         }
-        return '/open/api?method=' + method + auth_params;
+        return REST_BASE + '/open/api?method=' + method + auth_params;
     }
 
     function callback_filter(cbf, no_auto_login){
