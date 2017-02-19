@@ -55,37 +55,37 @@
 <script type="text/javascript" src="../js/common/date.js"></script>
 <script type="text/javascript" src="../js/api.js"></script>
 <script type="text/javascript" src="../js/index.js"></script>
-<script type="text/javascript">
-    jQuery(function($){
-        function checkAndroidAppVersion(callback){
-            var versionNum = Number(android.version().replace(/\./g, ''));
-            if(versionNum < 1001){
-                return;
-            }
-            android && U.api.app.android(function(info){
-                // android.open_url(REST_BASE + '/android/triplint-v' + info['version'] + '.apk');
-                var newVersionNum = Number(info['version'].replace(/\./g, ''));
-                if(newVersionNum > versionNum){
-                    callback(info);
-                }
-            });
-        }
+<!--<script type="text/javascript">-->
+    <!--jQuery(function($){-->
+        <!--function checkAndroidAppVersion(callback){-->
+            <!--var versionNum = Number(android.version().replace(/\./g, ''));-->
+            <!--if(versionNum < 1001){-->
+                <!--return;-->
+            <!--}-->
+            <!--android && U.api.app.android(function(info){-->
+                <!--// android.open_url(REST_BASE + '/android/triplint-v' + info['version'] + '.apk');-->
+                <!--var newVersionNum = Number(info['version'].replace(/\./g, ''));-->
+                <!--if(newVersionNum > versionNum){-->
+                    <!--callback(info);-->
+                <!--}-->
+            <!--});-->
+        <!--}-->
 
-        checkAndroidAppVersion(function(info){
-            android.confirm({
-                message: '有新版本(' + info['version'] + ')是否需要更新',
-                yesText: '是',
-                noText: '否',
-                callback: function(yesOrNo){
-                    if(yesOrNo){
-                        android.open_url(REST_BASE + '/android/triplint-v' + info['version'] + '.apk');
-                    }
-                }
-            })
-        })
+        <!--checkAndroidAppVersion(function(info){-->
+            <!--android.confirm({-->
+                <!--message: '有新版本(' + info['version'] + ')是否需要更新',-->
+                <!--yesText: '是',-->
+                <!--noText: '否',-->
+                <!--callback: function(yesOrNo){-->
+                    <!--if(yesOrNo){-->
+                        <!--android.open_url(REST_BASE + '/android/triplint-v' + info['version'] + '.apk');-->
+                    <!--}-->
+                <!--}-->
+            <!--})-->
+        <!--})-->
 
-    });
-</script>
+    <!--});-->
+<!--</script>-->
 <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=o9CPvMuqXebMhwZvsbYmHW2P"></script>
 </body>
 </html>
