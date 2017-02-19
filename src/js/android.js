@@ -17,27 +17,11 @@ android = (function(){
         return token;
     }
 
-    if(typeof(android) != 'undefined'){
-        android.get = function(key){
-            try{
-                return JSON.parse(android._get(key) || '""');
-            }catch(e){
-                return '';
-            }
-        };
-        android.put = function(k, v){
-            return android._put(k, JSON.stringify(v));
-        };
-        android.current_user = current_user;
-        android.token = getOrSetToken;
-        return android;
-    }
-
     function noop(){
         //todo
     }
 
-    return {
+    var funs = {
         // 获取版本
         version: function(){
             return "1.0";
@@ -119,6 +103,14 @@ android = (function(){
                 alert(msg);
             }
         },
+        "confirm": function(option, callback){
+            callback = callback || option['callback'];
+            if(confirm(option['message'])){
+                callback(true);
+            }else{
+                callback(false);
+            }
+        },
         "select": function(opts){
             opts = opts || [
                 {
@@ -180,4 +172,25 @@ android = (function(){
         },
         "token": getOrSetToken
     }
+
+    if(typeof(android) != 'undefined'){
+        android.get = function(key){
+            try{
+                return JSON.parse(android._get(key) || '""');
+            }catch(e){
+                return '';
+            }
+        };
+        android.put = function(k, v){
+            return android._put(k, JSON.stringify(v));
+        };
+        android.current_user = current_user;
+        android.token = getOrSetToken;
+        if(!android['confirm']){
+            android['confirm'] = funs['confirm'];
+        }
+        return android;
+    }
+
+    return funs;
 })();

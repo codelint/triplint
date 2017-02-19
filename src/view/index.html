@@ -29,12 +29,14 @@
 <div class="list">
     <a :href="'trips.html?group_id='+list.id" class="info" v-for="(list,index) in lists">
         <p v-cloak class="title">{{ list.title }}</p>
+
         <div class="time-didian">
             <p v-cloak>{{ list.dateTime}} {{ list.day }}天 {{ list.browse }} 次浏览</p>
             <i v-cloak>{{ list.place }}</i>
         </div>
         <div class="user" v-on:click="showMember(list, $event)">
             <img v-cloak :src="list.portrait" :alt="list.by">
+
             <p v-cloak>by {{ list.by }}</p>
         </div>
         <img v-cloak :src="list.img" :alt="list.title">
@@ -54,21 +56,35 @@
 <script type="text/javascript" src="../js/api.js"></script>
 <script type="text/javascript" src="../js/index.js"></script>
 <script type="text/javascript">
-    jQuery(function (err, json) {
-//        U.api.user.login('15918658642', '...', function(err,json){
-//            if(err){
-//                alert(err['message']);
-//            }else{
-//                android.put('user.current', json);
-//                alert('用户[' + json['nick'] + ']登录成功');
-//            }
-//        });
-        $('input[type="file"]').change(function (err, json) {
-            U.api.oss.uploadTempFile(1, $('form'), function (err, json) {
-                alert('todo');
+    jQuery(function($){
+        function checkAndroidAppVersion(callback){
+            var versionNum = Number(android.version().replace(/\./g, ''));
+            if(versionNum < 1001){
+                return;
+            }
+            android && U.api.app.android(function(info){
+                // android.open_url(REST_BASE + '/android/triplint-v' + info['version'] + '.apk');
+                var newVersionNum = Number(info['version'].replace(/\./g, ''));
+                if(newVersionNum > versionNum){
+                    callback(info);
+                }
+            });
+        }
+
+        checkAndroidAppVersion(function(info){
+            android.confirm({
+                message: '有新版本(' + info['version'] + ')是否需要更新',
+                yesText: '是',
+                noText: '否',
+                callback: function(yesOrNo){
+                    if(yesOrNo){
+                        android.open_url(REST_BASE + '/android/triplint-v' + info['version'] + '.apk');
+                    }
+                }
             })
-        });
-    })
+        })
+
+    });
 </script>
 <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=o9CPvMuqXebMhwZvsbYmHW2P"></script>
 </body>

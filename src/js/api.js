@@ -72,6 +72,30 @@ U.ajax = (function($){
         }
     }
 
+    function getJson(url, callback, tries){
+        var getJson = arguments.callee;
+        tries = tries || retryTimes;
+        callback && $.ajax({
+            type: "get",
+            url: url,
+            success: function(json){
+                callback(null, json);
+            },
+            error: function(e){
+                tries--;
+                if(tries > 0){
+                    setTimeout(function(){
+                        getJson(url, callback, tries);
+                    }, retryInterval);
+                }else{
+                    callback(e, null);
+                }
+            },
+            contentType: "application/json",
+            dataType: "json"
+        });
+    }
+
     return {
         url: function(uri){
             return ROOT_URL + uri;
@@ -199,28 +223,8 @@ U.ajax = (function($){
             });
         },
         getJson: function(url, callback, tries){
-            var getJson = arguments.callee;
-            tries = tries || retryTimes;
             var fallback = before_call(url, {}, callback, tries);
-            fallback && $.ajax({
-                type: "get",
-                url: url,
-                success: function(json){
-                    fallback(null, json);
-                },
-                error: function(e){
-                    tries--;
-                    if(tries > 0){
-                        setTimeout(function(){
-                            getJson(url, callback, tries);
-                        }, retryInterval);
-                    }else{
-                        fallback(e, null);
-                    }
-                },
-                contentType: "application/json",
-                dataType: "json"
-            });
+            getJson(url, fallback, tries);
         }
     }
 })(jQuery);
@@ -550,6 +554,15 @@ U.api = (function($){
                 }))
             }
         },
-        'apiCall': apiCall
+        'apiCall': apiCall,
+        'app': {
+            'android': function(callback){
+                U.ajax.getJson(REST_BASE + '/android/triplint.json', function(err, json){
+                    if(!err && json){
+                        callback(json);
+                    }
+                })
+            }
+        }
     }
 })(jQuery);
