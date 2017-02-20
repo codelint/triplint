@@ -108,4 +108,11 @@ jQuery(function($){
         });
 
     });
+
+    new Vue({
+        el: 'div.member',
+        data: {
+            uid: uid
+        }
+    })
 });

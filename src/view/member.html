@@ -46,7 +46,7 @@
     <div class="box">
         <div flex="main:center cross:center" class="info">
             <div class="fans">
-                <a id="fan-a" href="friend.html#fans">
+                <a id="fan-a" :href="'friend.html?uid=' + uid + '#fans'">
                 <p class="number fanCount">0</p>
                 <p class="desc">粉丝</p>
                 </a>
@@ -55,7 +55,7 @@
                 <img class="avatar" src="../images/logo.png" alt="">
             </div>
             <div class="attention">
-                <a id="follow-a" href="friend.html#follows">
+                <a id="follow-a" :href="'friend.html?uid=' + uid + '#follows'">
                 <p class="number followCount">0</p>
                 <p class="desc">关注</p>
                 </a>

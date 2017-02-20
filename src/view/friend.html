@@ -87,6 +87,7 @@
 <script type="text/javascript" src="../js/common/ue.js"></script>
 <script type="text/javascript">
     jQuery(function($){
+        var uid = U.ajax.getUrlParam('uid') || 0;
         var loadData = false;
         if(location.hash.length){
             $('.weui-tab').hide();
@@ -94,7 +95,7 @@
 
         function loadFollowsData(page, callback){
             location.hash = '#follows';
-            U.api.user.follows(page, function(err, json){
+            U.api.user.follows(uid, page, function(err, json){
                 var data = [];
                 if(err){
                     android.alert(err.message);
@@ -121,7 +122,7 @@
 
         function loadFansData(page, callback){
             location.hash = '#fans';
-            U.api.user.fans(page, function(err, json){
+            U.api.user.fans(uid, page, function(err, json){
                 var data = [];
                 if(err){
                     android.alert(err.message);

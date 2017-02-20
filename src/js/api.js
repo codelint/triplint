@@ -459,13 +459,13 @@ U.api = (function($){
                     }, null);
                 }
             },
-            'follows': function(page, cbf){
+            'follows': function(uid, page, cbf){
                 page = Math.round(Number(page));
-                apiCall('user.follows', {'page': page}, cbf);
+                apiCall('user.follows', {uid: uid, 'page': page}, cbf);
             },
-            'fans': function(page, cbf){
+            'fans': function(uid, page, cbf){
                 page = Math.round(Number(page));
-                apiCall('user.fans', {'page': page}, cbf);
+                apiCall('user.fans', {uid: uid, 'page': page}, cbf);
             }
         },
         'traveller': {
