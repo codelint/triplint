@@ -88,6 +88,9 @@
 <script type="text/javascript">
     jQuery(function($){
         var loadData = false;
+        if(location.hash.length){
+            $('.weui-tab').hide();
+        }
 
         function loadFollowsData(page, callback){
             location.hash = '#follows';
