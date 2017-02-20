@@ -59,7 +59,7 @@
             <div class="weui-cell__bd">
                 <p>{{ item['nick'] || item['name'] }}</p>
             </div>
-            <div class="weui-cell__ft"><a href="#" v-on:click="followOrNot(item)">{{ item.isFollow ? '取消关注' : '关注'
+            <div class="weui-cell__ft" v-if="!!item['summary']"><a href="#" v-on:click="followOrNot(item)">{{ item.isFollow ? '取消关注' : '关注'
                 }}</a></div>
         </div>
     </div>
@@ -107,6 +107,7 @@
                             nick: v['follow_nick'],
                             name: v['follow_nick'],
                             avatar: v['follow_avatar'] || '../images/logo.png',
+                            summary: v['summary'],
                             isFollow: true
                         });
                     });
@@ -132,6 +133,7 @@
                             id: v['user_id'],
                             nick: v['user_nick'],
                             name: v['user_nick'],
+                            summary: v['summary'],
                             avatar: v['user_avatar'] || '../images/logo.png',
                             isFollow: false
                         });
