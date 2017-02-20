@@ -186,6 +186,7 @@ android = (function(){
         };
         android.current_user = current_user;
         android.token = getOrSetToken;
+        android.alert = funs['alert'];
         if(!android['confirm']){
             android['confirm'] = funs['confirm'];
         }
