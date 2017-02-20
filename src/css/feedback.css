@@ -16,6 +16,9 @@ body {
 .hide {
   display: none;
 }
+.traveller-on {
+  display: none!important;
+}
 @font-face {
   font-family: "iconfont";
   src: url('//at.alicdn.com/t/font_910v1plfu3ex9a4i.eot?t=1480672633584');

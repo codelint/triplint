@@ -16,6 +16,9 @@ body {
 .hide {
   display: none;
 }
+.traveller-on {
+  display: none!important;
+}
 .t-nav {
   display: -webkit-box;
   display: flex;

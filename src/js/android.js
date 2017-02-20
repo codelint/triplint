@@ -171,7 +171,7 @@ android = (function(){
             alert(title + ": " + msg);
         },
         "token": getOrSetToken
-    }
+    };
 
     if(typeof(android) != 'undefined'){
         android.get = function(key){
