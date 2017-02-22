@@ -1,14 +1,12 @@
-<!DOCTYPE html>
-<html lang="zh-CN">
+<!doctype html>
+<html lang="zh-cn">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1, user-scalable=no">
-    <title>编辑故事</title>
-    <link rel="stylesheet" href="//at.alicdn.com/t/font_ltgrrchdg28d7vi.css">
-    <link rel="stylesheet" href="../public/css/swiper-3.3.1.min.css">
-    <!--<link rel="stylesheet" href="../public/css/weui.css">-->
-    <link rel="stylesheet" href="http://mobile.uzise.com/assets/mob/css/weui.min.css">
-    <link rel="stylesheet" href="//cdn.bootcss.com/jquery-weui/0.8.0/css/jquery-weui.min.css">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>上传图片</title>
+    <link rel="stylesheet" href="../public/jquery-weui/1.0/weui.min.css">
+    <link rel="stylesheet" href="../public/jquery-weui/1.0/jquery-weui.min.css">
     <link rel="stylesheet" href="../css/checkpoint.min.css">
 </head>
 <body>
@@ -17,15 +15,12 @@
     <div class="title">编辑故事</div>
     <div class="right commit">发送</div>
 </div>
-
-<div class="main" id="app">
+<div class="main">
     <div class="box">
         <textarea name="comment" id="" cols="30" rows="10" placeholder="把你的故事记录在这里..."></textarea>
-
         <div class="img-box">
             <div class="img">
-                <form class="hide" id="oss-upload-form" autocomplete="off" action="http://yue.oss-cn-hangzhou.aliyuncs.com/"
-                      method="post" enctype="multipart/form-data" target="hidden_frame">
+                <form class="hide" id="oss-upload-form" autocomplete="off" action="http://yue.oss-cn-hangzhou.aliyuncs.com/" method="post" enctype="multipart/form-data" target="hidden_frame">
                     <iframe name='hidden_frame' id="hidden_frame" style='display: none'></iframe>
                     <input type="hidden" name="OSSAccessKeyId" value=""/>
                     <input type="hidden" name="policy" value=""/>
@@ -45,60 +40,67 @@
                     <div class="photo-mask-right float-left"></div>
                 </div>
             </div>
-            <div class="map">
-                <i class="iconfont icon-map"></i>
-                <span id="geo-title">故事发生在...</span>
-            </div>
         </div>
     </div>
-    <div class="weui_cells weui_cells_form">
-        <div class="weui_cell hide">
-            <div class="weui_cell_hd"><label class="weui_label">上级ID</label></div>
-            <div class="weui_cell_bd weui_cell_primary">
-                <input name="group_id" class="weui_input" type="text" :value="(U.ajax.getUrlParam('group_id'))" placeholder="请输入上级ID">
+
+    <div class="weui-cells__title map map-btn">
+        <i class="iconfont icon-map"></i>
+        <span id="geo-title">故事发生在...</span>
+    </div>
+
+    <div class="weui-cells weui-cells_form">
+        <div class="weui-cell">
+            <div class="weui-cell__hd"><label class="weui-label">拍摄时间</label></div>
+            <div class="weui-cell__bd">
+                <input name="create_time" class="weui-input" type="text" placeholder="请输入拍摄时间">
             </div>
         </div>
-        <div class="weui_cell">
-            <div class="weui_cell_hd"><label class="weui_label">摄影时间</label></div>
-            <div class="weui_cell_bd weui_cell_primary">
-                <input name="create_time" class="weui_input" type="text" :value="(new DateFormat('yyyy-MM-dd HH:mm:ss').format(new Date()))" placeholder="请输入摄影时间">
+        <div class="weui-cell">
+            <div class="weui-cell__hd"><label class="weui-label">海拔</label></div>
+            <div class="weui-cell__bd">
+                <input name="altitude" class="weui-input auto-fill" type="number" placeholder="输入海拔" value="0">
             </div>
         </div>
-        <div class="weui_cell hide">
-            <div class="weui_cell_hd"><label class="weui_label">经纬度</label></div>
-            <div class="weui_cell_bd weui_cell_primary">
-                <input name="longitude" class="weui_input" type="text" placeholder="请输入经度">
-                <input name="latitude" class="weui_input" type="text" placeholder="请输入纬度">
+        <div class="weui-cell">
+            <div class="weui-cell__hd"><label class="weui-label">路标</label></div>
+            <div class="weui-cell__bd">
+                <input name="mark" class="weui-input" type="text" placeholder="输入路标，如码农寺" value="">
             </div>
         </div>
-        <div class="weui_cell">
-            <div class="weui_cell_hd"><label class="weui_label">海拔</label></div>
-            <div class="weui_cell_bd weui_cell_primary">
-                <input name="altitude" class="weui_input" type="number" value="0" placeholder="请输入海拔">
+        <!--hide s-->
+        <div class="weui-cell hide">
+            <div class="weui-cell__hd"><label class="weui-label">经纬度</label></div>
+            <div class="weui-cell__bd">
+                <input name="longitude" class="weui-input auto-fill" type="number" placeholder="输入经度">
+                <input name="latitude" class="weui-input auto-fill" type="number" placeholder="输入纬度">
             </div>
         </div>
-        <div class="weui_cell">
-            <div class="weui_cell_hd"><label class="weui_label">路标</label></div>
-            <div class="weui_cell_bd weui_cell_primary">
-                <input name="mark" class="weui_input" type="text" placeholder="请输入路标，如码农寺">
+        <div class="weui-cell hide">
+            <div class="weui-cell__hd"><label class="weui-label">上级ID</label></div>
+            <div class="weui-cell__bd">
+                <input name="group_id" class="weui-input auto-fill" type="number" pattern="[0-9]*" placeholder="上级ID" value="0">
             </div>
         </div>
+        <!--hide e-->
     </div>
 </div>
-
+</body>
 <script type="text/javascript" src="../public/js/jquery-2.1.4.js"></script>
-<script src="//cdn.bootcss.com/jquery-weui/0.8.0/js/jquery-weui.min.js"></script>
-<script type="text/javascript" src="../public/js/vue.min.js"></script>
+<script type="text/javascript" src="../public/jquery-weui/1.0/jquery-weui.min.js"></script>
 <script type="text/javascript" src="../public/js/md5.js"></script>
 <script type="text/javascript" src="../public/js/underscore.js"></script>
 <script type="text/javascript" src="../public/js/exif.js"></script>
-<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=o9CPvMuqXebMhwZvsbYmHW2P"></script>
 <script type="text/javascript" src="../public/js/coordtransform.js"></script>
+<script type="text/javascript" src="../public/js/weui.min.js"></script>
+<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=o9CPvMuqXebMhwZvsbYmHW2P"></script>
 
 <script type="text/javascript" src="../js/android.js"></script>
 <script type="text/javascript" src="../js/api.js"></script>
 <script type="text/javascript" src="../js/common/date.js"></script>
 <script type="text/javascript" src="../js/common/ue.js"></script>
+
+<script type="text/javascript" src="../js/wechat/emoji-fix.js"></script>
+
 <script type="text/javascript">
     var latitude = U.ajax.getUrlParam('latitude') || false;
     var longitude = U.ajax.getUrlParam('longitude') || false;
@@ -110,24 +112,39 @@
         $file.css('width', $preview.css('width'));
         $file.css('height', $preview.css('height'));
         $file.css('z-index', 1);
-        $file.css('opacity', 1);
+        $file.css('opacity', 0);
     }
 
-    function setup_geo(lon, lat) {
+    function setup_geo(lon, lat, alt) {
         latitude = lat;
         longitude = lon;
+
         $('input[name="latitude"]').val('1').val(lat);
         $('input[name="longitude"]').val('1').val(lon);
         var bd09 = coordtransform.wgs84tobd09(lon, lat);
         (typeof(BMap) != 'undefined') && (new BMap.Geocoder()).getLocation(new BMap.Point(bd09[0], bd09[1]), function (rs) {
             var addComp = rs.addressComponents;
-            var streetNumber = addComp.streetNumber;
-            var strGeo = addComp.province + ", " + addComp.city + ", " + addComp.district + ", " + addComp.street + ((streetNumber) ? ", " + streetNumber : "");
+            var strGeo = addComp.province + ", " + addComp.city + ", " + addComp.district + ", " + addComp.street + ", " + addComp.streetNumber;
             $('#geo-title').text(strGeo);
         });
+        if (alt) {
+            $('input[name="altitude"]').val(Number(alt).toFixed(2));
+        } else {
+            U.api.apiCall('checkpoint.altitude', {
+                latitude: lat,
+                longitude: lon
+            }, function (err, json) {
+                if (json && json['altitude']) {
+                    $('input[name="altitude"]').val(Number(json['altitude']).toFixed(2));
+                }
+            });
+        }
+
+        // U.ajax.getJson('http://ditu.google.cn/maps/api/elevation/json?locations=30.7561,90.8205')
     }
 
     function upload_file() {
+        $.showLoading("正在上传...");
         U.api.oss.upload(1, function (err, json) {
             if (err) {
                 $.alert(err.message);
@@ -148,8 +165,9 @@
                 U.api.oss.uploadSuccessCallback = (function (info) {
                     return function () {
                         // $form.remove();
-                        $(".upload-img").remove();
-                        $.toast('上传成功', 'text');
+                        $(".upload-img").hide();
+                        $.hideLoading();
+                        // $.toast("上传成功", "text");
                         $('img.temp_picture').attr('src', U.api.oss.rid2url(info['rid'], 'style/wap_upload_preview'));
                         $('input[name="rid"]').val(info['rid']);
                         setTimeout(adjust_file_input_pos, 2000);
@@ -188,8 +206,8 @@
             var time = json['DateTimeOriginal'];
             var dateFormat = new DateFormat('yyyy:MM:dd HH:mm:ss');
             if (time && (time = dateFormat.parse(time))) {
-                $('input[name="create_time"]').val(Math.round(time.getTime() / 1000));
-                $('#time-title').text(dateFormat.format(time));
+                $('input[name="create_time"]').val(time.toString('yyyy-MM-dd HH:mm'));
+                $('#time-title').text(time.toString());
             }
         });
     }
@@ -205,12 +223,12 @@
                         return false;
                     });
                 } else {
-                    setup_geo(cp['longitude'], cp['latitude']);
+                    setup_geo(cp['longitude'], cp['latitude'], cp['altitude']);
                     $('input[name="id"]').val(cp['id']);
                     $('input[name="group_id"]').val(cp['group_id']);
                     $('input[name="mark"]').val(cp['mark']);
-                    $('textarea[name="comment"]').val(cp['comment']);
-                    $('input[name="create_time"]').val(cp['create_time']).trigger('change');
+                    $textarea.val(cp['comment']);
+                    $('input[name="create_time"]').val(new Date(cp['create_time'] * 1000).toString()).trigger('change');
                     $('img.temp_picture').attr('src', U.api.oss.rid2url(cp['photo'], 'style/wap_upload_preview'));
                 }
             });
@@ -218,18 +236,15 @@
         })(U.ajax.getUrlParam('id'));
         adjust_file_input_pos();
 
-        new Vue({
-            el: "#app"
-        });
-
-        var $group_id = $('input[name="group_id"]');
-        $group_id.val() && $group_id.attr('readonly', 'readonly');
+//        var $group_id = $('input[name="group_id"]');
+//        $group_id.val() && $group_id.attr('readonly', 'readonly');
 
         setTimeout(function () {
             var longitude = Number($('input[name="longitude"]').val());
             var latitude = Number($('input[name="latitude"]').val());
+            var altitude = Number($('input[name="altitude"]').val());
             if (longitude > 0.001 && latitude > 0.001) {
-                setup_geo(longitude, latitude);
+                setup_geo(longitude, latitude, altitude);
             } else {
                 var gps_info = android.gps();
                 gps_info = gps_info.split(',');
@@ -239,34 +254,57 @@
             }
         }, 2000);
 
+        var $textarea = $('textarea[name="comment"]');
 
-        $('textarea[name="comment"]').bind('keydown', function () {
-            $('span.font-number').text($(this).text().length);
-        }).bind('input propertychange', function () {
-            ($(this).val()) ? $(this).addClass("on") : $(this).removeClass("on");
+        function checkTextareVal() {
+            ($textarea.val()) ? $textarea.addClass("on") : $textarea.removeClass("on");
+        }
+
+        checkTextareVal();
+        $textarea.keydown(function () {
+            $('span.font-number').text($(this).val().length);
+        })[0].wxImeEmojiFix();
+
+        $textarea.focus(function () {
+            $(this).addClass("on");
+        });
+        $textarea.blur(function () {
+            checkTextareVal();
         });
 
-        $('.weui-vcode-btn.map-btn').attr('href', 'map.html' + location.search).click(function () {
+        $('.map-btn').attr('href', 'map.html' + location.search).click(function () {
             var lat = Number($('input[name="latitude"]').val());
             var lon = Number($('input[name="longitude"]').val());
             $('#map-frame').remove();
-            var $frame = $('<iframe id="map-frame" src="map.html" style="position:fixed;width:100%;height:100%;top:0;left:0;z-index:999;"></iframe>');
-            $frame.attr('src', 'map.html?latitude=' + latitude + '&longitude=' + longitude);
+            var $frame = $('<iframe id="map-frame" src="map.html"></iframe>');
+//            location.href = 'map.html?latitude=' + latitude + '&longitude=' + longitude;
+            $frame.attr('src', 'map.html?latitude=' + lat + '&longitude=' + lon);
             $('body').append($frame);
             return false;
         });
 
-        $('input[name="create_time"]').datetimePicker().change(function () {
-            $('#time-title').text(new DateFormat('yyyy-MM-dd HH:mm:ss').format(new Date()));
-        }).val('1').val(new DateFormat('yyyy-MM-dd HH:mm:ss').format(new Date())).trigger('change');
+        $('input[name="create_time"]').datetimePicker({
+            'min': '1986-09-08',
+            'onConfirm': function (result) {
+                $.alert(result);
+            },
+            'onChange': function () {
+
+            }
+        }).change(function () {
+            $('#time-title').text($('input[name="create_time"]').val());
+        }).val('1').val(new Date().toString('yyyy-MM-dd HH:mm')).trigger('change');
 
         $('input[name="file"]').change(upload_file).change(parse_file);
-
+        // 上传图片
         $(".upload-img").click(function () {
             $('input[name="file"]').trigger("click");
         });
 
         $('.commit').click(function () {
+            var dateFormat = new DateFormat('yyyy-MM-dd HH:mm');
+            var create_time = Math.round(Number(dateFormat.parse($('input[name="create_time"]').val()).getTime() / 1000));
+
             var data = {
                 'id': Math.round(Number($('input[name="id"]').val())),
                 'group_id': Number($('input[name="group_id"]').val()),
@@ -274,20 +312,26 @@
                 'altitude': Number($('input[name="altitude"]').val()),
                 'longitude': Number($('input[name="longitude"]').val()),
                 'latitude': Number($('input[name="latitude"]').val()),
-                'create_time': new Date($('input[name="create_time"]').val()).getTime(),
-                'comment': $('textarea[name="comment"]').val(),
+                'create_time': create_time,
+                'comment': $textarea.val(),
                 'mark': $('input[name="mark"]').val()
             };
             U.api.checkpoint.commit(data, function (err, json) {
                 if (err) {
-                    $.alert(err.message);
+                    $.toast(err.message, 'text');
                 } else {
-                    $.alert('保存成功');
+                    $.toast('保存成功', 'text');
+                    if (data['group_id'] < 0) {
+                        location.href = 'trips.html?group_id=' + json['id'];
+                    } else if (data['group_id'] > 0) {
+                        window.history.back();
+                    } else {
+                        window.history.back();
+                    }
                 }
             })
         });
+
     });
 </script>
-
-</body>
 </html>

@@ -141,8 +141,9 @@ body {
   margin: 50px 15px 0;
 }
 .main .box textarea[name=comment] {
+  padding: 6px 0;
   width: 100%;
-  height: 100px;
+  height: 86px;
   font-size: 14px;
   margin-top: 15px;
   color: #49bdca;
@@ -150,6 +151,7 @@ body {
   resize: none;
   background: transparent;
   border: 1px dashed #faf8ec;
+  text-indent: 6px;
 }
 .main .box textarea:hover,
 .main .box textarea.on {
@@ -167,7 +169,6 @@ body {
 }
 .main .box .img-box .img .temp_picture {
   width: 100%;
-  display: block;
   display: none;
 }
 .main .box .img-box .img .temp_picture[src^=http] {
@@ -202,22 +203,22 @@ body {
   height: 5px;
   -webkit-box-flex: 1;
 }
-.main .box .img-box .map {
+.main .map {
   font-size: 14px;
   margin-top: 10px;
   color: #49bdca;
 }
-.main .box .img-box .map .icon-map {
+.main .map .icon-map {
   font-size: 18px;
 }
-.main .weui_cells {
+.main .weui-cells {
   background-color: transparent;
 }
-.main .weui_label {
+.main .weui-label {
   color: #49bdca;
   font-size: 14px;
 }
-.main .weui_input {
+.main .weui-input {
   color: #c9cac5;
   font-size: 14px;
 }
@@ -233,8 +234,15 @@ body {
 .main input:-ms-input-placeholder {
   color: #c9cac5 !important;
 }
-.main .weui-cells:before,
-.main .weui-cells:after,
-.main .weui-cell:before {
-  border-top: 1px solid #c9cac5;
+iframe {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  z-index: 999;
+  border: none;
+}
+#select-gps {
+  background: #49bdca !important;
 }

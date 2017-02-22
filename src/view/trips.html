@@ -63,13 +63,13 @@
             <div class="day" v-for="(item, index) in items">
                 <div :id="'checkpoint-div-'+item.id">
                     <div v-if="item.dayshow">
-                    <p v-cloak class="day-marker">
-                        <i class="circle circle-first"></i>
-                        第{{ item.day }}天 {{ (new Date(item.create_time*1000).getMonth() + 1) }}月{{ (new
-                        Date(item.create_time*1000).getDate()) }}日
-                    </p>
+                        <p v-cloak class="day-marker">
+                            <i class="circle circle-first"></i>
+                            第{{ item.day }}天 {{ (new Date(item.create_time*1000).getMonth() + 1) }}月{{ (new
+                            Date(item.create_time*1000).getDate()) }}日
+                        </p>
 
-                    <p class="wp-sep clear-both"></p>
+                        <p class="wp-sep clear-both"></p>
                     </div>
                     <div class="day-content">
                         <div class="waypoint">
@@ -127,7 +127,7 @@
             </div>
         </div>
     </section>
-    <div style="margin-bottom:16px"><a class="load-btn">更多</a></div>
+    <div style="margin-bottom:0px"><a class="load-btn">更多</a></div>
 </div>
 
 </body>

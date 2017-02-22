@@ -29,7 +29,7 @@ function getRect(ele){
 jQuery(function($){
     var page_size = 10;
     var group_id = U.ajax.getUrlParam("group_id"), uid = U.ajax.getUrlParam("uid");
-    $('a.upload-btn').attr('href', 'upload.html?group_id=' + group_id);
+    $('a.upload-btn').attr('href', 'checkpoint.html?group_id=' + group_id);
     /**
      * @param callBack function(err, data)
      *  data : array [{
@@ -153,7 +153,7 @@ jQuery(function($){
                         // 喜欢
                         edit: function(checkpoint){
                             // $.toast("后期开放此功能", "text");
-                            location.href = 'upload.html?id=' + checkpoint['id'];
+                            location.href = 'checkpoint.html?id=' + checkpoint['id'];
                             // vm._data.items[index].like = ++(vm._data.items[index].like);
                         },
                         // 评论

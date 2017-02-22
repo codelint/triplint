@@ -12,8 +12,9 @@
         margin: 50px 15px 0;
         textarea {
             &[name=comment] {
+                padding: 6px 0;
                 width: 100%;
-                height: 100px;
+                height: 86px;
                 font-size: 14px;
                 margin-top: 15px;
                 color: @baseColor;
@@ -21,8 +22,11 @@
                 resize: none;
                 background: transparent;
                 border: 1px dashed #faf8ec;
+                text-indent: 6px;
             }
-            &:hover, &.on { border: 1px dashed #e4e4da; }
+            &:hover, &.on {
+                border: 1px dashed #e4e4da;
+            }
 
         }
         .img-box {
@@ -35,7 +39,6 @@
                 color: #c9cac5;
                 .temp_picture {
                     width: 100%;
-                    display: block;
                     display: none;
                     &[src^=http] {
                         display: block;
@@ -71,17 +74,27 @@
                     }
                 }
             }
-            .map {
-                font-size: 14px;
-                margin-top: 10px;
-                color: #49bdca;
-                .icon-map { font-size: 18px; }
-            }
         }
     }
-    .weui_cells { background-color: transparent; }
-    .weui_label { color: @baseColor; font-size: 14px; }
-    .weui_input { color: #c9cac5; font-size: 14px; }
+    .map {
+        font-size: 14px;
+        margin-top: 10px;
+        color: #49bdca;
+        .icon-map {
+            font-size: 18px;
+        }
+    }
+    .weui-cells {
+        background-color: transparent;
+    }
+    .weui-label {
+        color: @baseColor;
+        font-size: 14px;
+    }
+    .weui-input {
+        color: #c9cac5;
+        font-size: 14px;
+    }
     input {
         &::-webkit-input-placeholder {
             color: #c9cac5 !important;
@@ -96,5 +109,18 @@
             color: #c9cac5 !important;
         }
     }
-    .weui-cells:before, .weui-cells:after, .weui-cell:before { border-top: 1px solid #c9cac5; }
+}
+
+iframe {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    z-index: 999;
+    border: none;
+}
+
+#select-gps {
+    background: @baseColor !important;
 }
