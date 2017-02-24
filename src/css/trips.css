@@ -67,9 +67,9 @@ body {
 }
 @font-face {
   font-family: "iconfont";
-  src: url('//at.alicdn.com/t/font_910v1plfu3ex9a4i.eot?t=1480672633584');
+  src: url('http://at.alicdn.com/t/font_910v1plfu3ex9a4i.eot?t=1480672633584');
   /* IE9*/
-  src: url('//at.alicdn.com/t/font_910v1plfu3ex9a4i.eot?t=1480672633584#iefix') format('embedded-opentype'), /* IE6-IE8 */ url('//at.alicdn.com/t/font_910v1plfu3ex9a4i.woff?t=1480672633584') format('woff'), /* chrome, firefox */ url('//at.alicdn.com/t/font_910v1plfu3ex9a4i.ttf?t=1480672633584') format('truetype'), /* chrome, firefox, opera, Safari, Android, iOS 4.2+*/ url('//at.alicdn.com/t/font_910v1plfu3ex9a4i.svg?t=1480672633584#iconfont') format('svg');
+  src: url('http://at.alicdn.com/t/font_910v1plfu3ex9a4i.eot?t=1480672633584#iefix') format('embedded-opentype'), /* IE6-IE8 */ url('http://at.alicdn.com/t/font_910v1plfu3ex9a4i.woff?t=1480672633584') format('woff'), /* chrome, firefox */ url('http://at.alicdn.com/t/font_910v1plfu3ex9a4i.ttf?t=1480672633584') format('truetype'), /* chrome, firefox, opera, Safari, Android, iOS 4.2+*/ url('http://at.alicdn.com/t/font_910v1plfu3ex9a4i.svg?t=1480672633584#iconfont') format('svg');
   /* iOS 4.1- */
 }
 .iconfont {
