@@ -1,29 +1,29 @@
 /**
  * Created by Qiu on 16-10-3.
  */
-function setup_geo(lon, lat, index){
-    typeof(BMap) != 'undefined' && (new BMap.Geocoder()).getLocation(new BMap.Point(lon, lat), function(result){
-        if(result){
+function setup_geo(lon, lat, index) {
+    typeof(BMap) != 'undefined' && (new BMap.Geocoder()).getLocation(new BMap.Point(lon, lat), function (result) {
+        if (result) {
             vue._data.lists[index].place = result.address;
         }
     });
 }
 
-jQuery(function($){
+jQuery(function ($) {
 
-    function loadBarData(callback){
+    function loadBarData(callback) {
         var user = android.current_user();
-        if(!user){
+        if (!user) {
             location.href = ROOT_URL + '/view/login.html?success_cbf=' + encodeURIComponent(location.pathname + location.search + location.hash);
         }
 
-        var setup = function(err, json){
+        var setup = function (err, json) {
             var arr = [];
             var item;
-            if(err){
+            if (err) {
                 android.alert(err.message);
-            }else if(json){
-                for(var i = 0; i < json.length; i++){
+            } else if (json) {
+                for (var i = 0; i < json.length; i++) {
                     item = json[i];
                     arr.push({
                         'src': U.api.oss.rid2url(item['image'], 'style/index_bar_photo'),
@@ -34,16 +34,16 @@ jQuery(function($){
             }
         };
 
-        U.api.ad.list('index', function(err, json){
-            if(json && json.length){
+        U.api.ad.list('index', function (err, json) {
+            if (json && json.length) {
                 setup(err, json);
-            }else{
+            } else {
                 var traveller_id = (user && Number(user['source']) > 0.01) ? user['source'] : user['id'];
-                U.api.checkpoint.list({'group_id': 0, 'traveller_id': traveller_id}, function(err, json){
-                    if(err){
+                U.api.checkpoint.list({'group_id': 0, 'traveller_id': traveller_id}, function (err, json) {
+                    if (err) {
                         android.alert(err.message);
-                    }else{
-                        json = _.each(json, function(v){
+                    } else {
+                        json = _.each(json, function (v) {
                             v['image'] = v['photo'];
                             v['link'] = ROOT_URL + '/view/trips.html?group_id=' + v['id'];
                         });
@@ -58,7 +58,7 @@ jQuery(function($){
      *
      * @param callback
      */
-    function loadData(callback){
+    function loadData(callback) {
 //        callback([
 //            {
 //                title: '六月在夏天又去了海边',
@@ -72,10 +72,11 @@ jQuery(function($){
 //            }
 //        ]);
         var data = [];
-        function push(list){
+
+        function push(list) {
             var checkpoint;
-            if(list){
-                for(var i = list.length; i--;){
+            if (list) {
+                for (var i = list.length; i--;) {
                     checkpoint = list[i];
                     data.push({
                         'id': checkpoint['id'],
@@ -94,21 +95,22 @@ jQuery(function($){
                 }
             }
         }
-        U.api.checkpoint.index(1, function(err, json){
+
+        U.api.checkpoint.index(1, function (err, json) {
             push(json);
-            if(data.length > 0){
+            if (data.length > 0) {
                 callback(err, data);
-            }else{
-                U.api.traveller.follows(1, function(err, json){
-                    if(json && json['follows'] && json['follows'].length){
+            } else {
+                U.api.traveller.follows(1, function (err, json) {
+                    if (json && json['follows'] && json['follows'].length) {
                         var item = json['follows'][0];
                         U.api.checkpoint.list({
                             'traveller_id': item['follow_id']
-                        }, function(err, json){
+                        }, function (err, json) {
                             push(json);
                             callback(err, data);
                         })
-                    }else{
+                    } else {
                         callback(err, data);
                     }
                 });
@@ -116,8 +118,8 @@ jQuery(function($){
         })
     }
 
-    loadData(function(err, data){
-        if(err){
+    loadData(function (err, data) {
+        if (err) {
             alert(err.message);
             return;
         }
@@ -131,8 +133,8 @@ jQuery(function($){
                 lists: data
             },
             methods: {
-                showMember: function(item, event){
-                    if(event){
+                showMember: function (item, event) {
+                    if (event) {
                         event.preventDefault()
                     }
                     location.href = "member.html?uid=" + item['user_id'];
@@ -143,15 +145,15 @@ jQuery(function($){
 //        vue._data.lists = data;
     });
 
-    loadBarData(function(err, data){
-        if(err){
+    loadBarData(function (err, data) {
+        if (err) {
             alert(err.message);
             return;
         }
         var len = data.length;
         var item;
         var $div;
-        for(var i = 0; i < len; i++){
+        for (var i = 0; i < len; i++) {
             item = data[i];
             $div = $('<div class="swiper-slide">' +
                 '<a><img src="../images/img.jpg?oss_image_style=1024w_480h_4e_250-248-236bgc" alt=""></a>' +
@@ -170,13 +172,24 @@ jQuery(function($){
     });
 
 
-    $(".add").click(function(){
+    $(".add").click(function () {
         alert("ok");
         // location.href = "http://192.168.1.106:8050/src/view/";
     });
 
     var user = android.current_user();
-    if(user['traveller']){
+    if (user['traveller']) {
         $('#upload-a').show();
     }
+
+    // calc height
+    function calcWH() {
+        $(".user-list").width($(".list").eq(0).width());
+        $(".recommend-user-wrap li").height($(".recommend-user-wrap li").eq(0).width());
+    }
+
+    calcWH();
+    $("html,body").resize(function () {
+        clacWH();
+    });
 });
