@@ -1,3 +1,28 @@
+.before {
+  position: relative;
+}
+.before:before {
+  position: absolute;
+  display: block;
+  content: "";
+}
+.after {
+  position: relative;
+}
+.after:after {
+  position: absolute;
+  display: block;
+  content: "";
+}
+.fl {
+  float: left;
+}
+.fr {
+  float: left;
+}
+.clear {
+  clear: both;
+}
 * {
   margin: 0;
   padding: 0;
@@ -5,6 +30,9 @@
 a {
   text-decoration: blink;
   outline: none;
+}
+li {
+  list-style: none;
 }
 html,
 body {
@@ -17,5 +45,5 @@ body {
   display: none;
 }
 .traveller-on {
-  display: none!important;
+  display: none !important;
 }

@@ -1,3 +1,28 @@
+.before {
+  position: relative;
+}
+.before:before {
+  position: absolute;
+  display: block;
+  content: "";
+}
+.after {
+  position: relative;
+}
+.after:after {
+  position: absolute;
+  display: block;
+  content: "";
+}
+.fl {
+  float: left;
+}
+.fr {
+  float: left;
+}
+.clear {
+  clear: both;
+}
 .t-nav {
   display: -webkit-box;
   display: flex;

@@ -5,3 +5,46 @@
 // t-new
 @navHeight: 50px;
 @navLeftRightWidth: 50px;
+
+//布局
+.displayFlex() {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: flex;
+}
+
+.flex1() {
+    -webkit-box-flex: 1;
+    -webkit-flex: 1;
+    flex: 1;
+}
+
+.before {
+    position: relative;
+    &:before {
+        position: absolute;
+        display: block;
+        content: "";
+    }
+}
+
+.after {
+    position: relative;
+    &:after {
+        position: absolute;
+        display: block;
+        content: "";
+    }
+}
+
+.fl {
+    float: left;
+}
+
+.fr {
+    float: left;
+}
+
+.clear {
+    clear: both
+}
