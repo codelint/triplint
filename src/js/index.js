@@ -129,39 +129,69 @@ jQuery(function($){
      *      ]
      *  }
      */
+    var travellers = {};
+
     function loadTravellerData(callback){
-        //mock the travellers' data
         var user = android.current_user();
-        callback(false, {
+        var travellerData = {
             'title': '行者无疆',
-            'travellers': [
-                {
-                    'id': 123,
-                    'avatar': U.api.oss.rid2url(user['avatar']),
-                    'summary': 'hello world',
-                    'fansCount': 0,
-                    'photosCount': 0,
-                    'photos': [
-                        'http://star.kuwo.cn/star/starheads/160/61/54/2102134023.jpg',
-                        "http://star.kuwo.cn/star/starheads/160/54/38/535904482.jpg",
-                        "http://star.kuwo.cn/star/starheads/160/10/94/745334819.jpg"
-                    ]
-                },
-                {
-                    'id': 123,
-                    'avatar': U.api.oss.rid2url(user['avatar']),
-                    'summary': 'hello world',
-                    'fansCount': 0,
-                    'photosCount': 0,
-                    'photos': [
-                        'http://star.kuwo.cn/star/starheads/160/61/54/2102134023.jpg',
-                        "http://star.kuwo.cn/star/starheads/160/54/38/535904482.jpg",
-                        "http://star.kuwo.cn/star/starheads/160/10/94/745334819.jpg"
-                    ]
-                }
-            ]
-        });
+            'travellers': []
+        };
+
+        //mock the travellers' data
+//        travellerData['travellers'] = [
+//            {
+//                'id': 123,
+//                'avatar': U.api.oss.rid2url(user['avatar']),
+//                'summary': 'hello world',
+//                'fansCount': 0,
+//                'photosCount': 0,
+//                'photos': [
+//                    'http://star.kuwo.cn/star/starheads/160/61/54/2102134023.jpg',
+//                    "http://star.kuwo.cn/star/starheads/160/54/38/535904482.jpg",
+//                    "http://star.kuwo.cn/star/starheads/160/10/94/745334819.jpg"
+//                ]
+//            },
+//            {
+//                'id': 123,
+//                'avatar': U.api.oss.rid2url(user['avatar']),
+//                'summary': 'hello world',
+//                'fansCount': 0,
+//                'photosCount': 0,
+//                'photos': [
+//                    'http://star.kuwo.cn/star/starheads/160/61/54/2102134023.jpg',
+//                    "http://star.kuwo.cn/star/starheads/160/54/38/535904482.jpg",
+//                    "http://star.kuwo.cn/star/starheads/160/10/94/745334819.jpg"
+//                ]
+//            }
+//        ];
+//        callback(false, travellerData);
+
         //todo get the real traveller data
+        U.api.traveller.fans(0, 1, function(err, json){
+            if(json && json['fans']){
+                _.each(json['fans'], function(v, k){
+                    var user = {
+                        'id': v['user_id'],
+                        'nick': v['user_nick'],
+                        'summary': '...',
+                        'avatar': U.api.oss.rid2url(v['user_avatar']),
+                        'photosCount': 0,
+                        'fansCount': 0,
+                        'photos': [
+                            'http://star.kuwo.cn/star/starheads/160/61/54/2102134023.jpg',
+                            "http://star.kuwo.cn/star/starheads/160/54/38/535904482.jpg",
+                            "http://star.kuwo.cn/star/starheads/160/10/94/745334819.jpg"
+                        ]
+                    };
+                    if(!travellers[user['id']]){
+                        travellers[user['id']] = user;
+                        travellerData['travellers'].push(user)
+                    }
+                });
+                callback(false, travellerData);
+            }
+        });
 
     }
 
@@ -227,10 +257,13 @@ jQuery(function($){
             data: data,
             mounted: function(){
                 if(data['travellers'] && data['travellers'].length > 0){
+//                    $('#user-recommend-div').removeClass('hide');
                     $('#user-recommend-div').addClass('hide');
                 }else{
-                    $('#user-recommend-div').removeClass('hide');
+                    $('#user-recommend-div').addClass('hide');
                 }
+                $(".user-list").width($(".list").eq(0).width());
+                $(".recommend-user-wrap li").height($(".recommend-user-wrap li").eq(0).width());
             },
             methods: {
 
@@ -249,11 +282,11 @@ jQuery(function($){
     }
 
     // calc height
-    function calcWH(){
-        $(".user-list").width($(".list").eq(0).width());
-        $(".recommend-user-wrap li").height($(".recommend-user-wrap li").eq(0).width());
-    }
-
-    calcWH();
-    $("html,body").resize(calcWH);
+//    function calcWH(){
+//        $(".user-list").width($(".list").eq(0).width());
+//        $(".recommend-user-wrap li").height($(".recommend-user-wrap li").eq(0).width());
+//    }
+//
+//    calcWH();
+//    $("html,body").resize(calcWH);
 });
