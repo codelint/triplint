@@ -26,26 +26,26 @@
     <div class="swiper-pagination"></div>
 </div>
 
-<div class="recommend-user-wrap hide">
+<div id="user-recommend-div" class="recommend-user-wrap hide">
     <div class="title-wrap">
         <i class="iconfont icon-star"></i>
-        <p class="title">用户推荐</p>
+        <p class="title">{{title}}</p>
     </div>
     <div class="user-items">
-        <div class="user-list before after">
+        <div class="user-list before after" v-for="(traveller, index) in travellers">
             <div class="user-info">
                 <div class="photo">
-                    <img src="http://note.img-cn-hangzhou.aliyuncs.com/image/user/1/avatar.png?x-oss-process=style/menu_avatar" alt="">
+                    <img :src="traveller['avatar']" alt="">
                 </div>
                 <div class="info">
                     <span class="name">弹弓人</span>
                     <span class="icon">
                         <i class="iconfont icon-users"></i>
-                        88
+                        {{traveller['fansCount'] || 0}}
                     </span>
                     <span class="icon">
                         <i class="iconfont icon-photo"></i>
-                        99
+                        {{traveller['photosCount'] || 0}}
                     </span>
                 </div>
                 <div class="follow">
@@ -53,46 +53,8 @@
                 </div>
             </div>
             <ul class="before">
-                <li>
-                    <img src="http://star.kuwo.cn/star/starheads/160/61/54/2102134023.jpg" alt="">
-                </li>
-                <li>
-                    <img src="http://star.kuwo.cn/star/starheads/160/54/38/535904482.jpg" alt="">
-                </li>
-                <li>
-                    <img src="http://star.kuwo.cn/star/starheads/160/10/94/745334819.jpg" alt="">
-                </li>
-            </ul>
-        </div>
-        <div class="user-list before after">
-            <div class="user-info">
-                <div class="photo">
-                    <img src="http://note.img-cn-hangzhou.aliyuncs.com/image/user/2/avatar.png?x-oss-process=style/resize_128x128" alt="">
-                </div>
-                <div class="info">
-                    <span class="name">yQiu</span>
-                    <span class="icon">
-                        <i class="iconfont icon-users"></i>
-                        88
-                    </span>
-                    <span class="icon">
-                        <i class="iconfont icon-photo"></i>
-                        99
-                    </span>
-                </div>
-                <div class="follow">
-                    <i class="iconfont icon-af-follow"></i>
-                </div>
-            </div>
-            <ul class="before">
-                <li>
-                    <img src="http://star.kuwo.cn/star/starheads/160/42/97/3914752958.jpg" alt="">
-                </li>
-                <li>
-                    <img src="http://star.kuwo.cn/star/starheads/160/67/44/2762022849.jpg" alt="">
-                </li>
-                <li>
-                    <img src="http://star.kuwo.cn/star/starheads/160/6/72/3732390216.jpg" alt="">
+                <li v-for="(photo, index) in traveller['photos']">
+                    <img :src="photo" alt="">
                 </li>
             </ul>
         </div>

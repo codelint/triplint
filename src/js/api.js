@@ -472,8 +472,11 @@ U.api = (function($){
             'apply': function(data, cbf){
                 return apiCall('traveller.apply', data, cbf);
             },
-            'follows': function(page, cbf){
-                return apiCall('traveller.follows', {'page': page}, cbf);
+            'follows': function(uid, page, cbf){
+                return apiCall('traveller.follows', {'uid': uid, 'page': page}, cbf);
+            },
+            'fans': function(uid, page, cbf){
+                return apiCall('traveller.fans', {'uid': uid, 'page': page}, cbf);
             }
         },
         'checkpoint': {
