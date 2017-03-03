@@ -233,6 +233,7 @@ U.api = (function($){
 
     var app_id = 1;
     var app_token = '';
+    var auto_login = true;
 
     if(android){
         app_id = android.get('app.id') || '';
@@ -271,7 +272,7 @@ U.api = (function($){
 
     function callback_filter(cbf, no_auto_login){
         no_auto_login = !!no_auto_login;
-        var callback = no_auto_login ? cbf : function(err, json){
+        var callback = (no_auto_login || !auto_login) ? cbf : function(err, json){
             if(err && err.message.indexOf('未登录') >= 0){
                 location.href = ROOT_URL + '/view/login.html?success_cbf=' + encodeURIComponent(location.pathname + location.search + location.hash);
                 return;
@@ -339,6 +340,13 @@ U.api = (function($){
 
     return {
         apiUrl: _url,
+        config:function(key, value){
+            switch(key){
+                case 'auto_login':
+                    auto_login = !!value;
+                    break;
+            }
+        },
         'oss': {
             rid2url: rid2url,
             upload: function(slot, cbf){
@@ -589,8 +597,9 @@ U.api = (function($){
 
 //todo auto rsync data
 (function(api){
-    android.is_user() && (function(page){
+    (function(page){
         var callee = arguments.callee;
+        api.config("auto_login", false);
         api.user.follows(page, function(err, json){
             if(!err && json['follows'] && json['follows'].length){
                 var follows = android.get('trip.api.user.follows') || {};
@@ -602,6 +611,7 @@ U.api = (function($){
                 android.put('trip.api.user.follows', follows);
                 callee(page + 1);
             }
+            api.config("auto_login", true);
         });
     })(1);
 
