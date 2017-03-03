@@ -30,6 +30,9 @@ android = (function(){
         app_name: function(){
             return 'triplint';
         },
+        is_user: function(){
+            return !!android.get('user.current');
+        },
         current_user: current_user,
         // 获得存储值
         "get": function(key){

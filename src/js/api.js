@@ -589,7 +589,7 @@ U.api = (function($){
 
 //todo auto rsync data
 (function(api){
-    (function(page){
+    android.is_user() && (function(page){
         var callee = arguments.callee;
         api.user.follows(page, function(err, json){
             if(!err && json['follows'] && json['follows'].length){
