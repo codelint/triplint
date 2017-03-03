@@ -460,7 +460,14 @@ U.api = (function($){
                 }
             },
             'follows': function(uid, page, cbf){
-                page = Math.round(Number(page));
+                if(!cbf){
+                    cbf = page;
+                    page = Math.round(Number(uid));
+                    uid = 0;
+                }else{
+                    page = Math.round(Number(page));
+                }
+
                 apiCall('user.follows', {uid: uid, 'page': page}, cbf);
             },
             'fans': function(uid, page, cbf){
@@ -469,10 +476,14 @@ U.api = (function($){
             },
             'follow': function(uid, cbf){
                 apiCall('user.follow', {'user_id': uid}, cbf)
+            },
+            'isFollow': function(uid){
+                var follows = android.get('trip.api.user.follows');
+                return !!follows[uid]
             }
         },
         'traveller': {
-            'info' : function(id, cbf){
+            'info': function(id, cbf){
                 return apiCall('traveller.info', {'id': id}, cbf);
             },
             'apply': function(data, cbf){
@@ -575,3 +586,23 @@ U.api = (function($){
         }
     }
 })(jQuery);
+
+//todo auto rsync data
+(function(api){
+    (function(page){
+        var callee = arguments.callee;
+        api.user.follows(page, function(err, json){
+            if(!err && json['follows'] && json['follows'].length){
+                var follows = android.get('trip.api.user.follows') || {};
+                var follow;
+                for(var i = json['follows'].length; i--;){
+                    follow = json['follows'][i];
+                    follows[follow['follow_id']] = follow;
+                }
+                android.put('trip.api.user.follows', follows);
+                callee(page + 1);
+            }
+        });
+    })(1);
+
+})(U.api);

@@ -184,7 +184,7 @@ jQuery(function($){
                             ROOT_URL + '/images/logo.png'
                         ]
                     };
-                    if(!travellers[user['id']]){
+                    if(!travellers[user['id']] && !U.api.user.isFollow(user['id'])){
                         travellers[user['id']] = user;
                         travellerData['travellers'].push(user)
                     }
