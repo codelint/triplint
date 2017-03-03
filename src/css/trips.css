@@ -369,6 +369,12 @@ div.banner img {
   min-width: 39px;
   background-color: rgba(0, 0, 0, 0.5);
 }
+.trip .trip-wps .photo-ctn .wp-btns a {
+  text-align: center;
+}
+.trip .trip-wps .photo-ctn .wp-btns a .iconfont {
+  font-size: 20px;
+}
 .trip .trip-wps .photo-ctn .wp-btns .comment-btn {
   text-align: right;
   padding-left: 4px;
