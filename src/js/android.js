@@ -188,6 +188,7 @@ android = (function(){
             return android._put(k, JSON.stringify(v));
         };
         android.current_user = current_user;
+        android.is_user = funs['is_user'];
         android.token = getOrSetToken;
         android.alert = funs['alert'];
         if(!android['confirm']){
