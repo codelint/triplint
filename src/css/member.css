@@ -176,11 +176,11 @@ body {
 [v-cloak] {
   display: none;
 }
-.t-nav {
-  background: transparent;
-}
 .t-nav .left {
   text-decoration: blink;
+}
+.t-nav .right {
+  font-size: 14px;
 }
 .member {
   overflow: hidden;
@@ -258,6 +258,16 @@ body {
 }
 .trip .list {
   margin: 20px 10px 100px;
+}
+.trip .list .wrap {
+  position: relative;
+}
+.trip .list .wrap .icon-delete {
+  position: absolute;
+  color: #fff;
+  right: 15px;
+  bottom: 10px;
+  text-shadow: 1px 1px 1px #000;
 }
 .trip .list img {
   width: 100%;
