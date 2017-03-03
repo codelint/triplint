@@ -48,7 +48,7 @@
                         {{traveller['photosCount'] || 0}}
                     </span>
                 </div>
-                <div class="follow">
+                <div class="follow" v-on:click="followUser(traveller)">
                     <i class="iconfont icon-af-follow"></i>
                 </div>
             </div>

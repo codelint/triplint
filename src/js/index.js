@@ -179,9 +179,9 @@ jQuery(function($){
                         'photosCount': 0,
                         'fansCount': 0,
                         'photos': [
-                            'http://star.kuwo.cn/star/starheads/160/61/54/2102134023.jpg',
-                            "http://star.kuwo.cn/star/starheads/160/54/38/535904482.jpg",
-                            "http://star.kuwo.cn/star/starheads/160/10/94/745334819.jpg"
+                            ROOT_URL + '/images/logo.png',
+                            ROOT_URL + '/images/logo.png',
+                            ROOT_URL + '/images/logo.png'
                         ]
                     };
                     if(!travellers[user['id']]){
@@ -257,8 +257,8 @@ jQuery(function($){
             data: data,
             mounted: function(){
                 if(data['travellers'] && data['travellers'].length > 0){
-//                    $('#user-recommend-div').removeClass('hide');
-                    $('#user-recommend-div').addClass('hide');
+                    $('#user-recommend-div').removeClass('hide');
+//                    $('#user-recommend-div').addClass('hide');
                     (function(next, traveller, index, travellers){
                         var callee = arguments.callee;
                         U.api.traveller.info(traveller['id'], function(err, json){
@@ -273,8 +273,9 @@ jQuery(function($){
                                 $el.find(".user-list").width($(".list").eq(0).width());
                                 $el.find("li").height($el.find("li").eq(0).width());
                             }
+                            index += 1;
                             if(index < travellers.length){
-                                callee(next, travellers[index + 1], index + 1, travellers);
+                                callee(next, travellers[index], index, travellers);
                             }else{
                                 next();
                             }
@@ -288,7 +289,15 @@ jQuery(function($){
                 }
             },
             methods: {
-
+                followUser : function(traveller){
+                    U.api.user.follow(traveller['id'], function(err, json){
+                        if(err){
+                            android.alert(err.message);
+                        }else{
+                            android.alert('关注成功');
+                        }
+                    });
+                }
             }
         });
     });
