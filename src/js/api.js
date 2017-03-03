@@ -469,6 +469,9 @@ U.api = (function($){
             }
         },
         'traveller': {
+            'info' : function(id, cbf){
+                return apiCall('traveller.info', {'id': id}, cbf);
+            },
             'apply': function(data, cbf){
                 return apiCall('traveller.apply', data, cbf);
             },

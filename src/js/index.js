@@ -259,11 +259,33 @@ jQuery(function($){
                 if(data['travellers'] && data['travellers'].length > 0){
 //                    $('#user-recommend-div').removeClass('hide');
                     $('#user-recommend-div').addClass('hide');
+                    (function(next, traveller, index, travellers){
+                        var callee = arguments.callee;
+                        U.api.traveller.info(traveller['id'], function(err, json){
+                            if(json){
+                                var $el = $('#traveller-' + traveller['id']);
+                                var $ul = $el.find("ul");
+                                $ul.empty();
+                                var checkpoints = json['checkpoints'];
+                                _.each(checkpoints, function(checkpoint){
+                                    $ul.append($("<li><img src='"+U.api.oss.rid2url(checkpoint['photo'], 'style/resize_256x256')+"'></li>"));
+                                });
+                                $el.find(".user-list").width($(".list").eq(0).width());
+                                $el.find("li").height($el.find("li").eq(0).width());
+                            }
+                            if(index < travellers.length){
+                                callee(next, travellers[index + 1], index + 1, travellers);
+                            }else{
+                                next();
+                            }
+                        });
+                    })(function(next, traveller){
+
+                    }, data['travellers'][0], 0, data['travellers']);
+
                 }else{
                     $('#user-recommend-div').addClass('hide');
                 }
-                $(".user-list").width($(".list").eq(0).width());
-                $(".recommend-user-wrap li").height($(".recommend-user-wrap li").eq(0).width());
             },
             methods: {
 

@@ -32,7 +32,7 @@
         <p class="title">{{title}}</p>
     </div>
     <div class="user-items">
-        <div class="user-list before after" v-for="(traveller, index) in travellers">
+        <div :id="'traveller-' + traveller['id']" class="user-list before after" v-for="(traveller, index) in travellers">
             <div class="user-info">
                 <div class="photo">
                     <img :src="traveller['avatar']" alt="">
