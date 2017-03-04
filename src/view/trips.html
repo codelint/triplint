@@ -86,7 +86,7 @@
                                     <div class="photo-mask-right float-left"></div>
                                 </div>
                                 <div class="wp-btns">
-                                    <a class="comment-btn" href="javascript:void(0)" v-on:click="detail(item)">
+                                    <a v-if="item.children_count > 0" class="comment-btn" href="javascript:void(0)" v-on:click="detail(item)">
                                         <i class="iconfont icon-more"></i>
                                         <!--<span v-cloak>{{ item.comment_count }}</span>-->
                                     </a>
