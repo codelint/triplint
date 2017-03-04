@@ -50,8 +50,8 @@ body {
 @font-face {
   font-family: 'iconfont';
   /* project id 158059 */
-  src: url('http://at.alicdn.com/t/font_x3ydsrzdmihsq0k9.eot');
-  src: url('http://at.alicdn.com/t/font_x3ydsrzdmihsq0k9.eot?#iefix') format('embedded-opentype'), url('http://at.alicdn.com/t/font_x3ydsrzdmihsq0k9.woff') format('woff'), url('http://at.alicdn.com/t/font_x3ydsrzdmihsq0k9.ttf') format('truetype'), url('http://at.alicdn.com/t/font_x3ydsrzdmihsq0k9.svg#iconfont') format('svg');
+  src: url('http://at.alicdn.com/t/font_rn8htr0tce3cv7vi.eot');
+  src: url('http://at.alicdn.com/t/font_rn8htr0tce3cv7vi.eot?#iefix') format('embedded-opentype'), url('http://at.alicdn.com/t/font_rn8htr0tce3cv7vi.woff') format('woff'), url('http://at.alicdn.com/t/font_rn8htr0tce3cv7vi.ttf') format('truetype'), url('http://at.alicdn.com/t/font_rn8htr0tce3cv7vi.svg#iconfont') format('svg');
 }
 .iconfont {
   font-family: "iconfont" !important;
@@ -282,22 +282,22 @@ img {
 .barn .swiper-pagination-bullet-active {
   background: #ded3b3;
 }
-.recommend-user-wrap {
-  margin-bottom: 20px;
-}
-.recommend-user-wrap .title-wrap {
+.title-wrap {
   margin: 0 10px;
   height: 30px;
   line-height: 30px;
   color: #49bdca;
 }
-.recommend-user-wrap .title-wrap i {
+.title-wrap i {
   float: left;
   font-size: 26px;
   margin-top: -3px;
 }
-.recommend-user-wrap .title-wrap .title {
+.title-wrap .title {
   font-size: 12px;
+}
+.recommend-user-wrap {
+  margin-bottom: 20px;
 }
 .recommend-user-wrap .user-items {
   overflow: hidden;
@@ -409,7 +409,7 @@ img {
   margin-bottom: 10px;
   min-height: 100px;
   border-radius: 8px;
-  background: #ded3b3;
+  background: #f2edda;
 }
 .list .info .title {
   position: absolute;
