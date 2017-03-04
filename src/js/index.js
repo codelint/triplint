@@ -168,7 +168,7 @@ jQuery(function($){
 //        callback(false, travellerData);
 
         //todo get the real traveller data
-        U.api.traveller.fans(0, 1, function(err, json){
+        U.api.traveller.fans(user['source'], 1, function(err, json){
             if(json && json['fans']){
                 _.each(json['fans'], function(v, k){
                     var user = {
