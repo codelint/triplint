@@ -18,80 +18,85 @@
             opacity: 0;
             /*z-index:999;*/
         }
-        a{
+
+        a {
             color: white;
         }
     </style>
 </head>
 <body>
-<div class="t-nav">
-    <a href="javascript:window.history.back();" class="left on-menu"><i class="iconfont icon-left"></i></a>
+<div id="vm">
+    <div class="t-nav" :style="topNavStyle">
+        <a href="javascript:window.history.back();" class="left on-menu"><i class="iconfont icon-left"></i></a>
 
-    <div class="title"></div>
-    <div class="right" style="display: none"><i class="iconfont icon-more"></i></div>
-</div>
-<div class="member">
-    <form id="oss-upload-form" autocomplete="off" action="http://yue.oss-cn-hangzhou.aliyuncs.com/"
-          method="post" enctype="multipart/form-data" target="hidden_frame">
-        <iframe name='hidden_frame' id="hidden_frame" style='display: none'></iframe>
-        <input type="hidden" name="OSSAccessKeyId" value=""/>
-        <input type="hidden" name="policy" value=""/>
-        <input type="hidden" name="Signature" value=""/>
-        <input type="hidden" name="key" value=""/>
-        <input type="hidden" name="success_action_redirect"
-               value="http://complint.localhost/wap/view/oss_upload_success.html"/>
-        <input type="file" name="file" class="form-control" id="fileInput" accept="image/*;capture=camera"
-               placeholder="选择文件"/>
-    </form>
-    <div class="box">
-        <div flex="main:center cross:center" class="info">
-            <div class="fans">
-                <a id="fan-a" :href="'friend.html?uid=' + uid + '#fans'">
-                <p class="number fanCount">0</p>
-                <p class="desc">粉丝</p>
-                </a>
-            </div>
-            <div class="user">
-                <img class="avatar" src="../images/logo.png" alt="">
-            </div>
-            <div class="attention">
-                <a id="follow-a" :href="'friend.html?uid=' + uid + '#follows'">
-                <p class="number followCount">0</p>
-                <p class="desc">关注</p>
-                </a>
-            </div>
-            <div class="level" style="display: none">Lv.1</div>
-        </div>
-        <p class="name">Triplint</p>
-
-        <div class="msg" style="display: none">
-            消息
-        </div>
+        <div class="title"></div>
+        <div class="right" @click="edit" v-cloak>{{editStart?'完成':'编辑'}}</div>
     </div>
-    <!--<img class="member-bg" src="../../public/images/member.jpg" alt="">-->
-</div>
 
-<div class="trip" id="trip_items">
-    <div class="list">
-        <a :href="'trips.html?uid='+U.ajax.getUrlParam('uid')+'&group_id='+list.id" class="info" v-for="list in lists">
-            <p v-cloak class="title">{{ list.title }}</p>
-
-            <div class="time-didian">
-                <p v-cloak>{{ list.dateTime}} {{ list.day }}天 {{ list.browse }} 次浏览</p>
-                <i v-cloak>{{ list.place }}</i>
+    <div class="member">
+        <form id="oss-upload-form" autocomplete="off" action="http://yue.oss-cn-hangzhou.aliyuncs.com/"
+              method="post" enctype="multipart/form-data" target="hidden_frame">
+            <iframe name='hidden_frame' id="hidden_frame" style='display: none'></iframe>
+            <input type="hidden" name="OSSAccessKeyId" value=""/>
+            <input type="hidden" name="policy" value=""/>
+            <input type="hidden" name="Signature" value=""/>
+            <input type="hidden" name="key" value=""/>
+            <input type="hidden" name="success_action_redirect"
+                   value="http://complint.localhost/wap/view/oss_upload_success.html"/>
+            <input type="file" name="file" class="form-control" id="fileInput" accept="image/*;capture=camera"
+                   placeholder="选择文件"/>
+        </form>
+        <div class="box">
+            <div flex="main:center cross:center" class="info">
+                <div class="fans">
+                    <a id="fan-a" :href="'friend.html?uid=' + uid + '#fans'">
+                        <p class="number fanCount">0</p>
+                        <p class="desc">粉丝</p>
+                    </a>
+                </div>
+                <div class="user">
+                    <img class="avatar" src="../images/logo.png" alt="">
+                </div>
+                <div class="attention">
+                    <a id="follow-a" :href="'friend.html?uid=' + uid + '#follows'">
+                        <p class="number followCount">0</p>
+                        <p class="desc">关注</p>
+                    </a>
+                </div>
+                <div class="level" style="display: none">Lv.1</div>
             </div>
-            <div class="user">
-                <img v-cloak :src="list.portrait" :alt="list.by">
+            <p class="name">Triplint</p>
 
-                <p v-cloak>by {{ list.by }}</p>
+            <div class="msg" style="display: none">
+                消息
             </div>
-            <img v-cloak :src="list.img" :alt="list.title">
-        </a>
+        </div>
+        <!--<img class="member-bg" src="../../public/images/member.jpg" alt="">-->
     </div>
-    <p class="null hide">这里空空如也</p>
+
+    <div class="trip" id="trip_items">
+        <div class="list">
+            <div class="wrap" v-for="list in lists">
+                <a :href="'trips.html?uid='+uid+'&group_id='+list.id" class="info">
+                    <p v-cloak class="title">{{ list.title }}</p>
+
+                    <div class="time-didian">
+                        <p v-cloak>{{ list.dateTime}} {{ list.day }}天 {{ list.browse }} 次浏览</p>
+                        <i v-cloak>{{ list.place }}</i>
+                    </div>
+                    <div class="user">
+                        <img v-cloak :src="list.portrait" :alt="list.by">
+
+                        <p v-cloak>by {{ list.by }}</p>
+                    </div>
+                    <img v-cloak :src="list.img" :alt="list.title">
+                </a>
+                <i class="iconfont icon-delete" v-if="editStart" @click="remove(list)"></i>
+            </div>
+        </div>
+        <p class="null hide">这里空空如也</p>
+    </div>
 </div>
-
-
 <script type="text/javascript" src="../public/js/jquery-2.1.4.js"></script>
 <script type="text/javascript" src="../public/js/vue.min.js"></script>
 <script type="text/javascript" src="../public/js/underscore.js"></script>
