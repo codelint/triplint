@@ -249,7 +249,6 @@ U.buildApiClient = (function($){
     var app_id = 1;
     var app_token = '';
 
-
     if(android){
         app_id = android.get('app.id') || '';
         app_token = android.get('app.token' || '');
@@ -301,7 +300,8 @@ U.buildApiClient = (function($){
     }
 
     return function(client, option){
-        var auto_login = option['auto_login'] || false;
+        option = option || {};
+        var auto_login = !!option['auto_login'];
 
         function callback_filter(cbf, no_auto_login){
             no_auto_login = !!no_auto_login;
