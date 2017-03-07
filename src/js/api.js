@@ -10,13 +10,211 @@ ROOT_URL = 'http://' + location.host + '/wap';
 REST_BASE = 'http://' + location.host;
 U = typeof(U) == 'undefined' ? {} : U;
 
-U.ajax = (function($){
-    var retryInterval = 500;
-    var retryTimes = 3;
-    var lastCallTime = {};
+HttpAjax = (function($){
     var noop = function(){
     };
+    // ------------ init function -------------- //
+    var ClassSpec = function(option){
+        option = option || {};
+        var self = this;
+        self['retryInterval'] = option['retryInterval'] || 500;
+        self['retryTimes'] = option['retryTimes'] || 3;
+        self['lastCallTime'] = {};
+        self['loading_tip'] = option['loading_tip'] || noop;
+        self['before_call_var'] = option['before_call'] || noop;
+        self['before_callback'] = option['before_callback'] || noop;
+        self['after_callback'] = option['after_callback'] || noop;
+        self['wrap_callback'] = function(url, data, callback, tries){
+            callback = callback || noop;
 
+            try{
+                var str = url.replace(/(^|&)timestamp=([^&]*)(&|$)/g, '&').replace(/(^|&)sign=([^&]*)(&|$)/g, '&')
+                    + '&data=' + JSON.stringify(data).replace(new RegExp('{|}|"|:', 'g'), '') + '&tries=' + tries;
+                var now = (new Date()).getTime();
+                self.lastCallTime[str] = self.lastCallTime[str] || 0;
+
+                if(self.lastCallTime[str] && (now - self.lastCallTime[str]) < 1000){
+                    return false;
+                }else{
+                    self.lastCallTime[str] = now;
+                }
+                self.before_call_var(url, data);
+                return function(err, json){
+                    self.before_callback(err, json);
+                    var res = callback(err, json);
+                    self.after_callback(err, json);
+                    return res;
+                }
+            }catch(e){
+                return callback;
+            }
+        };
+        self['_getJson'] = function(url, callback, tries){
+            var getJson = arguments.callee;
+            tries = tries || self.retryTimes;
+            callback && $.ajax({
+                type: "get",
+                url: url,
+                success: function(json){
+                    callback(null, json);
+                },
+                error: function(e){
+                    tries--;
+                    if(tries > 0){
+                        setTimeout(function(){
+                            getJson(url, callback, tries);
+                        }, self.retryInterval);
+                    }else{
+                        callback(e, null);
+                    }
+                },
+                contentType: "application/json",
+                dataType: "json"
+            });
+        };
+    };
+
+    //------------------ Public Interface --------------//
+    var iface = {
+        url: function(uri){
+            return ROOT_URL + uri;
+        },
+        setLoadingTip: function(loading_func){
+            self['loading_tip'] = loading_func;
+        },
+        getUrlParam: function(name, default_val){
+            var reg = new RegExp('(^|&)' + name + '=([^&]*)(&|$)', 'i'),
+                r = window.location.search.substr(1).match(reg);
+            if(r !== null){
+                return decodeURIComponent(r[2]);
+            }else{
+                return default_val || '';
+            }
+        },
+        ajaxHtml: function(url, callback, tries){
+            var ajaxHtml = arguments.callee;
+            tries = tries || this.retryTimes;
+            var fallback = this.wrap_callback(url, {}, callback, tries);
+            fallback && $.ajax({
+                type: "get",
+                url: url,
+                success: function(html){
+                    fallback(null, html);
+                },
+                error: function(e){
+                    tries--;
+                    if(tries > 0){
+                        setTimeout(function(){
+                            ajaxHtml(url, callback, tries);
+                        }, this.retryInterval);
+                    }else{
+                        fallback(e, null);
+                    }
+                }
+            })
+        },
+        postForm: function(url, data, callback, tries){
+            var postJson = arguments.callee;
+            tries = tries || this.retryTimes;
+            var fallback = this.wrap_callback(url, data, callback, tries);
+            fallback && $.ajax({
+                type: "post",
+                url: url,
+                data: data,
+                success: function(json){
+                    fallback(null, json);
+                },
+                error: function(e){
+                    tries--;
+                    if(tries > 0){
+                        setTimeout(function(){
+                            postJson(url, data, callback, tries);
+                        }, this.retryInterval);
+                    }else{
+                        fallback(e, null);
+                    }
+                },
+                contentType: 'application/x-www-form-urlencoded'
+            });
+        },
+        postJson: function(url, data, callback, tries){
+            var postJson = arguments.callee;
+            tries = tries || this.retryTimes;
+            var fallback = this.wrap_callback(url, data, callback, tries);
+            fallback && $.ajax({
+                type: "post",
+                url: url,
+                data: JSON.stringify(data),
+                success: function(json){
+                    fallback(null, json);
+                },
+                error: function(e){
+                    tries--;
+                    if(tries > 0){
+                        setTimeout(function(){
+                            postJson(url, data, callback, tries);
+                        }, this.retryInterval);
+                    }else{
+                        fallback(e, null);
+                    }
+                },
+                contentType: "application/json",
+                dataType: "json"
+            });
+        },
+        jsonp: function(url, data, callback){
+            // tries = tries || retryTimes;
+            var cbfKey = 'callback' + (new Date()).getTime() + '';
+            var $script = $('<script type="text/javascript"></script>');
+            callback = this.wrap_callback(url, data, callback, 1);
+            if(!callback){
+                return;
+            }
+            U.ajax.jsonp[cbfKey] = function(json){
+                $script.remove();
+                callback(null, json);
+            };
+            $script.attr('src', url + '&callback=U.ajax.jsonp.' + cbfKey);
+            $('body').append($script);
+        },
+        postRawData: function(url, data, callback, tries){
+            var postData = arguments.callee;
+            tries = tries || this.retryTimes;
+            var fallback = this.wrap_callback(url, data, callback, tries);
+            fallback && $.ajax({
+                type: "post",
+                url: url,
+                data: data,
+                success: function(json){
+                    fallback(null, json);
+                },
+                error: function(e){
+                    tries--;
+                    if(tries > 0){
+                        setTimeout(function(){
+                            postData(url, data, callback, tries);
+                        }, this.retryInterval);
+                    }else{
+                        fallback(e, null);
+                    }
+                },
+                contentType: "application/x-www-form-urlencoded"
+            });
+        },
+        getJson: function(url, callback, tries){
+            var fallback = this.wrap_callback(url, {}, callback, tries);
+            this._getJson(url, fallback, tries);
+        }
+    };
+
+    //------------------ Return Class Instance ---------//
+    // jquery style
+    $.extend(ClassSpec.prototype, iface);
+    // origin style
+    // ClassSpec.prototype = iface;
+    return ClassSpec;
+})(jQuery);
+U.ajax = (function(){
     var loading_tip = function(){
         var html = '<div id="">' +
             '<div class="weui-mask_transparent"></div>' +
@@ -31,232 +229,31 @@ U.ajax = (function($){
         }, 0);
         return $html;
     };
-
     var $loading_pop = [];
 
-    var before_call_var = function(url, data){
-        $loading_pop.push(loading_tip());
-    };
-
-    var before_callback = function(err, json){
-        setTimeout(function(){
-            $loading_pop.length && $loading_pop.pop().remove();
-        }, 0);
-    };
-
-    var after_callback = noop;
-
-    function wrap_callback(url, data, callback, tries){
-        callback = callback || noop;
-
-        try{
-            var str = url.replace(/(^|&)timestamp=([^&]*)(&|$)/g, '&').replace(/(^|&)sign=([^&]*)(&|$)/g, '&')
-                + '&data=' + JSON.stringify(data).replace(new RegExp('{|}|"|:', 'g'), '') + '&tries=' + tries;
-            var now = (new Date()).getTime();
-            lastCallTime[str] = lastCallTime[str] || 0;
-
-            if(lastCallTime[str] && (now - lastCallTime[str]) < 1000){
-                return false;
-            }else{
-                lastCallTime[str] = now;
-            }
-            before_call_var(url, data);
-            return function(err, json){
-                before_callback(err, json);
-                var res = callback(err, json);
-                after_callback(err, json);
-                return res;
-            }
-        }catch(e){
-            return callback;
+    return new HttpAjax({
+        'retryInterval': 500,
+        'retryTimes': 3,
+        'loading_tip': loading_tip,
+        'before_call': function(url, data){
+            $loading_pop.push(loading_tip());
+        },
+        'before_callback': function(err, json){
+            setTimeout(function(){
+                $loading_pop.length && $loading_pop.pop().remove();
+            }, 0);
         }
-    }
-
-    function getJson(url, callback, tries){
-        var getJson = arguments.callee;
-        tries = tries || retryTimes;
-        callback && $.ajax({
-            type: "get",
-            url: url,
-            success: function(json){
-                callback(null, json);
-            },
-            error: function(e){
-                tries--;
-                if(tries > 0){
-                    setTimeout(function(){
-                        getJson(url, callback, tries);
-                    }, retryInterval);
-                }else{
-                    callback(e, null);
-                }
-            },
-            contentType: "application/json",
-            dataType: "json"
-        });
-    }
-
-    return {
-        url: function(uri){
-            return ROOT_URL + uri;
-        },
-        setLoadingTip: function(loading_func){
-            loading_tip = loading_func;
-        },
-        getUrlParam: function(name, default_val){
-            var reg = new RegExp('(^|&)' + name + '=([^&]*)(&|$)', 'i'),
-                r = window.location.search.substr(1).match(reg);
-            if(r !== null){
-                return decodeURIComponent(r[2]);
-            }else{
-                return default_val || '';
-            }
-        },
-        ajaxHtml: function(url, callback, tries){
-            var ajaxHtml = arguments.callee;
-            tries = tries || retryTimes;
-            var fallback = wrap_callback(url, {}, callback, tries);
-            fallback && $.ajax({
-                type: "get",
-                url: url,
-                success: function(html){
-                    fallback(null, html);
-                },
-                error: function(e){
-                    tries--;
-                    if(tries > 0){
-                        setTimeout(function(){
-                            ajaxHtml(url, callback, tries);
-                        }, retryInterval);
-                    }else{
-                        fallback(e, null);
-                    }
-                }
-            })
-        },
-        postForm: function(url, data, callback, tries){
-            var postJson = arguments.callee;
-            tries = tries || retryTimes;
-            var fallback = wrap_callback(url, data, callback, tries);
-            fallback && $.ajax({
-                type: "post",
-                url: url,
-                data: data,
-                success: function(json){
-                    fallback(null, json);
-                },
-                error: function(e){
-                    tries--;
-                    if(tries > 0){
-                        setTimeout(function(){
-                            postJson(url, data, callback, tries);
-                        }, retryInterval);
-                    }else{
-                        fallback(e, null);
-                    }
-                },
-                contentType: 'application/x-www-form-urlencoded'
-            });
-        },
-        postJson: function(url, data, callback, tries){
-            var postJson = arguments.callee;
-            tries = tries || retryTimes;
-            var fallback = wrap_callback(url, data, callback, tries);
-            fallback && $.ajax({
-                type: "post",
-                url: url,
-                data: JSON.stringify(data),
-                success: function(json){
-                    fallback(null, json);
-                },
-                error: function(e){
-                    tries--;
-                    if(tries > 0){
-                        setTimeout(function(){
-                            postJson(url, data, callback, tries);
-                        }, retryInterval);
-                    }else{
-                        fallback(e, null);
-                    }
-                },
-                contentType: "application/json",
-                dataType: "json"
-            });
-        },
-        jsonp: function(url, data, callback){
-            // tries = tries || retryTimes;
-            var cbfKey = 'callback' + (new Date()).getTime() + '';
-            var $script = $('<script type="text/javascript"></script>');
-            callback = wrap_callback(url, data, callback, 1);
-            if(!callback){
-                return;
-            }
-            U.ajax.jsonp[cbfKey] = function(json){
-                $script.remove();
-                callback(null, json);
-            };
-            $script.attr('src', url + '&callback=U.ajax.jsonp.' + cbfKey);
-            $('body').append($script);
-        },
-        postRawData: function(url, data, callback, tries){
-            var postData = arguments.callee;
-            tries = tries || retryTimes;
-            var fallback = wrap_callback(url, data, callback, tries);
-            fallback && $.ajax({
-                type: "post",
-                url: url,
-                data: data,
-                success: function(json){
-                    fallback(null, json);
-                },
-                error: function(e){
-                    tries--;
-                    if(tries > 0){
-                        setTimeout(function(){
-                            postData(url, data, callback, tries);
-                        }, retryInterval);
-                    }else{
-                        fallback(e, null);
-                    }
-                },
-                contentType: "application/x-www-form-urlencoded"
-            });
-        },
-        getJson: function(url, callback, tries){
-            var fallback = wrap_callback(url, {}, callback, tries);
-            getJson(url, fallback, tries);
-        }
-    }
-})(jQuery);
-
-U.api = (function($){
-
+    });
+})();
+U.buildApiClient = (function($){
     var app_id = 1;
     var app_token = '';
     var auto_login = true;
 
+
     if(android){
         app_id = android.get('app.id') || '';
         app_token = android.get('app.token' || '');
-    }
-
-    function setup_user_auth(user, callback){
-        android.put('app.id', user['id']);
-        android.put('app.token', user['api_token']);
-        app_id = android.get('app.id') || '';
-        app_token = android.get('app.token' || '');
-
-        if(user['name'] && user['avatar']){
-            android.put("app.user", user);
-        }else{
-            U.ajax.postJson(_url('user.info'), {'user_id': user['id']}, callback_filter(function(err, json){
-                if(!err && json){
-                    android.put('app.user', json);
-                    android.current_user(json);
-                }
-                callback && callback(err, json);
-            }, true));
-        }
     }
 
     function _url(method){
@@ -330,277 +327,301 @@ U.api = (function($){
         }
     }
 
-    function apiCall(method, data, callback){
-        if(!callback){
-            callback = data;
-            data = {};
-        }
-        return U.ajax.postJson(_url(method), data, callback_filter(callback));
-    }
+    return function(client){
 
-    return {
-        apiUrl: _url,
-        config: function(key, value){
-            switch(key){
-                case 'auto_login':
-                    auto_login = !!value;
-                    break;
-            }
-            return this;
-        },
-        'oss': {
-            rid2url: rid2url,
-            upload: function(slot, cbf){
-                U.ajax.postJson(_url('checkpoint.upload'), {'slot': slot}, callback_filter(cbf));
-            },
-            uploadTempFile: function(slot, $form, callback){
-                slot = (slot % 7 + 1) || 1;
-                // $('body').append($form);
-                U.ajax.postJson(_url('checkpoint.upload'), {'slot': slot}, callback_filter(function(err, json){
-                    if(json && json['data'] && json['data']['post']){
-                        var postData = json['data']['post'];
-                        // var $form = $('#oss-upload-form');
-//                        var $form = $('<form id="oss-upload-form">' +
-//                            '<input type="file" name="file" class="form-control" id="fileInput" placeholder="选择文件"/>' +
-//                        '</form>');
-                        // $('body').append($form);
-                        $form.attr('action', 'http://' + postData['host'] + '/');
-                        $form.attr('method', 'post');
-                        $form.attr('target', 'hidden_frame');
-                        $form.attr('encrypt', 'multipart/form-data');
-                        $form.attr('autocomplete', 'off');
-                        if(!$form.find('iframe').length){
-                            $form.append($('<iframe name="hidden_frame" id="hidden_frame" style="display: none"></iframe>'));
-                        }
-                        var $file = $form.find('input[type="file"]');
-                        if($file.length == 0 || !$file.val()){
-                            android.alert('未选择照片');
-                        }
-                        $form.append($('<input type="hidden" name="OSSAccessKeyId" value=""/>').val(postData['accessid']));
-                        $form.append($('<input type="hidden" name="policy" value=""/>').val(postData['policy']));
-                        $form.append($('<input type="hidden" name="Signature" value=""/>').val(postData['signature']));
-                        $form.append($('<input type="hidden" name="key" value=""/>').val(postData['object']));
-                        $form.append($('<input type="hidden" name="success_action_redirect" value=""/>').val(ROOT_URL + '/view/oss_upload_success.html'));
+        function setup_user_auth(user, callback){
+            android.put('app.id', user['id']);
+            android.put('app.token', user['api_token']);
+            app_id = android.get('app.id') || '';
+            app_token = android.get('app.token' || '');
 
-                        U.api.oss.uploadSuccessCallback = function(){
-                            $form.remove();
-                            callback(err, json);
-                        };
-
-                        $form.submit();
-                    }else{
-                        if(err){
-                            android.alert(err.message);
-                        }else{
-                            android.alert('上传文件失败');
-                        }
-                    }
-                }));
-            }
-        },
-        'user': {
-            'info': function(uid, callback){
-                if(!callback){
-                    callback = uid;
-                    uid = uid || android.get('app.id');
-                }
-                uid = uid || 0;
-                U.ajax.postJson(_url('user.info'), {'user_id': uid}, callback_filter(callback));
-            },
-            'loginWithToken': function(uid, token, cbf){
-                setup_user_auth({'id': uid, 'token': token}, cbf);
-            },
-            'login': function(mobile, password, wechat_id, cbf){
-                var login_info = {'login_name': mobile, 'password': password};
-                if(!cbf){
-                    cbf = wechat_id;
-                }else{
-                    if(wechat_id){
-                        login_info['wechat_id'] = wechat_id;
-                    }
-                }
-
-                U.ajax.postJson(_url('user.login'), login_info, callback_filter(function(err, user){
-                    if(user && user['id'] && user['api_token']){
-                        setup_user_auth(user);
-                    }
-                    cbf(err, user);
-                }))
-            },
-            'logout': function(meta, cbf){
-                if(!cbf){
-                    cbf = meta;
-                    meta = {};
-                }
-                cbf = cbf || function(){
-                    location.href = 'login.html';
-                };
-                U.ajax.postJson(_url('user.logout'), meta, callback_filter(cbf, true));
-            },
-            'register': function(mobile, nick, password, inviteCode, inviteMobile, cbf){
-                U.ajax.postJson(_url('user.register'), {
-                    "mobile": mobile,
-                    "nick": nick,
-                    "password": password,
-                    "inviteCode": inviteCode,
-                    "inviteMobile": inviteMobile
-                }, callback_filter(function(err, json){
-                    cbf(err, json);
-                }))
-            },
-            'invite': function(mobile, memo, cbf){
-                if(!cbf){
-                    cbf = memo;
-                    memo = '';
-                }
-                U.ajax.postJson(_url('user.invite'), {
-                    'mobile': mobile,
-                    'nick': memo
-                }, callback_filter(cbf))
-            },
-            'update': function(user, cbf){
-                user['id'] = Math.round(Number(user['id']));
-                if(user['id']){
-                    U.ajax.postJson(_url('user.update'), user, callback_filter(cbf));
-                }else{
-                    cbf({
-                        'message': '参数错误'
-                    }, null);
-                }
-            },
-            'follows': function(uid, page, cbf){
-                if(!cbf){
-                    cbf = page;
-                    page = Math.round(Number(uid));
-                    uid = 0;
-                }else{
-                    page = Math.round(Number(page));
-                }
-
-                apiCall('user.follows', {uid: uid, 'page': page}, cbf);
-            },
-            'fans': function(uid, page, cbf){
-                page = Math.round(Number(page));
-                apiCall('user.fans', {uid: uid, 'page': page}, cbf);
-            },
-            'follow': function(uid, cbf){
-                apiCall('user.follow', {'user_id': uid}, cbf)
-            },
-            'isFollow': function(uid){
-                var follows = android.get('trip.api.user.follows');
-                return !!follows[uid]
-            }
-        },
-        'traveller': {
-            'info': function(id, cbf){
-                return apiCall('traveller.info', {'id': id}, cbf);
-            },
-            'apply': function(data, cbf){
-                return apiCall('traveller.apply', data, cbf);
-            },
-            'follows': function(uid, page, cbf){
-                return apiCall('traveller.follows', {'uid': uid, 'page': page}, cbf);
-            },
-            'fans': function(uid, page, cbf){
-                return apiCall('traveller.fans', {'uid': uid, 'page': page}, cbf);
-            }
-        },
-        'checkpoint': {
-            'index': function(page, cbf){
-                return apiCall('checkpoint.index', {'page': page}, cbf);
-            },
-            'list': function(query, cbf){
-                query['group_id'] = query['group_id'] || 0;
-                U.ajax.postJson(_url('checkpoint.list'), query, callback_filter(function(err, json){
-                    if(json && json.length > 0){
-                        for(var i = json.length; i--;){
-                            json[i]['create_time'] = Number(json[i]['create_time']);
-                        }
-                    }
-                    cbf(err, json);
-                }));
-            },
-            /**
-             * @param data array {
-                 "group_id": 1000000,
-                 "resource": "oss://yue/image/1/tmp/checkpoint/hour/1.jpg",
-                 "latitude": 23.04,
-                 "longitude": 23.04,
-                 "altitude": 123,
-                 "create_time": 0,
-                 "comment": "有一种鸟一生只降落一次"
-             }
-             * @param cbf
-             */
-            'commit': function(data, cbf){
-                if(data['id']){
-                    delete data['resource'];
-                    U.ajax.postJson(_url('checkpoint.update'), data, callback_filter(cbf));
-                }else{
-                    U.ajax.postJson(_url('checkpoint.commit'), data, callback_filter(cbf));
-                }
-            },
-            'info': function(id, cbf){
-                U.ajax.postJson(_url('checkpoint.info'), {'id': id}, callback_filter(cbf));
-            },
-            'remove': function(id, cbf){
-                U.ajax.postJson(_url('checkpoint.remove'), {'id': id}, callback_filter(cbf));
-            }
-        },
-        'feedback': function(message, cbf){
-            U.ajax.postJson(_url('feedback.submit'), {
-                'user_name': '',
-                'contact': '',
-                'description': message
-            }, callback_filter(cbf));
-        },
-        'ad': {
-            'list': function(type, cbf){
-                U.ajax.postJson(_url('ad.list'), {'type': type}, callback_filter(cbf));
-            }
-        },
-        'trac': {
-            'sign': function(data, cbf){
-                U.ajax.postJson(_url('trac.api.signature'), data, callback_filter(cbf));
-            },
-            'list': function(query, cbf){
-                this.sign(query, callback_filter(function(err, json){
-                    if(json && json['endpoints']){
-                        U.ajax.jsonp(json['endpoints']['search'], {}, callback_filter(cbf));
-                    }
-                }))
-            },
-            'modify': function(query, cbf){
-                query['id'] = Math.floor(Number(query['id'] || 0));
-                if(!query['id']){
-                    cbf({'message': 'lack of info'}, null);
-                    return;
-                }
-                this.sign(query, callback_filter(function(err, json){
-                    if(json && json['endpoints']){
-                        U.ajax.jsonp(json['endpoints']['modify'], {}, callback_filter(cbf));
-                    }
-                }))
-            }
-        },
-        'apiCall': apiCall,
-        'app': {
-            'android': function(callback){
-                U.ajax.getJson(REST_BASE + '/android/triplint.json', function(err, json){
+            if(user['name'] && user['avatar']){
+                android.put("app.user", user);
+            }else{
+                client.postJson(_url('user.info'), {'user_id': user['id']}, callback_filter(function(err, json){
                     if(!err && json){
-                        callback(json);
+                        android.put('app.user', json);
+                        android.current_user(json);
                     }
-                })
+                    callback && callback(err, json);
+                }, true));
             }
         }
+
+        function apiCall(method, data, callback){
+            if(!callback){
+                callback = data;
+                data = {};
+            }
+            return client.postJson(_url(method), data, callback_filter(callback));
+        }
+
+        return {
+            apiUrl: _url,
+            config: function(key, value){
+                switch(key){
+                    case 'auto_login':
+                        auto_login = !!value;
+                        break;
+                }
+                return this;
+            },
+            'oss': {
+                rid2url: rid2url,
+                upload: function(slot, cbf){
+                    client.postJson(_url('checkpoint.upload'), {'slot': slot}, callback_filter(cbf));
+                },
+                uploadTempFile: function(slot, $form, callback){
+                    slot = (slot % 7 + 1) || 1;
+                    // $('body').append($form);
+                    client.postJson(_url('checkpoint.upload'), {'slot': slot}, callback_filter(function(err, json){
+                        if(json && json['data'] && json['data']['post']){
+                            var postData = json['data']['post'];
+                            // var $form = $('#oss-upload-form');
+                            //                        var $form = $('<form id="oss-upload-form">' +
+                            //                            '<input type="file" name="file" class="form-control" id="fileInput" placeholder="选择文件"/>' +
+                            //                        '</form>');
+                            // $('body').append($form);
+                            $form.attr('action', 'http://' + postData['host'] + '/');
+                            $form.attr('method', 'post');
+                            $form.attr('target', 'hidden_frame');
+                            $form.attr('encrypt', 'multipart/form-data');
+                            $form.attr('autocomplete', 'off');
+                            if(!$form.find('iframe').length){
+                                $form.append($('<iframe name="hidden_frame" id="hidden_frame" style="display: none"></iframe>'));
+                            }
+                            var $file = $form.find('input[type="file"]');
+                            if($file.length == 0 || !$file.val()){
+                                android.alert('未选择照片');
+                            }
+                            $form.append($('<input type="hidden" name="OSSAccessKeyId" value=""/>').val(postData['accessid']));
+                            $form.append($('<input type="hidden" name="policy" value=""/>').val(postData['policy']));
+                            $form.append($('<input type="hidden" name="Signature" value=""/>').val(postData['signature']));
+                            $form.append($('<input type="hidden" name="key" value=""/>').val(postData['object']));
+                            $form.append($('<input type="hidden" name="success_action_redirect" value=""/>').val(ROOT_URL + '/view/oss_upload_success.html'));
+
+                            U.api.oss.uploadSuccessCallback = function(){
+                                $form.remove();
+                                callback(err, json);
+                            };
+
+                            $form.submit();
+                        }else{
+                            if(err){
+                                android.alert(err.message);
+                            }else{
+                                android.alert('上传文件失败');
+                            }
+                        }
+                    }));
+                }
+            },
+            'user': {
+                'info': function(uid, callback){
+                    if(!callback){
+                        callback = uid;
+                        uid = uid || android.get('app.id');
+                    }
+                    uid = uid || 0;
+                    client.postJson(_url('user.info'), {'user_id': uid}, callback_filter(callback));
+                },
+                'loginWithToken': function(uid, token, cbf){
+                    setup_user_auth({'id': uid, 'token': token}, cbf);
+                },
+                'login': function(mobile, password, wechat_id, cbf){
+                    var login_info = {'login_name': mobile, 'password': password};
+                    if(!cbf){
+                        cbf = wechat_id;
+                    }else{
+                        if(wechat_id){
+                            login_info['wechat_id'] = wechat_id;
+                        }
+                    }
+
+                    client.postJson(_url('user.login'), login_info, callback_filter(function(err, user){
+                        if(user && user['id'] && user['api_token']){
+                            setup_user_auth(user);
+                        }
+                        cbf(err, user);
+                    }))
+                },
+                'logout': function(meta, cbf){
+                    if(!cbf){
+                        cbf = meta;
+                        meta = {};
+                    }
+                    cbf = cbf || function(){
+                        location.href = 'login.html';
+                    };
+                    client.postJson(_url('user.logout'), meta, callback_filter(cbf, true));
+                },
+                'register': function(mobile, nick, password, inviteCode, inviteMobile, cbf){
+                    client.postJson(_url('user.register'), {
+                        "mobile": mobile,
+                        "nick": nick,
+                        "password": password,
+                        "inviteCode": inviteCode,
+                        "inviteMobile": inviteMobile
+                    }, callback_filter(function(err, json){
+                        cbf(err, json);
+                    }))
+                },
+                'invite': function(mobile, memo, cbf){
+                    if(!cbf){
+                        cbf = memo;
+                        memo = '';
+                    }
+                    client.postJson(_url('user.invite'), {
+                        'mobile': mobile,
+                        'nick': memo
+                    }, callback_filter(cbf))
+                },
+                'update': function(user, cbf){
+                    user['id'] = Math.round(Number(user['id']));
+                    if(user['id']){
+                        client.postJson(_url('user.update'), user, callback_filter(cbf));
+                    }else{
+                        cbf({
+                            'message': '参数错误'
+                        }, null);
+                    }
+                },
+                'follows': function(uid, page, cbf){
+                    if(!cbf){
+                        cbf = page;
+                        page = Math.round(Number(uid));
+                        uid = 0;
+                    }else{
+                        page = Math.round(Number(page));
+                    }
+
+                    apiCall('user.follows', {uid: uid, 'page': page}, cbf);
+                },
+                'fans': function(uid, page, cbf){
+                    page = Math.round(Number(page));
+                    apiCall('user.fans', {uid: uid, 'page': page}, cbf);
+                },
+                'follow': function(uid, cbf){
+                    apiCall('user.follow', {'user_id': uid}, cbf)
+                },
+                'isFollow': function(uid){
+                    var follows = android.get('trip.api.user.follows');
+                    return !!follows[uid]
+                }
+            },
+            'traveller': {
+                'info': function(id, cbf){
+                    return apiCall('traveller.info', {'id': id}, cbf);
+                },
+                'apply': function(data, cbf){
+                    return apiCall('traveller.apply', data, cbf);
+                },
+                'follows': function(uid, page, cbf){
+                    return apiCall('traveller.follows', {'uid': uid, 'page': page}, cbf);
+                },
+                'fans': function(uid, page, cbf){
+                    return apiCall('traveller.fans', {'uid': uid, 'page': page}, cbf);
+                }
+            },
+            'checkpoint': {
+                'index': function(page, cbf){
+                    return apiCall('checkpoint.index', {'page': page}, cbf);
+                },
+                'list': function(query, cbf){
+                    query['group_id'] = query['group_id'] || 0;
+                    client.postJson(_url('checkpoint.list'), query, callback_filter(function(err, json){
+                        if(json && json.length > 0){
+                            for(var i = json.length; i--;){
+                                json[i]['create_time'] = Number(json[i]['create_time']);
+                            }
+                        }
+                        cbf(err, json);
+                    }));
+                },
+                /**
+                 * @param data array {
+                             "group_id": 1000000,
+                             "resource": "oss://yue/image/1/tmp/checkpoint/hour/1.jpg",
+                             "latitude": 23.04,
+                             "longitude": 23.04,
+                             "altitude": 123,
+                             "create_time": 0,
+                             "comment": "有一种鸟一生只降落一次"
+                         }
+                 * @param cbf
+                 */
+                'commit': function(data, cbf){
+                    if(data['id']){
+                        delete data['resource'];
+                        client.postJson(_url('checkpoint.update'), data, callback_filter(cbf));
+                    }else{
+                        client.postJson(_url('checkpoint.commit'), data, callback_filter(cbf));
+                    }
+                },
+                'info': function(id, cbf){
+                    client.postJson(_url('checkpoint.info'), {'id': id}, callback_filter(cbf));
+                },
+                'remove': function(id, cbf){
+                    client.postJson(_url('checkpoint.remove'), {'id': id}, callback_filter(cbf));
+                }
+            },
+            'feedback': function(message, cbf){
+                client.postJson(_url('feedback.submit'), {
+                    'user_name': '',
+                    'contact': '',
+                    'description': message
+                }, callback_filter(cbf));
+            },
+            'ad': {
+                'list': function(type, cbf){
+                    client.postJson(_url('ad.list'), {'type': type}, callback_filter(cbf));
+                }
+            },
+            'trac': {
+                'sign': function(data, cbf){
+                    client.postJson(_url('trac.api.signature'), data, callback_filter(cbf));
+                },
+                'list': function(query, cbf){
+                    this.sign(query, callback_filter(function(err, json){
+                        if(json && json['endpoints']){
+                            client.jsonp(json['endpoints']['search'], {}, callback_filter(cbf));
+                        }
+                    }))
+                },
+                'modify': function(query, cbf){
+                    query['id'] = Math.floor(Number(query['id'] || 0));
+                    if(!query['id']){
+                        cbf({'message': 'lack of info'}, null);
+                        return;
+                    }
+                    this.sign(query, callback_filter(function(err, json){
+                        if(json && json['endpoints']){
+                            client.jsonp(json['endpoints']['modify'], {}, callback_filter(cbf));
+                        }
+                    }))
+                }
+            },
+            'apiCall': apiCall,
+            'app': {
+                'android': function(callback){
+                    client.getJson(REST_BASE + '/android/triplint.json', function(err, json){
+                        if(!err && json){
+                            callback(json);
+                        }
+                    })
+                }
+            }
+        };
     }
 })(jQuery);
+
+U.api = U.buildApiClient(U.ajax);
 
 //todo auto rsync data
 (function(api){
     (function(page){
         var callee = arguments.callee;
-        api.config("auto_login", false).user.follows(page, function(err, json){
+        api.user.follows(page, function(err, json){
             if(!err && json['follows'] && json['follows'].length){
                 var follows = android.get('trip.api.user.follows') || {};
                 var follow;
@@ -611,8 +632,6 @@ U.api = (function($){
                 android.put('trip.api.user.follows', follows);
                 callee(page + 1);
             }
-            api.config("auto_login", true);
         });
     })(1);
-
-})(U.api);
+})(U.buildApiClient(new HttpAjax()));
