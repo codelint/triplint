@@ -88,19 +88,19 @@
                                 <div class="wp-btns">
                                     <a v-if="item.children_count > 0" class="comment-btn" href="javascript:void(0)" v-on:click="detail(item)">
                                         <i class="iconfont icon-more"></i>
-                                        <!--<span v-cloak>{{ item.comment_count }}</span>-->
+                                        <span v-cloak>{{ item.comment_count }}</span>
                                     </a>
-                                    <i v-if="item.user_id && item.user_id == android.current_user()['id']"
+                                    <i v-if="item.user_id && item.user_id == android.user()['id']"
                                        class="icon-btnbg"></i>
 
-                                    <a v-if="item.user_id && item.user_id == android.current_user()['id']"
+                                    <a v-if="item.user_id && item.user_id == android.user()['id']"
                                        class="delete-btn" href="javascript:void(0)" v-on:click="remove(item)">
                                         <i class="iconfont icon-delete"></i>
                                         <!--<span v-cloak>{{ item.comment_count }}</span>-->
                                     </a>
-                                    <i v-if="item.user_id && item.user_id == android.current_user()['id']"
+                                    <i v-if="item.user_id && item.user_id == android.user()['id']"
                                        class="icon-btnbg"></i>
-                                    <a v-if="item.user_id && item.user_id == android.current_user()['id']"
+                                    <a v-if="item.user_id && item.user_id == android.user()['id']"
                                        href="javascript:void(0)" class="like-btn" v-on:click="edit(item)">
                                         <i class="iconfont icon-edit"></i>
                                         <!--<span v-cloak>{{ item.like }}</span>-->

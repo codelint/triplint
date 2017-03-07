@@ -33,6 +33,9 @@ android = (function(){
         is_user: function(){
             return !!android.get('user.current');
         },
+        user: function(){
+            return android.get('user.current');
+        },
         current_user: current_user,
         // 获得存储值
         "get": function(key){
@@ -188,6 +191,7 @@ android = (function(){
             return android._put(k, JSON.stringify(v));
         };
         android.current_user = current_user;
+        android.user = funs['user'];
         android.is_user = funs['is_user'];
         android.token = getOrSetToken;
         android.alert = funs['alert'];

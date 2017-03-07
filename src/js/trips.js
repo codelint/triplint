@@ -144,7 +144,10 @@ jQuery(function($){
 
                 var vm = new Vue({
                     el: '#' + $elem.attr('id'),
-                    data: {items: []},
+                    data: {
+                        user : android.user(),
+                        items: data
+                    },
                     methods: {
                         // 查看图片
                         showImgs: function(event){
@@ -190,13 +193,10 @@ jQuery(function($){
                     })).open();
                 }
 
-                vm._data.items = data;
-
-
+//                vm._data.items = data;
             }else{
                 //todo no data process
             }
-
         };
     })();
 
@@ -240,8 +240,8 @@ jQuery(function($){
         return true;
     });
 
-    var user = android.current_user();
-    if(user['traveller']){
+    var user = android.get('user.current');
+    if(user && user['traveller']){
         $('#upload-a').show();
     }
 });

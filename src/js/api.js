@@ -46,7 +46,7 @@ U.ajax = (function($){
 
     var after_callback = noop;
 
-    function before_call(url, data, callback, tries){
+    function wrap_callback(url, data, callback, tries){
         callback = callback || noop;
 
         try{
@@ -115,7 +115,7 @@ U.ajax = (function($){
         ajaxHtml: function(url, callback, tries){
             var ajaxHtml = arguments.callee;
             tries = tries || retryTimes;
-            var fallback = before_call(url, {}, callback, tries);
+            var fallback = wrap_callback(url, {}, callback, tries);
             fallback && $.ajax({
                 type: "get",
                 url: url,
@@ -137,7 +137,7 @@ U.ajax = (function($){
         postForm: function(url, data, callback, tries){
             var postJson = arguments.callee;
             tries = tries || retryTimes;
-            var fallback = before_call(url, data, callback, tries);
+            var fallback = wrap_callback(url, data, callback, tries);
             fallback && $.ajax({
                 type: "post",
                 url: url,
@@ -161,7 +161,7 @@ U.ajax = (function($){
         postJson: function(url, data, callback, tries){
             var postJson = arguments.callee;
             tries = tries || retryTimes;
-            var fallback = before_call(url, data, callback, tries);
+            var fallback = wrap_callback(url, data, callback, tries);
             fallback && $.ajax({
                 type: "post",
                 url: url,
@@ -187,7 +187,7 @@ U.ajax = (function($){
             // tries = tries || retryTimes;
             var cbfKey = 'callback' + (new Date()).getTime() + '';
             var $script = $('<script type="text/javascript"></script>');
-            callback = before_call(url, data, callback, 1);
+            callback = wrap_callback(url, data, callback, 1);
             if(!callback){
                 return;
             }
@@ -201,7 +201,7 @@ U.ajax = (function($){
         postRawData: function(url, data, callback, tries){
             var postData = arguments.callee;
             tries = tries || retryTimes;
-            var fallback = before_call(url, data, callback, tries);
+            var fallback = wrap_callback(url, data, callback, tries);
             fallback && $.ajax({
                 type: "post",
                 url: url,
@@ -223,7 +223,7 @@ U.ajax = (function($){
             });
         },
         getJson: function(url, callback, tries){
-            var fallback = before_call(url, {}, callback, tries);
+            var fallback = wrap_callback(url, {}, callback, tries);
             getJson(url, fallback, tries);
         }
     }
@@ -340,12 +340,13 @@ U.api = (function($){
 
     return {
         apiUrl: _url,
-        config:function(key, value){
+        config: function(key, value){
             switch(key){
                 case 'auto_login':
                     auto_login = !!value;
                     break;
             }
+            return this;
         },
         'oss': {
             rid2url: rid2url,
@@ -599,8 +600,7 @@ U.api = (function($){
 (function(api){
     (function(page){
         var callee = arguments.callee;
-        api.config("auto_login", false);
-        api.user.follows(page, function(err, json){
+        api.config("auto_login", false).user.follows(page, function(err, json){
             if(!err && json['follows'] && json['follows'].length){
                 var follows = android.get('trip.api.user.follows') || {};
                 var follow;
