@@ -248,7 +248,6 @@ U.ajax = (function(){
 U.buildApiClient = (function($){
     var app_id = 1;
     var app_token = '';
-    var auto_login = true;
 
 
     if(android){
@@ -265,32 +264,6 @@ U.buildApiClient = (function($){
             auth_params = '&app_id=' + app_id + '&timestamp=' + now + '&sign=' + sign;
         }
         return REST_BASE + '/open/api?method=' + method + auth_params;
-    }
-
-    function callback_filter(cbf, no_auto_login){
-        no_auto_login = !!no_auto_login;
-        var callback = (no_auto_login || !auto_login) ? cbf : function(err, json){
-            if(err && err.message.indexOf('未登录') >= 0){
-                location.href = ROOT_URL + '/view/login.html?success_cbf=' + encodeURIComponent(location.pathname + location.search + location.hash);
-                return;
-            }
-            cbf(err, json);
-        };
-        return function(err, json){
-            if(err){
-                callback(err, json);
-            }else{
-                if(json && json['error_response']){
-                    err = json['error_response'];
-                }
-
-                if(json && json['response']){
-                    json = json['response'];
-                }
-
-            }
-            callback(err, json);
-        }
     }
 
     /**
@@ -327,7 +300,34 @@ U.buildApiClient = (function($){
         }
     }
 
-    return function(client){
+    return function(client, option){
+        var auto_login = option['auto_login'] || false;
+
+        function callback_filter(cbf, no_auto_login){
+            no_auto_login = !!no_auto_login;
+            var callback = (no_auto_login || !auto_login) ? cbf : function(err, json){
+                if(err && err.message.indexOf('未登录') >= 0){
+                    location.href = ROOT_URL + '/view/login.html?success_cbf=' + encodeURIComponent(location.pathname + location.search + location.hash);
+                    return;
+                }
+                cbf(err, json);
+            };
+            return function(err, json){
+                if(err){
+                    callback(err, json);
+                }else{
+                    if(json && json['error_response']){
+                        err = json['error_response'];
+                    }
+
+                    if(json && json['response']){
+                        json = json['response'];
+                    }
+
+                }
+                callback(err, json);
+            }
+        }
 
         function setup_user_auth(user, callback){
             android.put('app.id', user['id']);
@@ -615,7 +615,9 @@ U.buildApiClient = (function($){
     }
 })(jQuery);
 
-U.api = U.buildApiClient(U.ajax);
+U.api = U.buildApiClient(U.ajax, {
+    'auto_login': true
+});
 
 //todo auto rsync data
 (function(api){
