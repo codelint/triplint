@@ -48,15 +48,15 @@
 
 <body>
 <!--<div id="search-area" class="weui-cell weui-cell_vcode">-->
-    <!--<div class="weui-cell__bd">-->
-        <!--<input name="keyword" class="weui-input auto-fill" type="text" placeholder="输入关键字">-->
-    <!--</div>-->
-    <!--<div class="weui-cell__ft">-->
-        <!--<a id="search-btn" href="javascript:;" class="weui-vcode-btn map-btn">搜索</a>-->
-    <!--</div>-->
+<!--<div class="weui-cell__bd">-->
+<!--<input name="keyword" class="weui-input auto-fill" type="text" placeholder="输入关键字">-->
+<!--</div>-->
+<!--<div class="weui-cell__ft">-->
+<!--<a id="search-btn" href="javascript:;" class="weui-vcode-btn map-btn">搜索</a>-->
+<!--</div>-->
 <!--</div>-->
 <!--<div class="weui-btn-area">-->
-    <!--<a class="weui-btn weui-btn_primary commit" href="javascript:" id="select-gps">保存</a>-->
+<!--<a class="weui-btn weui-btn_primary commit" href="javascript:" id="select-gps">保存</a>-->
 <!--</div>-->
 <div id="container"></div>
 <table style="z-index: 999;position: fixed;bottom: 10%;right: 16px;border: 1px solid;width:18px;">
@@ -72,6 +72,12 @@
     var map = new BMap.Map("container");          // 创建地图实例
     map.enableScrollWheelZoom();
 
+    function mark(lon, lat){
+        var bd09 = coordtransform.wgs84tobd09(lon, lat);
+        var marker = new BMap.Marker(new BMap.Point(bd09[0], bd09[1]));
+        map.addOverlay(marker);
+    }
+
     /**
      * wgs
      */
@@ -79,14 +85,16 @@
         if(!data.length){
             return;
         }
+        map.clearOverlays();
         var points = [];
         _.each(data, function(v, k){
             var bd09 = coordtransform.wgs84tobd09(v['longitude'], v['latitude']);
+            mark(v['longitude'], v['latitude']);
             points.push(new BMap.Point(bd09[0], bd09[1]));
         });
 
         var polyline = new BMap.Polyline(points, {strokeColor: "red", strokeWeight: 1, strokeOpacity: 1});
-        map.clearOverlays();
+
         map.addOverlay(polyline);
 
         var bd09 = coordtransform.wgs84tobd09(data[0]['longitude'], data[0]['latitude']);
@@ -96,7 +104,6 @@
             map.setCenter(new BMap.Point(bd09[0], bd09[1]));
         }, 1000);
     }
-
 
 
     // drawRoutine(points);

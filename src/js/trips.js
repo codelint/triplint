@@ -145,6 +145,7 @@ jQuery(function($){
                 var vm = new Vue({
                     el: '#' + $elem.attr('id'),
                     data: {
+                        group_id: group_id,
                         user : android.user(),
                         items: data
                     },

@@ -115,7 +115,7 @@
                                     <i class="iconfont icon-shijian"></i>
                                     <span v-cloak>{{ (new Date(item.create_time*1000).getHours()) }}:{{ (new Date(item.create_time*1000).getMinutes()) }}</span>
                                 </p>
-                                <a v-cloak class="wp-poi wp-poi-verified" href="javascript:;">
+                                <a v-cloak class="wp-poi wp-poi-verified" :href="'routine.html?group_id='+group_id">
                                     <i class="iconfont icon-map"></i>
                                     {{ item.location }}
                                 </a>
