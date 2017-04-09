@@ -123,29 +123,48 @@
 
 <script type="text/javascript">
     jQuery(function($){
-        var page_size = 50;
+        var page_size = 10;
         var group_id = U.ajax.getUrlParam("group_id"), uid = U.ajax.getUrlParam("uid");
         var minTime = (new Date()).getTime() / 1000;
         var vshow = {};
+        var checkpoints = [];
+        var father = false;
 
-        function query(query, callBack){
+        function query(cond, callBack){
             if(!callBack){
-                callBack = query;
-                query = {
+                callBack = cond;
+                cond = {
                     "group_id": group_id,
                     "page": 1,
                     "psize": page_size
                 };
             }
 
-            query['group_id'] = group_id;
+            cond['group_id'] = group_id;
 
-            U.api.checkpoint.list(query, function(err, json){
+            U.api.checkpoint.list(cond, function(err, json){
                 if(err){
                     android.alert(err.message);
+                    if(checkpoints.length){
+                        callBack(err, checkpoints, cond);
+                    }
                 }else{
+                    json = _.each(json, function(v){
+                        if(!father){
+                            father = v;
+                        }
+
+                        if(father['group_id'] == v['id']){
+                            father = v;
+                        }
+                    });
+
+                    json = _.filter(json, function(v){
+                        return father['id'] != v['id'];
+                    });
                     // calculate array[].day
                     if(json && json.length){
+
                         json = _.sortBy(json, function(v){
                             if(v['create_time'] < minTime){
                                 minTime = v['create_time'];
@@ -164,9 +183,13 @@
                             }
                             v['htmlComment'] = v['comment'];
                             arr[k] = v;
+                            checkpoints.push(v);
                         });
+                        cond['page'] += 1;
+                        query(cond, callBack);
+                    }else{
+                        callBack(err, checkpoints, cond);
                     }
-                    callBack(err, json, query);
                 }
 
             });
