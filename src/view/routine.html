@@ -76,7 +76,7 @@
 
     function mark(lon, lat){
         var bd09 = coordtransform.wgs84tobd09(lon, lat);
-        var icon = new BMap.Icon(ROOT_URL + "/public/images/bluedot.8x8.png", new BMap.Size(8, 8));
+        var icon = new BMap.Icon(ROOT_URL + "/public/images/reddot.png", new BMap.Size(12, 12));
         var marker = new BMap.Marker(new BMap.Point(bd09[0], bd09[1]), {icon:icon});
 //        var marker = new BMap.Circle(new BMap.Point(bd09[0], bd09[1]), 30,{
 //            strokeColor:"red",
