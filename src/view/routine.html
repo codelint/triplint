@@ -74,9 +74,10 @@
     var cur_longitude = U.ajax.getUrlParam('longitude');
     map.enableScrollWheelZoom();
 
-    function mark(lon, lat){
+    function mark(lon, lat, dot_url){
+        dot_url = dot_url || "/public/images/reddot.png";
         var bd09 = coordtransform.wgs84tobd09(lon, lat);
-        var icon = new BMap.Icon(ROOT_URL + "/public/images/reddot.png", new BMap.Size(12, 12));
+        var icon = new BMap.Icon(ROOT_URL + dot_url, new BMap.Size(12, 12));
         var marker = new BMap.Marker(new BMap.Point(bd09[0], bd09[1]), {icon:icon});
 //        var marker = new BMap.Circle(new BMap.Point(bd09[0], bd09[1]), 30,{
 //            strokeColor:"red",
@@ -85,6 +86,10 @@
 //        });
 
         map.addOverlay(marker);
+    }
+
+    function distance(lon0, lat0, lon1, lat1){
+        return Math.sqrt((lon0-lon1)*(lon0-lon1) + (lat0-lat1)*(lat0-lat1));
     }
 
     /**
@@ -98,7 +103,11 @@
         var points = [];
         _.each(data, function(v, k){
             var bd09 = coordtransform.wgs84tobd09(v['longitude'], v['latitude']);
-            mark(v['longitude'], v['latitude']);
+            if(distance(cur_longitude, cur_latitude, v['longitude'], v['latitude']) < 0.01){
+                mark(v['longitude'], v['latitude'], "/public/images/bluedot.png");
+            }else{
+                mark(v['longitude'], v['latitude']);
+            }
             points.push(new BMap.Point(bd09[0], bd09[1]));
         });
 
