@@ -125,7 +125,6 @@
         }
     }
 
-
     if(cur_latitude && cur_longitude){
         var bd09 = coordtransform.wgs84tobd09(cur_longitude, cur_latitude);
         map.centerAndZoom(new BMap.Point(bd09[0], bd09[1]), 13);
