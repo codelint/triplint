@@ -44,6 +44,9 @@ body {
 .hide {
   display: none;
 }
+.main {
+  padding-top: 50px;
+}
 .traveller-on {
   display: none !important;
 }
@@ -253,4 +256,95 @@ a {
   font-weight: bold;
   text-align: center;
   color: #fff;
+}
+.t-nav .right {
+  font-size: 14px;
+}
+.postcard-wrap {
+  margin: 10px 10px 35px 10px;
+  position: relative;
+}
+.postcard-wrap:after {
+  content: '';
+  background: -webkit-repeating-linear-gradient(45deg, #114abc, #114abc 10px, #fff 10px, #fff 20px, #bf2010 20px, #bf2010 30px, #fff 30px, #fff 40px);
+  background: repeating-linear-gradient(45deg, #114abc, #114abc 10px, #fff 10px, #fff 20px, #bf2010 20px, #bf2010 30px, #fff 30px, #fff 40px);
+  border-radius: 4px;
+  box-shadow: 1px 2px 6px 1px rgba(76, 66, 47, 0.75);
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: -16px;
+  position: absolute;
+}
+.postcard-wrap .postcard {
+  position: relative;
+  margin: 0 16px 16px 0;
+  z-index: 1;
+  top: 8px;
+  left: 8px;
+  right: 8px;
+  bottom: 8px;
+  background: #fff;
+  background-image: -webkit-radial-gradient(rgba(191, 32, 16, 0.075) 15%, rgba(0, 0, 0, 0) 16%), -webkit-radial-gradient(rgba(17, 74, 188, 0.05) 15%, rgba(0, 0, 0, 0) 16%);
+  background-image: radial-gradient(rgba(191, 32, 16, 0.075) 15%, rgba(0, 0, 0, 0) 16%), radial-gradient(rgba(17, 74, 188, 0.05) 15%, rgba(0, 0, 0, 0) 16%);
+  background-size: 120px 120px;
+  background-position: 0 0, 60px 60px;
+  font-family: 'IM Fell English', serif;
+}
+.postcard-wrap .postcard .stamp {
+  width: 48px;
+  height: 48px;
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  border: 1px solid #d9d6c8;
+}
+.postcard-wrap .postcard .stamp img {
+  width: 100%;
+  height: 100%;
+}
+.postcard-wrap .postcard .postcodes {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  font-size: 12px;
+}
+.postcard-wrap .postcard .postcodes span {
+  margin: 0 1px;
+  width: 20px;
+  height: 20px;
+  text-align: center;
+  line-height: 20px;
+  display: inline-block;
+  border: 1px solid #bf2010;
+}
+.postcard-wrap .postcard .comment-wrap {
+  position: relative;
+  width: 100%;
+  font-size: 12px;
+  margin: 20px 10px;
+  line-height: 26px;
+  text-indent: 2em;
+  padding: 80px 0 20px 0;
+  right: 15px;
+}
+.postcard-wrap .postcard .comment-wrap .comment {
+  width: 70%;
+  float: right;
+  text-decoration: underline;
+}
+.add-postcard {
+  text-align: center;
+  margin: 50px auto;
+}
+.add-postcard i {
+  color: #49bdca;
+}
+.trip-cells_form {
+  background-color: #faf8ec;
+  font-size: 14px;
+}
+.trip-cells_form .weui-cell__hd,
+.trip-cells_form .weui-cell__bd {
+  color: #49bdca;
 }

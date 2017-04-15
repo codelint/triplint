@@ -44,6 +44,9 @@ body {
 .hide {
   display: none;
 }
+.main {
+  padding-top: 50px;
+}
 .traveller-on {
   display: none !important;
 }
