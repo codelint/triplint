@@ -242,7 +242,7 @@ jQuery(function($){
     });
 
     var user = android.get('user.current');
-    if(user && user['traveller']){
+    if(user){
         $('#upload-a').show();
     }
 });
