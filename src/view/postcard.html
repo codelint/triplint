@@ -17,7 +17,7 @@
     </div>
 
     <div class="postcard-items" v-if="status==0 && postcardItems.length>0">
-        <div class="postcard-wrap" v-for="(item,i) in postcardItems" @click="editPostcard(item,i)">
+        <div class="postcard-wrap" v-cloak v-for="(item,i) in postcardItems" @click="editPostcard(item,i)">
             <div class="postcard">
                 <div class="stamp">
                     <img src="../public/images/stamp.png" alt="">
