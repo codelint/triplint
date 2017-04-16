@@ -257,164 +257,94 @@ a {
   text-align: center;
   color: #fff;
 }
-.t-nav .title {
-  text-indent: 10px;
-  text-align: left;
-}
 .t-nav .right {
-  font-size: 15px;
+  font-size: 14px;
 }
-html,
-body {
+.postcard-wrap {
+  margin: 10px 10px 35px 10px;
+  position: relative;
+}
+.postcard-wrap:after {
+  content: '';
+  background: -webkit-repeating-linear-gradient(45deg, #114abc, #114abc 10px, #fff 10px, #fff 20px, #bf2010 20px, #bf2010 30px, #fff 30px, #fff 40px);
+  background: repeating-linear-gradient(45deg, #114abc, #114abc 10px, #fff 10px, #fff 20px, #bf2010 20px, #bf2010 30px, #fff 30px, #fff 40px);
+  border-radius: 4px;
+  box-shadow: 1px 2px 6px 1px rgba(76, 66, 47, 0.75);
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: -16px;
+  position: absolute;
+}
+.postcard-wrap .postcard {
+  position: relative;
+  margin: 0 16px 16px 0;
+  z-index: 1;
+  top: 8px;
+  left: 8px;
+  right: 8px;
+  bottom: 8px;
+  background: #fff;
+  background-image: -webkit-radial-gradient(rgba(191, 32, 16, 0.075) 15%, rgba(0, 0, 0, 0) 16%), -webkit-radial-gradient(rgba(17, 74, 188, 0.05) 15%, rgba(0, 0, 0, 0) 16%);
+  background-image: radial-gradient(rgba(191, 32, 16, 0.075) 15%, rgba(0, 0, 0, 0) 16%), radial-gradient(rgba(17, 74, 188, 0.05) 15%, rgba(0, 0, 0, 0) 16%);
+  background-size: 120px 120px;
+  background-position: 0 0, 60px 60px;
+  font-family: 'IM Fell English', serif;
+}
+.postcard-wrap .postcard .stamp {
+  width: 48px;
+  height: 48px;
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  border: 1px solid #d9d6c8;
+}
+.postcard-wrap .postcard .stamp img {
+  width: 100%;
   height: 100%;
 }
-.main {
+.postcard-wrap .postcard .postcodes {
   position: absolute;
-  width: 100%;
-  max-width: 640px;
-  top: 58px;
-  bottom: 0;
-}
-.main .feedback-list {
-  width: 100%;
-  padding-bottom: 50px;
-}
-.main .feedback-list .time {
-  padding: 15px;
+  top: 10px;
+  left: 10px;
   font-size: 12px;
-  color: #797979;
-  text-align: center;
 }
-.main .feedback-list .system {
-  display: inline-table;
-  width: 100%;
-  position: relative;
-}
-.main .feedback-list .system .sys-img {
-  position: absolute;
-  left: 15px;
-  width: 35px;
-  height: 35px;
-  border-radius: 50%;
-}
-.main .feedback-list .system .chat {
-  display: inline-block;
-}
-.main .feedback-list .system .chat .msg {
-  position: relative;
-  display: inline-block;
-  font-size: 13px;
-  margin: 5px 70px 15px 70px;
-  padding: 10px;
-  border: 1px solid #ececec;
-  color: #49bdca;
-  background: #fff;
-  float: left;
-}
-.main .feedback-list .system .chat .msg:before {
-  position: absolute;
-  content: "";
-  display: block;
-  top: -24px;
-  left: -16px;
-  width: 50px;
-  height: 23px;
-  z-index: 1;
-  background: #faf8ec;
-  border-bottom: 1px solid #ececec;
-}
-.main .feedback-list .system .chat .msg:after {
-  position: absolute;
-  left: -11px;
-  top: -10px;
-  content: " ";
+.postcard-wrap .postcard .postcodes span {
+  margin: 0 1px;
   width: 20px;
   height: 20px;
-  background: white;
-  transform: rotate(45deg);
-  border: 1px solid #ececec;
-  border-top: none;
-  border-right: none;
+  text-align: center;
+  line-height: 20px;
+  display: inline-block;
+  border: 1px solid #bf2010;
 }
-.main .feedback-list .user {
-  display: inline-table;
-  width: 100%;
+.postcard-wrap .postcard .comment-wrap {
   position: relative;
-}
-.main .feedback-list .user .sys-img {
-  position: absolute;
+  width: 100%;
+  font-size: 12px;
+  margin: 20px 10px;
+  line-height: 26px;
+  text-indent: 2em;
+  padding: 80px 0 20px 0;
   right: 15px;
-  width: 35px;
-  height: 35px;
-  border-radius: 50%;
 }
-.main .feedback-list .user .chat {
-  display: inline-block;
+.postcard-wrap .postcard .comment-wrap .comment {
+  width: 70%;
   float: right;
+  text-decoration: underline;
 }
-.main .feedback-list .user .chat .msg {
-  position: relative;
-  display: inline-block;
-  font-size: 13px;
-  margin: 5px 70px 15px 70px;
-  padding: 10px;
-  border: 1px solid #49bdca;
-  color: #fff;
-  background: #49bdca;
-  float: right;
-}
-.main .feedback-list .user .chat .msg:before {
-  position: absolute;
-  content: "";
-  display: block;
-  top: -24px;
-  right: -16px;
-  width: 50px;
-  height: 23px;
-  z-index: 1;
-  background: #faf8ec;
-  border-bottom: 1px solid #49bdca;
-}
-.main .feedback-list .user .chat .msg:after {
-  position: absolute;
-  top: -10px;
-  right: -11px;
-  content: " ";
-  width: 20px;
-  height: 20px;
-  background: #49bdca;
-  transform: rotate(45deg);
-  border: 1px solid #49bdca;
-  border-left: none;
-  border-bottom: none;
-}
-.main .input-sand {
-  position: fixed;
-  display: -webkit-box;
-  display: flex;
-  width: 100%;
-  max-width: 640px;
-  height: 50px;
-  line-height: 50px;
-  bottom: 0;
+.add-postcard {
   text-align: center;
-  background: #49bdca;
-  z-index: 10;
+  margin: 50px auto;
 }
-.main .input-sand input {
-  border: none;
-  height: 35px;
-  line-height: 35px;
-  margin: 7.5px 0 0 7.5px;
-  flex: 1;
-  text-indent: 15px;
-  outline: none;
+.add-postcard i {
+  color: #49bdca;
 }
-.main .input-sand .sand {
-  width: 80px;
-  background: #198f9c;
-  color: #fff;
-  height: 35px;
-  line-height: 35px;
-  margin: 7.5px;
+.trip-cells_form {
+  background-color: #faf8ec;
+  font-size: 14px;
+}
+.trip-cells_form .weui-cell__hd,
+.trip-cells_form .weui-cell__bd {
+  color: #49bdca;
 }
