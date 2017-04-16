@@ -23,6 +23,21 @@
 .clear {
   clear: both;
 }
+.f12 {
+  font-size: 12px;
+}
+.f14 {
+  font-size: 14px;
+}
+.f16 {
+  font-size: 16px;
+}
+.f18 {
+  font-size: 18px;
+}
+.f20 {
+  font-size: 20px;
+}
 * {
   margin: 0;
   padding: 0;
@@ -261,9 +276,33 @@ a {
   background-color: #faf8ec;
   font-size: 14px;
 }
+.trip-cells_form.weui-panel {
+  margin-top: 0;
+}
+.trip-cells_form.weui-panel:before {
+  display: none;
+}
+.trip-cells_form .pub-date .weui-vcode-btn {
+  color: #49bdca;
+  padding: 0 1.5em;
+}
+.trip-cells_form .pub-date input {
+  text-align: center;
+}
 .trip-cells_form .weui-cell__hd,
 .trip-cells_form .weui-cell__bd {
   color: #49bdca;
+}
+.trip-cells_form .money {
+  margin-right: 1em;
+}
+.trip-cells_form .weui-media-box__desc .server {
+  padding: 0 2px;
+  border: 1px solid #ded3b3;
+  display: inline-block;
+  margin: 2px;
+  border-radius: 4px;
+  text-align: center;
 }
 .weui-loadmore__tips {
   background-color: #faf8ec !important;
@@ -291,7 +330,8 @@ a {
   height: 30px;
   right: 15px;
   text-align: center;
-  bottom: 15px;
+  top: 50%;
+  margin-top: -15px;
   line-height: 30px;
   color: #fff;
   font-size: 14px;
@@ -299,4 +339,7 @@ a {
   -moz-border-radius: 8px;
   border-radius: 8px;
   background: #49bdca;
+}
+.book.no {
+  background: #ccc;
 }

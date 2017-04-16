@@ -7,10 +7,34 @@
 .trip-cells_form {
     background-color: @color2;
     font-size: 14px;
-    .weui-cells {
+    &.weui-panel {
+        margin-top: 0;
+        &:before {
+            display: none;
+        }
+    }
+    .pub-date {
+        .weui-vcode-btn {
+            color: @baseColor;
+            padding: 0 1.5em;
+        }
+        input {
+            text-align: center;
+        }
     }
     .weui-cell__hd, .weui-cell__bd {
         color: @baseColor;
+    }
+    .money {
+        margin-right: 1em;
+    }
+    .weui-media-box__desc .server {
+        padding: 0 2px;
+        border: 1px solid #ded3b3;
+        display: inline-block;
+        margin: 2px;
+        border-radius: 4px;
+        text-align: center;
     }
 }
 
@@ -44,7 +68,8 @@
     height: 30px;
     right: 15px;
     text-align: center;
-    bottom: 15px;
+    top: 50%;
+    margin-top: -15px;
     line-height: 30px;
     color: #fff;
     font-size: 14px;
@@ -52,4 +77,7 @@
     -moz-border-radius: 8px;
     border-radius: 8px;
     background: @baseColor;
+    &.no {
+        background: #ccc;
+    }
 }
