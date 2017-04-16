@@ -5,6 +5,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <title>选择位置</title>
     <link rel="stylesheet" href="../public/css/weui.css">
+    <link rel="stylesheet" href="../public/css/font_h5xvumt53vwsif6r.css">
     <style type="text/css">
         html {
             height: 100%
@@ -43,12 +44,19 @@
     <script src="../public/js/jquery-2.1.4.js"></script>
     <script type="text/javascript" src="../js/android.js"></script>
     <script type="text/javascript" src="../js/api.js"></script>
+    <script type="text/javascript" src="../public/js/exif.js"></script>
 </head>
 
 <body>
 <div id="search-area" class="weui-cell weui-cell_vcode">
     <div class="weui-cell__bd">
         <input name="keyword" class="weui-input auto-fill" type="text" placeholder="输入关键字">
+    </div>
+    <div>
+        <i class="iconfont icon-camera">
+        </i>
+        <input type="file" name="file" class="form-control" id="fileInput" accept="image/*;capture=camera"
+               placeholder="选择文件" style="position: fixed"/>
     </div>
     <div class="weui-cell__ft">
         <a id="search-btn" href="javascript:;" class="weui-vcode-btn map-btn">搜索</a>
@@ -59,6 +67,53 @@
 </div>
 <div id="container"></div>
 
+<script type="text/javascript">
+    jQuery(function($){
+        var $file = $('input[name="file"]');
+        var $icon = $('i.icon-camera');
+        $file.css('left', $icon.offset().left);
+        $file.css('top', $icon.offset().top);
+        $file.css('width', $icon.css('width'));
+        $file.css('height', $icon.css('height'));
+        $file.css('z-index', 1);
+        $file.css('opacity', 0);
+
+        function parse_file(e){
+            if(!e.target || !e.target.files.length || !e.target.files[0]){
+                return
+            }
+
+            var _file = e.target.files[0];
+            var passFileType = /^(?:image\/bmp|image\/gif|image\/jpeg|image\/png)$/i;
+
+            if(!passFileType.test(_file.type)){
+                return
+            }
+
+            (new FileReader()).readAsDataURL(_file);
+
+            EXIF.getData(_file, function(){
+                // var _dataTxt = EXIF.pretty(this);
+                var json = EXIF.getAllTags(this);
+                var latitude = json['GPSLatitude'];
+                var longitude = json['GPSLongitude'];
+                if(latitude && longitude){
+                    latitude = latitude[0] + latitude[1] / 60 + latitude[2] / 3600;
+                    longitude = longitude[0] + longitude[1] / 60 + longitude[2] / 3600;
+                    mark(longitude.toFixed(8), latitude.toFixed(8));
+                    var bd09 = coordtransform.wgs84tobd09(longitude.toFixed(8), latitude.toFixed(8));
+                        // 初始化地图，设置中心点坐标和地图级别
+                    map.centerAndZoom(new BMap.Point(bd09[0], bd09[1]), 15);
+                }else{
+                    android.alert('图片文件中不存在地理位置信息');
+                }
+            });
+        }
+
+        $file.change(parse_file);
+
+    });
+</script>
 <script type="text/javascript">
     var map = new BMap.Map("container");          // 创建地图实例
 
