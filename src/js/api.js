@@ -293,7 +293,7 @@ U.buildApiClient = (function($){
             rid = rid.substr(6);
             var bucket = rid.slice(0, rid.indexOf('/'));
             var object = rid.slice(rid.indexOf('/') + 1);
-            return 'http://' + OSS_IMG_DOMAIN + '/' + object;
+            return 'http://' + bucket + OSS_IMG_DOMAIN + '/' + object;
         }else{
             return rid;
         }
