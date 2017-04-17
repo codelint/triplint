@@ -12,12 +12,14 @@
 <body>
 <div class="main">
     <div class="t-nav">
-        <!--<a href="javascript:;" class="left"><i class="iconfont icon-left"></i></a>-->
+        <a href="javascript:;" class="left" v-if="status>0" @click="status = --status">
+            <i class="iconfont icon-left"></i>
+        </a>
         <div class="title">客房预订</div>
         <!--<div class="right" v-if="status==1" @click="addPostcard">{{ (status==1)?('完成'):('') }}</div>-->
     </div>
 
-    <div v-if="status==0">
+    <div class="status0" v-if="status==0">
         <div class="swiper-container barn">
             <div class="swiper-wrapper">
                 <div class="swiper-slide">
@@ -30,7 +32,7 @@
             <div class="swiper-pagination"></div>
         </div>
 
-        <div class="weui-cells weui-cells_form trip-cells_form">
+        <div class="weui-cells weui-cells_form trip-cells_form" style="margin-top:0;">
             <div class="weui-cell weui-cell_vcode pub-date">
                 <div class="weui-cell__bd">
                     <input class="weui-input" id="date" type="text" value="" readonly="" placeholder="选择入住日期">
@@ -45,8 +47,8 @@
         </div>
 
         <div class="weui-panel weui-panel_access trip-cells_form">
-            <div class="weui-panel__hd">客房情况</div>
-            <div class="weui-panel__bd">
+            <div class="weui-panel__hd" id="fold0" @click="funcFold(0)">客房情况</div>
+            <div class="weui-panel__bd" v-show="foldData==0">
                 <div class="weui-media-box weui-media-box_appmsg" v-for="(item,i) in roomData">
                     <div class="weui-media-box__hd">
                         <img class="weui-media-box__thumb" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAHgAAAB4CAMAAAAOusbgAAAAeFBMVEUAwAD///+U5ZTc9twOww7G8MYwzDCH4YcfyR9x23Hw+/DY9dhm2WZG0kbT9NP0/PTL8sux7LFe115T1VM+zz7i+OIXxhes6qxr2mvA8MCe6J6M4oz6/frr+us5zjn2/fa67rqB4IF13XWn6ad83nxa1loqyirn+eccHxx4AAAC/klEQVRo3u2W2ZKiQBBF8wpCNSCyLwri7v//4bRIFVXoTBBB+DAReV5sG6lTXDITiGEYhmEYhmEYhmEYhmEY5v9i5fsZGRx9PyGDne8f6K9cfd+mKXe1yNG/0CcqYE86AkBMBh66f20deBc7wA/1WFiTwvSEpBMA2JJOBsSLxe/4QEEaJRrASP8EVF8Q74GbmevKg0saa0B8QbwBdjRyADYxIhqxAZ++IKYtciPXLQVG+imw+oo4Bu56rjEJ4GYsvPmKOAB+xlz7L5aevqUXuePWVhvWJ4eWiwUQ67mK51qPj4dFDMlRLBZTqF3SDvmr4BwtkECu5gHWPkmDfQh02WLxXuvbvC8ku8F57GsI5e0CmUwLz1kq3kD17R1In5816rGvQ5VMk5FEtIiWislTffuDpl/k/PzscdQsv8r9qWq4LRWX6tQYtTxvI3XyrwdyQxChXioOngH3dLgOFjk0all56XRi/wDFQrGQU3Os5t0wJu1GNtNKHdPqYaGYQuRDfbfDf26AGLYSyGS3ZAK4S8XuoAlxGSdYMKwqZKM9XJMtyqXi7HX/CiAZS6d8bSVUz5J36mEMFDTlAFQzxOT1dzLRljjB6+++ejFqka+mXIe6F59mw22OuOw1F4T6lg/9VjL1rLDoI9Xzl1MSYDNHnPQnt3D1EE7PrXjye/3pVpr1Z45hMUdcACc5NVQI0bOdS1WA0wuz73e7/5TNqBPhQXPEFGJNV2zNqWI7QKBd2Gn6AiBko02zuAOXeWIXjV0jNqdKegaE/kJQ6Bfs4aju04lMLkA2T5wBSYPKDGF3RKhFYEa6A1L1LG2yacmsaZ6YPOSAMKNsO+N5dNTfkc5Aqe26uxHpx7ZirvgCwJpWq/lmX1hA7LyabQ34tt5RiJKXSwQ+0KU0V5xg+hZrd4Bn1n4EID+WkQdgLfRNtvil9SPfwy+WQ7PFBWQz6dGWZBLkeJFXZGCfLUjCgGgqXo5TuSu3cugdcTv/HjqnBTEMwzAMwzAMwzAMwzAMw/zf/AFbXiOA6frlMAAAAABJRU5ErkJggg==" alt="">
@@ -64,10 +66,229 @@
                 </div>
             </div>
         </div>
+
+        <div class="fold" id="fold1">
+            <div class="weui-panel__hd" @click="funcFold(1)">旅舍概况</div>
+            <article class="weui-article hotel-overview" v-show="foldData==1">
+                <h1>旅舍概况</h1>
+                <p>
+                    泉州一束光青年旅舍位于泉州学府路，泉州第一中学附近，从梅石书院旧址的大榕树进入梅石巷内大约两百米。
+                    从旅舍步行大约5分钟可到朝天门，骑自行车（15分钟）或乘坐15路/K1直达清源山国家重点风景名胜区游览
+                </p>
+
+                <h1>景点游览</h1>
+                <p> 至东湖公园：骑行10分钟；公交15路/1路泉州一中上，东门下</p>
+                <p> 至西湖公园：骑行15分钟；公交21路/17路，北门街上，西湖公园下</p>
+                <p> 至钟楼&西街：骑行10分钟；公交1路，泉州一中上（海星小区方向），钟楼下；2路/17路/40路，北门街上，钟楼下</p>
+                <p> 至开元寺：骑行10分钟，公交40路，北门街上（新塘、尚好家园方向），开元寺西门下</p>
+                <p> 至关帝庙：骑行10分钟；公交X1，泉州一中上，九一街下</p>
+                <p> 至天后宫：骑行20分钟；公交21路，北门街上，义全街口下</p>
+                <p> 至闽台缘博物馆：骑行10分钟；公交15路，泉州一中上，泉山路南段下</p>
+                <p> 至源和1916：骑行15分钟；公交40路，北门街上，蔬菜公司下</p>
+            </article>
+        </div>
+
+        <div class="fold" id="fold2">
+            <div class="weui-panel__hd" @click="funcFold(2)">交通指引</div>
+            <article class="weui-article hotel-overview" v-show="foldData==2">
+                <h1>1.机场：距离晋江机场14.5公里</h1>
+                <p>（1）乘坐K603，到承天寺下，同站换乘X1（福厦高铁泉州站方向），在学府街西段下（PS.X1公交车随叫随停，可告知司机在梅石书院旧址下），到一束光青年旅舍</p>
+                <p>（2）乘坐K603，到钟楼下，换乘1路公交车（外国语中学方向），在学府街西段下，到一束光青年旅舍</p>
+                <p>（3）在机场路口可乘坐K604，东南医院下，换乘15路公交车（清源山风景区方向），在学府街西段下，到一束光青年旅舍</p>
+                <p>（4）在机场路口可乘坐K604，公路一公司下，同站换乘1路公交车（外国语中学方向），在学府街西段下，到一束光青年旅舍</p>
+                <p>（5）出租车：约40分钟，费用约50元</p>
+
+                <h1>2.泉州动车站：距离动车站7.6公里</h1>
+                <p>（1）乘坐X1，在学府街西段下（PS.X1公交车随叫随停，可告知司机在梅石书院旧址下）</p>
+                <p>（2）乘坐K1/3路，在普明村下，步行约8分钟到一束光青年旅舍</p>
+                <p>（3）乘坐2/17路，在朝天门下，步行约10分钟到一束光青年旅舍</p>
+                <p>（4）出租车：约20分钟，费用约25元</p>
+
+                <h1>3.市区</h1>
+                <p>市内可乘坐1路、15路、22路、37路、X1路公交车，在学府街西段下，到一束光青年旅舍</p>
+
+                <h1>4.自行车，自便~</h1>
+            </article>
+        </div>
+
+        <div class="fold" id="fold3">
+            <div class="weui-panel__hd" @click="funcFold(3)">可提供的服务</div>
+            <article class="weui-article hotel-overview" v-show="foldData==3">
+                <h1>旅舍概况</h1>
+                <p>无线WiFi、餐厅、24小时热水洗浴、自助洗衣、行李寄存、贵重物品存放、24小时前台服务、免费旅游咨询服务、茶室、书吧、咖啡饮料甜点、电吹风等</p>
+            </article>
+        </div>
     </div>
+
     <div v-if="status==1">
-        <h1>预订房间</h1>
+        <div class="weui-panel weui-panel_access trip-cells_form">
+            <div class="weui-panel__bd">
+                <div class="weui-media-box weui-media-box_text">
+                    <h4 class="weui-media-box__title">入住时间</h4>
+                    <p class="weui-media-box__desc">2017-04-29 至 2017-04-30</p>
+                </div>
+                <div class="weui-media-box weui-media-box_text">
+                    <h4 class="weui-media-box__title">预订类型</h4>
+                    <p class="weui-media-box__desc">一束光青年旅舍</p>
+                </div>
+                <div class="weui-media-box weui-media-box_text">
+                    <h4 class="weui-media-box__title">房间类型</h4>
+                    <p class="weui-media-box__desc">混住多人间床位（公共卫生间）</p>
+                </div>
+            </div>
+        </div>
+        <div class="weui-cells weui-cells_form trip-cells_form">
+            <div class="weui-cell">
+                <div class="weui-cell__hd"><label class="weui-label">会员价数量</label></div>
+                <div class="weui-cell__bd">
+                    <input class="weui-input" type="number" pattern="[0-9]*" placeholder="请输入您需要预定的数量">
+                </div>
+            </div>
+        </div>
+        <div class="weui-cells weui-cells_form trip-cells_form">
+            <div class="weui-cell">
+                <div class="weui-cell__hd"><label class="weui-label">预订人姓名</label></div>
+                <div class="weui-cell__bd">
+                    <input class="weui-input" type="text" placeholder="请输入预订人姓名">
+                </div>
+            </div>
+            <div class="weui-cell">
+                <div class="weui-cell__hd"><label class="weui-label">手机号码</label></div>
+                <div class="weui-cell__bd">
+                    <input class="weui-input" type="number" pattern="[0-9]*" placeholder="请输入联系人手机号码">
+                </div>
+            </div>
+            <div class="weui-cell">
+                <div class="weui-cell__hd"><label class="weui-label">电子邮箱</label></div>
+                <div class="weui-cell__bd">
+                    <input class="weui-input" type="email" placeholder="请输入电子邮箱">
+                </div>
+            </div>
+            <div class="weui-cell">
+                <div class="weui-cell__hd"><label class="weui-label">入住（男）</label></div>
+                <div class="weui-cell__bd">
+                    <input class="weui-input" type="number" pattern="[0-9]*" placeholder="请输入入住的男性人数">
+                </div>
+            </div>
+            <div class="weui-cell">
+                <div class="weui-cell__hd"><label class="weui-label">入住（女）</label></div>
+                <div class="weui-cell__bd">
+                    <input class="weui-input" type="number" pattern="[0-9]*" placeholder="请输入入住的女性人数">
+                </div>
+            </div>
+        </div>
+        <div class="weui-cells__tips f12">温馨提示：入住当天，旅舍为您保留床位|房间的时限为入住当日的6:00 至 18:00 。如果您因事情延误，在最晚到店时间前无法赶到旅舍办理入住手续的，请注意通知旅舍为您保留预订房间，以免床位⁄房间被重新安排。</div>
+        <div class="weui-btn-area">
+            <a class="weui-btn weui-btn_primary" href="javascript:" @click="next">下一步</a>
+        </div>
     </div>
+
+    <div v-if="status==2">
+        <div class="weui-cells__title">预订信息</div>
+        <div class="weui-cells trip-cells_form status2">
+            <div class="weui-cell">
+                <div class="weui-cell__ft">入住时间</div>
+                <div class="weui-cell__bd">
+                    <p>2017/04/26 至 2017/04/29 </p>
+                </div>
+            </div>
+            <div class="weui-cell">
+                <div class="weui-cell__ft">入住晚数</div>
+                <div class="weui-cell__bd">
+                    <p>3 晚</p>
+                </div>
+            </div>
+            <div class="weui-cell">
+                <div class="weui-cell__ft">预订旅舍</div>
+                <div class="weui-cell__bd">
+                    <p>[泉州]一束光青年旅舍</p>
+                </div>
+            </div>
+            <div class="weui-cell">
+                <div class="weui-cell__ft">房间类型</div>
+                <div class="weui-cell__bd">
+                    <p>三人间</p>
+                </div>
+            </div>
+            <div class="weui-cell">
+                <div class="weui-cell__ft">床位数量</div>
+                <div class="weui-cell__bd">
+                    <p>2床</p>
+                </div>
+            </div>
+            <div class="weui-cell">
+                <div class="weui-cell__ft">你共订了</div>
+                <div class="weui-cell__bd">
+                    <p>2房</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="weui-cells__title">入住资料</div>
+        <div class="weui-cells trip-cells_form status2">
+            <div class="weui-cell">
+                <div class="weui-cell__ft">入住姓名</div>
+                <div class="weui-cell__bd">
+                    <p>邱永劲</p>
+                </div>
+            </div>
+            <div class="weui-cell">
+                <div class="weui-cell__ft">手机号码</div>
+                <div class="weui-cell__bd">
+                    <p>15218288177</p>
+                </div>
+            </div>
+            <div class="weui-cell">
+                <div class="weui-cell__ft">电子邮箱</div>
+                <div class="weui-cell__bd">
+                    <p>qiu5630@163.com</p>
+                </div>
+            </div>
+            <div class="weui-cell">
+                <div class="weui-cell__ft">入住人数</div>
+                <div class="weui-cell__bd">
+                    <p>1</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="weui-cells__title">付款详情</div>
+        <div class="weui-cells trip-cells_form status2">
+            <div class="weui-cell">
+                <div class="weui-cell__ft">订单总额</div>
+                <div class="weui-cell__bd">
+                    <p>1000 元</p>
+                </div>
+            </div>
+            <div class="weui-cell">
+                <div class="weui-cell__ft">到前台支付</div>
+                <div class="weui-cell__bd">
+                    <p>500</p>
+                </div>
+            </div>
+            <div class="weui-cell">
+                <div class="weui-cell__ft">电子邮箱</div>
+                <div class="weui-cell__bd">
+                    <p>qiu5630@163.com</p>
+                </div>
+            </div>
+            <div class="weui-cell">
+                <div class="weui-cell__ft" style="width: 200px;">现在需要支付的预订服务费</div>
+                <div class="weui-cell__bd">
+                    <p>300 元</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="weui-cells__title">支付方式</div>
+        <div class="weui-btn-area" style="margin-top: 8px;">
+            <a class="weui-btn weui-btn_primary" href="javascript:" @click="next">支付宝</a>
+        </div>
+        <div class="weui-btn-area">
+            <a class="weui-btn weui-btn_primary" href="javascript:" @click="next">微信</a>
+        </div>
+    </div>
+
     <div class="weui-loadmore weui-loadmore_line">
         <span class="weui-loadmore__tips">壹束光青年旅舍</span>
     </div>
@@ -100,7 +321,8 @@
     new Vue({
         el: '.main',
         data: {
-            status: 0, // 0：正常 1：预订房间 2：
+            status: 0, // 0：正常 1：预订房间 2:显示预订信息
+            foldData: 0,
             roomData: [
                 {
                     id: 0,
@@ -140,6 +362,9 @@
 
         },
         methods: {
+            funcBack: function () {
+                (this.status == 1) ? this.status = 0 : window.history.back();
+            },
             book: function (item) {
                 // 预订
                 console.log(item);
@@ -147,6 +372,13 @@
                     this.status = 1;
                 } else
                     $.alert("这个房间没有空床位了");
+            },
+            next: function () {
+                this.status = 2;
+            },
+            funcFold: function (index) {
+                this.foldData = index;
+                location.href = "#fold" + index;
             }
         }
     });

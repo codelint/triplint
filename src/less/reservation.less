@@ -4,11 +4,22 @@
 @import "t-nav";
 @import "leftMenu";
 
+html, body {
+    background: #efeee8;
+}
+
+.barn .swiper-pagination-bullet {
+    background: #ded3b3 !important;
+}
+
+.barn .swiper-pagination-bullet-active {
+    background: @baseColor !important;
+}
+
 .trip-cells_form {
     background-color: @color2;
     font-size: 14px;
     &.weui-panel {
-        margin-top: 0;
         &:before {
             display: none;
         }
@@ -39,7 +50,7 @@
 }
 
 .weui-loadmore__tips {
-    background-color: @color2 !important;
+    background-color: #efeee8 !important;
 }
 
 .barn {
@@ -80,4 +91,26 @@
     &.no {
         background: #ccc;
     }
+}
+
+.weui-btn_primary {
+    background-color: @baseColor;
+}
+
+.status0 {
+    .hotel-overview {
+        background: @color2;
+    }
+}
+
+.status2 {
+    .weui-cell__ft {
+        width: 100px;
+        text-align: left;
+    }
+}
+
+.fold {
+    margin-top: 10px;
+    background: @color2;
 }
