@@ -29,6 +29,7 @@ function getRect(ele){
 jQuery(function($){
     var page_size = 10;
     var group_id = U.ajax.getUrlParam("group_id"), uid = U.ajax.getUrlParam("uid");
+    var sort = U.ajax.getUrlParam('sort') || 'asc';
     $('a.upload-btn').attr('href', 'checkpoint.html?group_id=' + group_id);
     /**
      * @param callBack function(err, data)
@@ -55,6 +56,7 @@ jQuery(function($){
             query = {
                 "group_id": group_id,
                 "page": 1,
+                'sort': sort,
                 "psize": page_size
             };
         }
@@ -67,14 +69,15 @@ jQuery(function($){
             }else{
                 // calculate array[].day
                 if(json && json.length){
-                    json = _.sortBy(json, function(v){
-                        if(v['create_time'] < minTime){
-                            minTime = v['create_time'];
-                        }
-                        return v['create_time'];
-                    });
+//                    json = _.sortBy(json, function(v){
+//                        if(v['create_time'] < minTime){
+//                            minTime = v['create_time'];
+//                        }
+//                        return v['create_time'];
+//                    });
 
                     _.each(json, function(v, k, arr){
+                        minTime = v['create_time'] - v['past_time'];
                         v['day'] = Math.floor((Number(v['create_time'])+28800)/86400) - Math.floor((minTime+28800)/86400) + 1;
                         v['dayshow'] = !vshow[v['day']];
                         vshow[v['day']] = vshow[v['day']] || 1;
@@ -206,6 +209,7 @@ jQuery(function($){
     $('a.load-btn').click(function(){
         query({
             page: Math.round(Number($('a.load-btn').attr('page'))),
+            sort: sort,
             psize: page_size
         }, loadData);
     });
@@ -229,6 +233,7 @@ jQuery(function($){
             canAutoQuery = false;
             var queryData = {
                 page: Math.round(Number($loadBtn.attr('page'))),
+                sort: sort,
                 psize: page_size
             };
             query(queryData, function(err, json){
