@@ -156,7 +156,6 @@
     android.setupShareInfo = isWeiXin() ? function (title, summary, imgUrl, link){
         wx.ready(function(){
             function setupShare(option){
-                android.alert('hello');
                 var shareInfo = {
                     title: option['title'] || '', // 分享标题
                     desc: option['summary'] || option['title'] || '', // 分享描述
@@ -175,7 +174,7 @@
                 wx.onMenuShareWeibo(shareInfo);
                 wx.onMenuShareQZone(shareInfo);
             }
-
+            android.alert(imgUrl);
             setupShare({
                 'title': title,
                 'summary': summary,
