@@ -132,7 +132,11 @@ jQuery(function($){
                     new Vue({
                         el: 'div.banner',
                         data: {father: father}
-                    })
+                    });
+                    android.setupShareInfo(title,
+                        title,
+                        U.api.oss.rid2url(father['photo'], 'style/trips_item_photo'),
+                        location.href);
                 }
 
                 var $elem = $('div.sample.item-list').clone().removeClass('sample');

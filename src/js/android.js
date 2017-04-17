@@ -176,7 +176,8 @@ android = (function(){
             //todo
             alert(title + ": " + msg);
         },
-        "token": getOrSetToken
+        "token": getOrSetToken,
+        "setupShareInfo": function(title, summary, imgUrl, link){}
     };
 
     if(typeof(android) != 'undefined'){
@@ -195,8 +196,12 @@ android = (function(){
         android.is_user = funs['is_user'];
         android.token = getOrSetToken;
         android.alert = funs['alert'];
+
         if(!android['confirm']){
             android['confirm'] = funs['confirm'];
+        }
+        if(!android['setupShareInfo']){
+            android['setupShareInfo'] = funs['setupShareInfo'];
         }
         return android;
     }

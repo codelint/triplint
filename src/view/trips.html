@@ -86,7 +86,8 @@
                                     <div class="photo-mask-right float-left"></div>
                                 </div>
                                 <div class="wp-btns">
-                                    <a v-if="item.children_count > 0" class="comment-btn" href="javascript:void(0)" v-on:click="detail(item)">
+                                    <a v-if="item.children_count > 0" class="comment-btn" href="javascript:void(0)"
+                                       v-on:click="detail(item)">
                                         <i class="iconfont icon-more"></i>
                                         <span v-cloak>{{ item.comment_count }}</span>
                                     </a>
@@ -107,7 +108,8 @@
                                     </a>
                                 </div>
                             </div>
-                            <p v-cloak class="text" style="padding-top: 10px" v-html="item['htmlComment'] || item.comment">
+                            <p v-cloak class="text" style="padding-top: 10px"
+                               v-html="item['htmlComment'] || item.comment">
                             </p>
 
                             <div class="wp-stats">
@@ -115,7 +117,8 @@
                                     <i class="iconfont icon-shijian"></i>
                                     <span v-cloak>{{ (new Date(item.create_time*1000).getHours()) }}:{{ (new Date(item.create_time*1000).getMinutes()) }}</span>
                                 </p>
-                                <a v-cloak class="wp-poi wp-poi-verified" :href="'routine.html?group_id='+group_id+'&longitude='+item.longitude+'&latitude='+item.latitude">
+                                <a v-cloak class="wp-poi wp-poi-verified"
+                                   :href="'routine.html?group_id='+group_id+'&longitude='+item.longitude+'&latitude='+item.latitude">
                                     <i class="iconfont icon-map"></i>
                                     {{ item.location }}
                                 </a>
@@ -127,7 +130,7 @@
             </div>
         </div>
     </section>
-    <div style="margin-bottom:0px"><a class="load-btn">更多</a></div>
+    <div style="margin-bottom:0"><a class="load-btn">更多</a></div>
 </div>
 
 </body>
@@ -142,4 +145,45 @@
 <script type="text/javascript" src="../js/api.js"></script>
 <script type="text/javascript" src="../js/common/wiki.js"></script>
 <script type="text/javascript" src="../js/trips.js"></script>
+
+<script type="text/javascript" src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+<script type="text/javascript" src="http://wxysg.inotseeyou.com/js/wechat/config"></script>
+<script type="text/javascript">
+    function isWeiXin(){
+        var ua = window.navigator.userAgent.toLowerCase();
+        return ua.match(/MicroMessenger/i) == 'micromessenger';
+    }
+    android.setupShareInfo = isWeiXin() ? function (title, summary, imgUrl, link){
+        wx.ready(function(){
+            function setupShare(option){
+                var shareInfo = {
+                    title: option['title'] || '', // 分享标题
+                    desc: option['summary'] || option['title'] || '', // 分享描述
+                    link: option['link'] || '',
+                    imgUrl: option['imageUrl'] || '', // 分享图标
+                    success: function(){
+                        // 用户确认分享后执行的回调函数
+                    },
+                    cancel: function(){
+                        // 用户取消分享后执行的回调函数
+                    }
+                };
+                wx.onMenuShareTimeline(shareInfo);
+                wx.onMenuShareAppMessage(shareInfo);
+                wx.onMenuShareQQ(shareInfo);
+                wx.onMenuShareWeibo(shareInfo);
+                wx.onMenuShareQZone(shareInfo);
+            }
+
+            setupShare({
+                'title': title,
+                'summary': summary,
+                'link': link || location.href,
+                'imgUrl': imgUrl
+            });
+        });
+    } : android.setupShareInfo;
+</script>
+
+
 </html>
