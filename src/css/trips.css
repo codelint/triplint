@@ -461,7 +461,7 @@ div.banner img {
   -webkit-border-radius: 22px;
   border-radius: 22px;
   padding: 0 10px;
-  max-width: 135px;
+  max-width: 70%;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
