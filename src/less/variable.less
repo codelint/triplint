@@ -14,6 +14,12 @@
     display: flex;
 }
 
+.alignItems(@type:center) {
+    -webkit-box-align: @type;
+    -webkit-align-items: @type;
+    align-items: @type;
+}
+
 .flex1() {
     -webkit-box-flex: 1;
     -webkit-flex: 1;
@@ -48,4 +54,25 @@
 
 .clear {
     clear: both
+}
+
+//字号
+.f12 {
+    font-size: 12px;
+}
+
+.f14 {
+    font-size: 14px;
+}
+
+.f16 {
+    font-size: 16px;
+}
+
+.f18 {
+    font-size: 18px;
+}
+
+.f20 {
+    font-size: 20px;
 }
