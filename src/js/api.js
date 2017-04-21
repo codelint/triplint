@@ -5,7 +5,7 @@ if(typeof String.prototype.endsWith !== 'function'){
     };
 }
 OSS_DOMAIN = 'oss-cn-hangzhou.aliyuncs.com';
-OSS_IMG_DOMAIN = 'img-cn-hangzhou.aliyuncs.com';
+OSS_IMG_DOMAIN = 'img.inotseeyou.com';
 ROOT_URL = 'http://' + location.host + '/wap';
 REST_BASE = 'http://' + location.host;
 U = typeof(U) == 'undefined' ? {} : U;
@@ -293,7 +293,7 @@ U.buildApiClient = (function($){
             rid = rid.substr(6);
             var bucket = rid.slice(0, rid.indexOf('/'));
             var object = rid.slice(rid.indexOf('/') + 1);
-            return 'http://' + bucket + '.' + OSS_IMG_DOMAIN + '/' + object;
+            return 'http://' + bucket + OSS_IMG_DOMAIN + '/' + object;
         }else{
             return rid;
         }
