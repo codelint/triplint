@@ -49,6 +49,13 @@
     </div>
 
     <div class="weui-cells weui-cells_form">
+        <div id="group-div" class="weui-cell hide">
+            <div class="weui-cell__hd"><label class="weui-label">所属故事</label></div>
+            <div class="weui-cell__bd">
+                <input name="group_id" class="weui-input auto-fill" type="number" pattern="[0-9]*" placeholder="上级ID" value="0">
+                <img id="group_img" src="" height="14px"><a id="group_a" href="#" style="font-size: 14px">...</a>
+            </div>
+        </div>
         <div class="weui-cell">
             <div class="weui-cell__hd"><label class="weui-label">拍摄时间</label></div>
             <div class="weui-cell__bd">
@@ -73,12 +80,6 @@
             <div class="weui-cell__bd">
                 <input name="longitude" class="weui-input auto-fill" type="number" placeholder="输入经度">
                 <input name="latitude" class="weui-input auto-fill" type="number" placeholder="输入纬度">
-            </div>
-        </div>
-        <div class="weui-cell hide">
-            <div class="weui-cell__hd"><label class="weui-label">上级ID</label></div>
-            <div class="weui-cell__bd">
-                <input name="group_id" class="weui-input auto-fill" type="number" pattern="[0-9]*" placeholder="上级ID" value="0">
             </div>
         </div>
         <!--hide e-->
@@ -234,6 +235,18 @@
             });
 
         })(U.ajax.getUrlParam('id'));
+
+        (function(group_id){
+            group_id && U.api.checkpoint.info(group_id, function (err, cp){
+                $('#group-div').removeClass('hide');
+                $('input[name="group_id"]').attr('type', 'hidden');
+                $('#group_img').attr('src', U.api.oss.rid2url(cp['photo'], 'style/resize_128x128'));
+                $('#group_a').text(cp['comment']);
+//                $('#group_a').text(cp['comment']).attr('href', 'trips.html?group_id=' + group_id);
+
+            });
+        })(U.ajax.getUrlParam('group_id'));
+
         adjust_file_input_pos();
 
 //        var $group_id = $('input[name="group_id"]');
