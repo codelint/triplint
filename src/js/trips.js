@@ -134,7 +134,7 @@ jQuery(function($){
                         data: {father: father}
                     });
                     android.setupShareInfo(title,
-                        title,
+                        '自 ' + new Date(father['create_time']*1000) + '起, 已有' + father['children_count'] + '个回忆',
                         U.api.oss.rid2url(father['photo'], 'style/trips_item_photo'),
                         location.href);
                 }
