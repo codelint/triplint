@@ -410,7 +410,7 @@
                     book: function(item){
                         // 预订
                         console.log(item);
-                        if(item.kf > 0){
+                        if(item.stock > 0){
                             this.status = 1;
                         }else
                             $.alert("这个房间没有空床位了");
