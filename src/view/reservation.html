@@ -142,23 +142,24 @@
     </div>
 </div>
 
-<div v-if="status==1">
+<div id="book-div" v-if="status==1">
     <div class="weui-panel weui-panel_access trip-cells_form">
         <div class="weui-panel__bd">
             <div class="weui-media-box weui-media-box_text">
                 <h4 class="weui-media-box__title">入住时间</h4>
 
-                <p class="weui-media-box__desc">2017-04-29 至 2017-04-30</p>
+                <p class="weui-media-box__desc"><span class="start_date">2017-04-29</span>入住 - <span class="end_date">2017-04-30</span>离店
+                </p>
             </div>
             <div class="weui-media-box weui-media-box_text">
-                <h4 class="weui-media-box__title">预订类型</h4>
+                <h4 class="weui-media-box__title name">客舍名称</h4>
 
-                <p class="weui-media-box__desc">一束光青年旅舍</p>
+                <p class="weui-media-box__desc">壹束光青年旅舍</p>
             </div>
             <div class="weui-media-box weui-media-box_text">
                 <h4 class="weui-media-box__title">房间类型</h4>
 
-                <p class="weui-media-box__desc">混住多人间床位（公共卫生间）</p>
+                <p class="weui-media-box__desc product_name">混住多人间床位（公共卫生间）</p>
             </div>
         </div>
     </div>
@@ -406,6 +407,7 @@
 
 
         }
+
         // Vue.config.devtools = true;
 
         loadRoomData(function(data){
@@ -413,7 +415,6 @@
                 el: '.main',
                 data: data,
                 created: function(){
-
                 },
                 methods: {
                     funcBack: function(){
@@ -422,6 +423,10 @@
                     book: function(item){
                         // 预订
                         if(item.stock > 0){
+                            var $main = $('#book-div');
+                            $main.find("span.start_date").text('');
+                            $main.find("span.end_date").text('');
+                            $main.find("p.product_name").text(item['name']);
                             this.status = 1;
                         }else{
                             $.alert("产品已经售完");
@@ -437,19 +442,20 @@
             });
 
             $("#date,#date2").calendar({
-                minDate: Date.parse(new Date()),
+                minDate: Date.parse(new Date().toString()),
                 onClose: function(p){
                     console.log(p.value[0]);
                 }
             });
 
             $(".barn").swiper({
-                loop: true,
+                loop: false,
                 autoplay: 2000,//可选选项，自动滑动
                 pagination: '.swiper-pagination',// 分页
                 autoHeight: true, //高度随内容变化
                 autoplayDisableOnInteraction: false// 点击后继续滑动
             });
+
         });
     });
 </script>
