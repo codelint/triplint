@@ -409,11 +409,11 @@
                     },
                     book: function(item){
                         // 预订
-                        console.log(item);
                         if(item.stock > 0){
                             this.status = 1;
-                        }else
-                            $.alert("这个房间没有空床位了");
+                        }else{
+                            $.alert("产品已经售完");
+                        }
                     },
                     next: function(){
                         this.status = 2;
