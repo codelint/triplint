@@ -161,6 +161,10 @@ jQuery(function($){
                         showImgs: function(event){
                             getPhotoItems(event.target.alt);
                         },
+                        upload: function(item){
+                            var group_id = item['id'];
+                            location.href = 'checkpoint.html?group_id=' + group_id;
+                        },
                         // 喜欢
                         edit: function(checkpoint){
                             // $.toast("后期开放此功能", "text");

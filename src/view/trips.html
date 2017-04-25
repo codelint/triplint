@@ -91,6 +91,10 @@
                                         <i class="iconfont icon-more"></i>
                                         <span v-cloak>{{ item.comment_count }}</span>
                                     </a>
+                                    <a v-if="item.children_count == 0 && item.user_id && item.user_id == android.user()['id'] " class="comment-btn" href="javascript:void(0)"
+                                       v-on:click="upload(item)">
+                                        <i class="iconfont icon-camera"></i>
+                                    </a>
                                     <i v-if="item.user_id && item.user_id == android.user()['id']"
                                        class="icon-btnbg"></i>
 
