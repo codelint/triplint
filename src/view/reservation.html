@@ -67,7 +67,7 @@
                         <span class="service f12" v-for="service in item.services">{{service}}</span>
                     </p>
                 </div>
-                <div class="book" :class="{no:item.kf<=0}" v-on:click="book(item)">预订</div>
+                <div class="book" :class="{no:item.stock<=0}" v-on:click="book(item)">预订</div>
             </div>
         </div>
     </div>
@@ -344,13 +344,6 @@
             autoplayDisableOnInteraction: false// 点击后继续滑动
         });
 
-        $("#date,#date2").calendar({
-            minDate: Date.parse(new Date()),
-            onClose: function(p){
-                console.log(p.value[0]);
-            }
-        });
-
         function loadRoomData(callback){
             callback({
                 roomData: [
@@ -425,6 +418,13 @@
             });
         });
 
+
+        $("#date,#date2").calendar({
+            minDate: Date.parse(new Date()),
+            onClose: function(p){
+                console.log(p.value[0]);
+            }
+        });
     });
 
 
