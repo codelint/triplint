@@ -23,11 +23,8 @@
 <div class="status0" v-if="status==0">
     <div class="swiper-container barn">
         <div class="swiper-wrapper">
-            <div class="swiper-slide">
-                <img src="../images/img.jpg?oss_image_style=1024w_480h_4e_250-248-236bgc" alt="">
-            </div>
-            <div class="swiper-slide">
-                <img src="../images/img.jpg?oss_image_style=1024w_480h_4e_250-248-236bgc" alt="">
+            <div class="swiper-slide" v-for="(photo,i) in photos">
+                <img :src="photo['src']" :alt="photo['alt']">
             </div>
         </div>
         <div class="swiper-pagination"></div>
@@ -335,64 +332,90 @@
 <script type="text/javascript" src="../js/api.js"></script>
 
 <script type="text/javascript">
+    var page_size = 10;
+    var group_id = U.ajax.getUrlParam("group_id");
+    var sort = U.ajax.getUrlParam('sort') || 'asc';
+
     jQuery(function($){
-        $(".barn").swiper({
-            loop: true,
-            autoplay: 2000,//可选选项，自动滑动
-            pagination: '.swiper-pagination',// 分页
-            autoHeight: true, //高度随内容变化
-            autoplayDisableOnInteraction: false// 点击后继续滑动
-        });
+        function loadRoomData(query, callback){
+            if(!callback){
+                callback = query;
+                query = {
+                    "group_id": group_id,
+                    "page": 1,
+                    'sort': sort,
+                    "psize": page_size
+                };
+            }
 
-        function loadRoomData(callback){
-            callback({
-                roomData: [
-                    {
-                        id: 0,
-                        name: '四人间',
-                        wsj: true, // 卫生间
-                        price: 45,
-                        stock: 2, // 剩下房间
-                        services: ['Wifi', '空调', '卫生间']
-                    },
-                    {
-                        id: 1,
-                        name: '六人间',
-                        wsj: true,
-                        price: 45,
-                        stock: 0,
-                        services: ['Wifi', '空调', '卫生间']
-                    },
-                    {
-                        id: 2,
-                        name: '六人间',
-                        wsj: false,
-                        price: 40,
-                        stock: 4,
-                        services: ['Wifi', '空调']
-                    },
-                    {
-                        id: 3,
-                        name: '八人间',
-                        wsj: true,
-                        price: 40,
-                        stock: 3,
-                        services: ['Wifi', '空调', '卫生间']
+            query['group_id'] = group_id;
+
+            U.api.checkpoint.list(query, function(err, json){
+                if(err){
+                    android.alert(err.message);
+                }else{
+                    var photos = [];
+                    var roomData = [
+                        {
+                            id: 0,
+                            name: '四人间',
+                            wsj: true, // 卫生间
+                            price: 45,
+                            stock: 2, // 剩下房间
+                            services: ['Wifi', '空调', '卫生间']
+                        },
+                        {
+                            id: 1,
+                            name: '六人间',
+                            wsj: true,
+                            price: 45,
+                            stock: 0,
+                            services: ['Wifi', '空调', '卫生间']
+                        },
+                        {
+                            id: 2,
+                            name: '六人间',
+                            wsj: false,
+                            price: 40,
+                            stock: 4,
+                            services: ['Wifi', '空调']
+                        },
+                        {
+                            id: 3,
+                            name: '八人间',
+                            wsj: true,
+                            price: 40,
+                            stock: 3,
+                            services: ['Wifi', '空调', '卫生间']
+                        }
+                    ];
+                    if(json && json.length){
+                        _.each(json, function(v, k, arr){
+                            photos.push({
+                                'src': U.api.oss.rid2url(v['photo'], 'style/index_bar_photo'),
+                                'alt': v['mark']
+                            })
+                        });
+
+                        callback({
+                            status: 0,
+                            photos: photos,
+                            roomData: roomData
+                        })
                     }
-                ]
-            })
+                    // callBack(err, json, query);
+                }
+
+            });
+
+
         }
-
-
-        Vue.config.devtools = true;
+        // Vue.config.devtools = true;
 
         loadRoomData(function(data){
             new Vue({
                 el: '.main',
-                data: {
-                    status: 0, // 0：正常 1：预订房间 2:显示预订信息
-                    roomData: data['roomData']
-                },
+                data: data,
                 created: function(){
 
                 },
@@ -416,17 +439,22 @@
                     }
                 }
             });
-        });
 
+            $("#date,#date2").calendar({
+                minDate: Date.parse(new Date()),
+                onClose: function(p){
+                    console.log(p.value[0]);
+                }
+            });
 
-        $("#date,#date2").calendar({
-            minDate: Date.parse(new Date()),
-            onClose: function(p){
-                console.log(p.value[0]);
-            }
+            $(".barn").swiper({
+                loop: true,
+                autoplay: 2000,//可选选项，自动滑动
+                pagination: '.swiper-pagination',// 分页
+                autoHeight: true, //高度随内容变化
+                autoplayDisableOnInteraction: false// 点击后继续滑动
+            });
         });
     });
-
-
 </script>
 </html>
