@@ -12,18 +12,29 @@ jQuery(function($){
      * 表单自动保存自动填充
      */
     (function($){
+        function getKeyPrefix(){
+            return location.href + location.search + '#';
+        }
+
         function backup(elem){
             var $input = $(elem);
             if(android && $input.attr('name')){
-                $input.attr('type') != 'file' && android.put(location.href + location.search + '#' + $input.attr('name'), $input.val());
+                $input.attr('type') != 'file' && android.put(getKeyPrefix() + $input.attr('name'), $input.val());
             }
         }
 
         function restore(elem){
             var $input = $(elem);
             if(android && $input.attr('name')){
-                var v = android.get(location.href + location.search + '#' + $input.attr('name'));
+                var v = android.get(getKeyPrefix() + $input.attr('name'));
                 v && $input.attr('type') != 'file' && $input.val('1').val(v);
+            }
+        }
+
+        function clear(elem){
+            var $input = $(elem);
+            if(android && $input.attr('name')){
+                android.put(getKeyPrefix() + $input.attr('name'), '');
             }
         }
 

@@ -207,12 +207,8 @@ body {
   outline: none;
   resize: none;
   background: transparent;
-  border: 1px dashed #faf8ec;
-  text-indent: 6px;
-}
-.main .box textarea:hover,
-.main .box textarea.on {
   border: 1px dashed #e4e4da;
+  text-indent: 6px;
 }
 .main .box .img-box {
   width: 100%;
