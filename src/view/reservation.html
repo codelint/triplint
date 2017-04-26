@@ -356,36 +356,16 @@
                     android.alert(err.message);
                 }else{
                     var photos = [];
-                    var roomData = [
-                        {
-                            id: 0,
-                            name: '女生四人间',
-                            price: 45,
-                            stock: 2, // 剩下房间
-                            services: ['wifi', '空调', '独卫']
-                        },
-                        {
-                            id: 1,
-                            name: '男生六人间',
-                            price: 45,
-                            stock: 0,
-                            services: ['wifi', '空调', '独卫']
-                        },
-                        {
-                            id: 2,
-                            name: '女生六人间',
-                            price: 40,
-                            stock: 4,
-                            services: ['wifi', '空调']
-                        },
-                        {
-                            id: 3,
-                            name: '男生八人间',
-                            price: 40,
-                            stock: 3,
-                            services: ['wifi', '空调', '独卫']
-                        }
-                    ];
+//                    var roomData = [
+//                        {
+//                            id: 0,
+//                            name: '女生四人间',
+//                            price: 45,
+//                            stock: 2, // 剩下房间
+//                            services: ['wifi', '空调', '独卫']
+//                        }
+//                    ];
+
                     if(json && json.length){
                         _.each(json, function(v, k, arr){
                             photos.push({
@@ -394,11 +374,28 @@
                             })
                         });
 
-                        callback({
-                            status: 0,
-                            photos: photos,
-                            roomData: roomData
-                        })
+                        U.api.shop.product.search({page: 1}, function(err, json){
+                            var roomData = [];
+                            if(json && json['rows']){
+                                _.each(json['rows'], function(v, k, arr){
+                                    roomData.push({
+                                        id: v['id'],
+                                        name: v['name'],
+                                        price: v['price'],
+                                        stock: v['stock'],
+                                        services: ['wifi', '空调', '独卫']
+                                    })
+                                })
+                            }
+
+                            callback({
+                                status: 0,
+                                photos: photos,
+                                roomData: roomData
+                            })
+                        });
+
+
                     }
                     // callBack(err, json, query);
                 }

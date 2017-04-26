@@ -577,6 +577,14 @@ U.buildApiClient = (function($){
                     client.postJson(_url('ad.list'), {'type': type}, callback_filter(cbf));
                 }
             },
+            'shop': {
+                'product': {
+                    'search': function(query, cbf){
+                        query['type'] = query['type'] || 1001;
+                        client.postJson(_url('product.search'), query, callback_filter(cbf));
+                    }
+                }
+            },
             'trac': {
                 'sign': function(data, cbf){
                     client.postJson(_url('trac.api.signature'), data, callback_filter(cbf));
