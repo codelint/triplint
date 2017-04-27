@@ -12,6 +12,9 @@
         #book-div, #confirm-div{
             display: none;
         }
+        .template{
+            display: none;
+        }
     </style>
 </head>
 <body>
@@ -38,10 +41,10 @@
     <div class="weui-cells weui-cells_form trip-cells_form" style="margin-top:0;">
         <div class="weui-cell weui-cell_vcode pub-date">
             <div class="weui-cell__bd">
-                <input class="weui-input" id="date" type="text" value="" readonly="" placeholder="选择入住日期">
+                <input name="in_date" class="weui-input" id="date" type="text" value="" readonly="" placeholder="选择入住日期">
             </div>
             <div class="weui-cell__bd">
-                <input class="weui-input" id="date2" type="text" value="" readonly="" placeholder="选择离开日期">
+                <input name="out_date" class="weui-input" id="date2" type="text" value="" readonly="" placeholder="选择离开日期">
             </div>
             <div class="weui-cell__ft">
                 <button class="weui-vcode-btn">查询</button>
@@ -153,7 +156,7 @@
             <div class="weui-media-box weui-media-box_text">
                 <h4 class="weui-media-box__title">入住时间</h4>
 
-                <p class="weui-media-box__desc"><span class="start_date">2017-04-29</span>入住 - <span class="end_date">2017-04-30</span>离店
+                <p class="weui-media-box__desc"><span class="checkin_date">2017-04-29</span>入住 - <span class="checkout_date">2017-04-30</span>离店
                 </p>
             </div>
             <div class="weui-media-box weui-media-box_text">
@@ -177,10 +180,11 @@
         <!--</div>-->
     <!--</div>-->
     <div class="weui-cells weui-cells_form trip-cells_form">
+        <input type="hidden" name="product_id" value="">
         <div class="weui-cell">
             <div class="weui-cell__hd"><label class="weui-label">预订人姓名</label></div>
             <div class="weui-cell__bd">
-                <input name="name" class="weui-input" type="text" placeholder="请输入预订人姓名">
+                <input name="consignee" class="weui-input" type="text" placeholder="请输入预订人姓名">
             </div>
         </div>
         <div class="weui-cell">
@@ -218,49 +222,49 @@
         。如果您因事情延误，在最晚到店时间前无法赶到旅舍办理入住手续的，请注意通知旅舍为您保留预订房间，以免床位⁄房间被重新安排。
     </div>
     <div class="weui-btn-area">
-        <a class="weui-btn weui-btn_primary" href="javascript:" v-on:click="next">下一步</a>
+        <a class="weui-btn weui-btn_primary" href="javascript:" v-on:click="confirm">下一步</a>
     </div>
 </div>
 
-<div id="confirm-div" class="page">
+<div class="page confirm template">
     <div class="weui-cells__title">预订信息</div>
     <div class="weui-cells trip-cells_form status2">
         <div class="weui-cell">
             <div class="weui-cell__ft">入住时间</div>
             <div class="weui-cell__bd">
-                <p>2017/04/26 至 2017/04/29 </p>
+                <p>{{ checkin }} 至 {{ checkout }} </p>
             </div>
         </div>
         <div class="weui-cell">
             <div class="weui-cell__ft">入住晚数</div>
             <div class="weui-cell__bd">
-                <p>3 晚</p>
+                <p>{{ product['number'] }} 晚</p>
             </div>
         </div>
         <div class="weui-cell">
             <div class="weui-cell__ft">预订旅舍</div>
             <div class="weui-cell__bd">
-                <p>[泉州]一束光青年旅舍</p>
+                <p>泉州壹束光青年旅舍</p>
             </div>
         </div>
         <div class="weui-cell">
             <div class="weui-cell__ft">房间类型</div>
             <div class="weui-cell__bd">
-                <p>三人间</p>
+                <p>{{ product['name'] }}</p>
             </div>
         </div>
-        <div class="weui-cell">
-            <div class="weui-cell__ft">床位数量</div>
-            <div class="weui-cell__bd">
-                <p>2床</p>
-            </div>
-        </div>
-        <div class="weui-cell">
-            <div class="weui-cell__ft">你共订了</div>
-            <div class="weui-cell__bd">
-                <p>2房</p>
-            </div>
-        </div>
+        <!--<div class="weui-cell">-->
+            <!--<div class="weui-cell__ft">床位数量</div>-->
+            <!--<div class="weui-cell__bd">-->
+                <!--<p>2床</p>-->
+            <!--</div>-->
+        <!--</div>-->
+        <!--<div class="weui-cell">-->
+            <!--<div class="weui-cell__ft">你共订了</div>-->
+            <!--<div class="weui-cell__bd">-->
+                <!--<p>1床</p>-->
+            <!--</div>-->
+        <!--</div>-->
     </div>
 
     <div class="weui-cells__title">入住资料</div>
@@ -268,19 +272,19 @@
         <div class="weui-cell">
             <div class="weui-cell__ft">入住姓名</div>
             <div class="weui-cell__bd">
-                <p>邱永劲</p>
+                <p>{{ contact['consignee'] }}</p>
             </div>
         </div>
         <div class="weui-cell">
             <div class="weui-cell__ft">手机号码</div>
             <div class="weui-cell__bd">
-                <p>15218288177</p>
+                <p>{{ contact['mobile'] }}</p>
             </div>
         </div>
         <div class="weui-cell">
-            <div class="weui-cell__ft">电子邮箱</div>
+            <div class="weui-cell__ft">身份证信息</div>
             <div class="weui-cell__bd">
-                <p>qiu5630@163.com</p>
+                <p>{{ contact['identity'] }}</p>
             </div>
         </div>
         <div class="weui-cell">
@@ -296,41 +300,41 @@
         <div class="weui-cell">
             <div class="weui-cell__ft">订单总额</div>
             <div class="weui-cell__bd">
-                <p>1000 元</p>
+                <p>{{ product['price']*product['number'] }} 元</p>
             </div>
         </div>
         <div class="weui-cell">
             <div class="weui-cell__ft">到前台支付</div>
             <div class="weui-cell__bd">
-                <p>500</p>
+                <p>0</p>
             </div>
         </div>
-        <div class="weui-cell">
-            <div class="weui-cell__ft">电子邮箱</div>
-            <div class="weui-cell__bd">
-                <p>qiu5630@163.com</p>
-            </div>
-        </div>
+        <!--<div class="weui-cell">-->
+            <!--<div class="weui-cell__ft">电子邮箱</div>-->
+            <!--<div class="weui-cell__bd">-->
+                <!--<p>{{ contact['email'] }}</p>-->
+            <!--</div>-->
+        <!--</div>-->
         <div class="weui-cell">
             <div class="weui-cell__ft" style="width: 200px;">现在需要支付的预订服务费</div>
             <div class="weui-cell__bd">
-                <p>300 元</p>
+                <p>{{ product['price']*product['number'] }}元</p>
             </div>
         </div>
     </div>
 
     <div class="weui-cells__title">支付方式</div>
-    <div class="weui-btn-area" style="margin-top: 8px;">
-        <a class="weui-btn weui-btn_primary" href="javascript:" v-on:click="next">支付宝</a>
-    </div>
+    <!--<div class="weui-btn-area" style="margin-top: 8px;">-->
+        <!--<a class="weui-btn weui-btn_primary" href="javascript:" v-on:click="next">支付宝</a>-->
+    <!--</div>-->
     <div class="weui-btn-area">
-        <a class="weui-btn weui-btn_primary" href="javascript:" v-on:click="next">微信</a>
+        <a class="weui-btn weui-btn_primary" href="javascript:">提交订单</a>
     </div>
 </div>
 
+</div>
 <div class="weui-loadmore weui-loadmore_line">
     <span class="weui-loadmore__tips">壹束光青年旅舍</span>
-</div>
 </div>
 </body>
 <script type="text/javascript" src="../public/js/jquery-2.1.4.js"></script>
@@ -411,23 +415,20 @@
             });
         }
         function toggle(status){
-            var $page = $('div.page');
+            var $page = $('div.page').hide();
             var $back_btn = $('#back-a');
             switch(status){
                 case 1:
-                    $page.hide();
                     $('#book-div').show();
                     $back_btn.show();
                     break;
                 case 2:
-                    $page.hide();
                     $('#confirm-div').show();
                     $back_btn.show();
                     break;
                 case 0:
                 default:
                     $back_btn.hide();
-                    $page.hide();
                     $('#info-div').show();
                     $("#date,#date2").calendar({
                         minDate: Date.parse(new Date().toString()),
@@ -448,10 +449,53 @@
 
         // Vue.config.devtools = true;
         loadRoomData(function(data){
+            var selected_item = false;
             new Vue({
-                el: '.main',
+                el: '#info-div',
                 data: data,
                 created: function(){
+                    var self = this;
+                    new Vue({el:"div.t-nav", methods:{
+                        "funcBack": function(){
+                            if(!self.status){
+                                window.history.back();
+                            }else{
+                                self.status --;
+                                toggle(self.status);
+                            }
+                        }
+                    }});
+                    new Vue({el:'#book-div', methods: {
+                        confirm: function(){
+                            $('#confirm-div').remove();
+                            var $confirm_div = $('div.template.confirm').clone();
+                            $confirm_div.removeClass('template').attr('id', 'confirm-div');
+                            $('.main').append($confirm_div);
+                            toggle(2);
+                            self.status = 2;
+                            var checkin = $('input[name="in_date"]').val();
+                            var checkout = $('input[name="out_date"]').val();
+                            var days = (Date.parse(checkout) - Date.parse(checkin))/86400000;
+                            new Vue({
+                                'el': '#confirm-div',
+                                data: {
+                                    'product': {
+                                        'id': selected_item['id'],
+                                        'name': selected_item['name'],
+                                        'price': selected_item['price'],
+                                        'number': days
+                                    },
+                                    'contact': {
+                                        'consignee': $('input[name="consignee"]').val(),
+                                        'mobile': $('input[name="mobile"]').val(),
+                                        'identity': $('input[name="identity"]').val()
+                                    },
+                                    'checkin': checkin,
+                                    'checkout': checkout
+                                }
+                            })
+                        }
+                    }})
                 },
                 methods: {
                     funcBack: function(){
@@ -470,14 +514,15 @@
                             $main.find("span.start_date").text('');
                             $main.find("span.end_date").text('');
                             $main.find("p.product_name").text(item['name']);
+                            $('input[name="product_id"]').val(item['id']);
+                            $('span.checkin_date').text($('input[name="in_date"]').val());
+                            $('span.checkout_date').text($('input[name="out_date"]').val());
                             this.status = 1;
+                            selected_item = item;
                         }else{
                             $.alert("产品已经售完");
                         }
-                    },
-                    next: function(){
-                        toggle(2);
-                        this.status = 2;
+                        var self = this;
                     },
                     funcFold: function(e){
                         $(e.target).next().toggle();
