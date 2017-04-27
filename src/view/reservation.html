@@ -328,7 +328,7 @@
         <!--<a class="weui-btn weui-btn_primary" href="javascript:" v-on:click="next">支付宝</a>-->
     <!--</div>-->
     <div class="weui-btn-area">
-        <a class="weui-btn weui-btn_primary" href="javascript:">提交订单</a>
+        <a class="weui-btn weui-btn_primary" href="javascript:" v-on:click="submit">提交订单</a>
     </div>
 </div>
 
@@ -497,7 +497,26 @@
                                     data: data,
                                     methods:{
                                         'submit': function(){
-                                            alert('todo: submit');
+                                            var data = {
+                                                'seller_id': 1,
+                                                'carts': {
+
+                                                },
+                                                'contact': {
+                                                    'consignee': this.contact['consignee'],
+                                                    'mobile': this.contact['mobile'],
+                                                    'address': this.contact['identity']
+                                                },
+                                                'consume_time': Date.parse(checkin)/1000
+                                            };
+                                            data['carts'][this.product['id']] = this.product['number'];
+                                            U.api.shop.order.submit(data , function(err, json){
+                                                if(err){
+                                                    alert(err.message);
+                                                }else{
+                                                    alert(JSON.stringify(json));
+                                                }
+                                            })
                                         }
                                     }
                                 });

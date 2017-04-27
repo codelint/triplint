@@ -583,6 +583,11 @@ U.buildApiClient = (function($){
                         query['type'] = query['type'] || 1001;
                         client.postJson(_url('product.search'), query, callback_filter(cbf));
                     }
+                },
+                'order': {
+                    'submit': function(data, cbf){
+                        client.postJson(_url('order.submit'), data, callback_filter(cbf));
+                    }
                 }
             },
             'trac': {
