@@ -495,7 +495,7 @@
                                 }
                             })
                         }
-                    }})
+                    }});
                 },
                 methods: {
                     funcBack: function(){
@@ -510,8 +510,7 @@
                         var checkin = $('input[name="in_date"]').val();
                         var checkout = $('input[name="out_date"]').val();
                         if(!checkin || !checkout || (Date.parse(checkout) - Date.parse(checkin))/86400000 < 0.5){
-                            android.alert('日期选择错误');
-                            return false;
+                            return alert('日期选择错误');
                         }
                         // 预订
                         if(item.stock > 0){
@@ -535,8 +534,7 @@
                     }
                 }
             });
-
-
+            toggle(0);
         });
     });
 </script>
