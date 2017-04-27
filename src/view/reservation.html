@@ -494,7 +494,12 @@
                                 self.status = 2;
                                 new Vue({
                                     'el': '#confirm-div',
-                                    data: data
+                                    data: data,
+                                    methods:{
+                                        'submit': function(){
+                                            alert('todo: submit');
+                                        }
+                                    }
                                 });
                             }else{
                                 toggle(1);
