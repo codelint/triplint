@@ -507,6 +507,12 @@
                         }
                     },
                     book: function(item){
+                        var checkin = $('input[name="in_date"]').val();
+                        var checkout = $('input[name="out_date"]').val();
+                        if(!checkin || !checkout || (Date.parse(checkout) - Date.parse(checkin))/86400000 < 0.5){
+                            android.alert('日期选择错误');
+                            return false;
+                        }
                         // 预订
                         if(item.stock > 0){
                             toggle(1);
@@ -515,8 +521,8 @@
                             $main.find("span.end_date").text('');
                             $main.find("p.product_name").text(item['name']);
                             $('input[name="product_id"]').val(item['id']);
-                            $('span.checkin_date').text($('input[name="in_date"]').val());
-                            $('span.checkout_date').text($('input[name="out_date"]').val());
+                            $('span.checkin_date').text(checkin);
+                            $('span.checkout_date').text(checkout);
                             this.status = 1;
                             selected_item = item;
                         }else{
