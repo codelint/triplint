@@ -471,29 +471,35 @@
                             var $confirm_div = $('div.template.confirm').clone();
                             $confirm_div.removeClass('template').attr('id', 'confirm-div');
                             $('.main').append($confirm_div);
-                            toggle(2);
-                            self.status = 2;
                             var checkin = $('input[name="in_date"]').val();
                             var checkout = $('input[name="out_date"]').val();
-                            var days = (Date.parse(checkout) - Date.parse(checkin))/86400000;
-                            new Vue({
-                                'el': '#confirm-div',
-                                data: {
-                                    'product': {
-                                        'id': selected_item['id'],
-                                        'name': selected_item['name'],
-                                        'price': selected_item['price'],
-                                        'number': days
-                                    },
-                                    'contact': {
-                                        'consignee': $('input[name="consignee"]').val(),
-                                        'mobile': $('input[name="mobile"]').val(),
-                                        'identity': $('input[name="identity"]').val()
-                                    },
-                                    'checkin': checkin,
-                                    'checkout': checkout
-                                }
-                            })
+                            var data = {
+                                'product': {
+                                    'id': selected_item['id'],
+                                    'name': selected_item['name'],
+                                    'price': selected_item['price'],
+                                    'number': (Date.parse(checkout) - Date.parse(checkin))/86400000
+                                },
+                                'contact': {
+                                    'consignee': $('input[name="consignee"]').val(),
+                                    'mobile': $('input[name="mobile"]').val(),
+                                    'identity': $('input[name="identity"]').val()
+                                },
+                                'checkin': checkin,
+                                'checkout': checkout
+                            };
+                            var contact = data['contact'];
+                            if(contact && contact['consignee'] && contact['mobile'] && contact['mobile'].length == 11 && contact['identity'].length > 10){
+                                toggle(2);
+                                self.status = 2;
+                                new Vue({
+                                    'el': '#confirm-div',
+                                    data: data
+                                });
+                            }else{
+                                toggle(1);
+                                alert('联系信息输入有误');
+                            }
                         }
                     }});
                 },
