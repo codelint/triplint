@@ -77,18 +77,19 @@
         </div>
     </div>
 
-    <div class="fold" id="fold1">
+    <div class="fold" id="fold0">
         <div class="weui-panel__hd" v-on:click="funcFold">旅舍概况</div>
         <article class="weui-article hotel-overview hide">
-            <h1>旅舍概况</h1>
-
             <p>
                 泉州一束光青年旅舍位于泉州学府路，泉州第一中学附近，从梅石书院旧址的大榕树进入梅石巷内大约两百米。
                 从旅舍步行大约5分钟可到朝天门，骑自行车（15分钟）或乘坐15路/K1直达清源山国家重点风景名胜区游览
             </p>
+        </article>
+    </div>
 
-            <h1>景点游览</h1>
-
+    <div class="fold" id="fold1">
+        <div class="weui-panel__hd" v-on:click="funcFold">旅舍周边</div>
+        <article class="weui-article hotel-overview hide">
             <p> 至东湖公园：骑行10分钟；公交15路/1路泉州一中上，东门下</p>
 
             <p> 至西湖公园：骑行15分钟；公交21路/17路，北门街上，西湖公园下</p>
@@ -381,16 +382,21 @@
 //                            services: ['wifi', '空调', '独卫']
 //                        }
 //                    ];
+                    var seller_id = 0;
 
                     if(json && json.length){
                         _.each(json, function(v, k, arr){
                             photos.push({
                                 'src': U.api.oss.rid2url(v['photo'], 'style/index_bar_photo'),
                                 'alt': v['mark']
-                            })
+                            });
+                            seller_id = v['user_id'];
                         });
 
-                        U.api.shop.product.search({page: 1}, function(err, json){
+                        U.api.shop.product.search({
+                            seller_id: seller_id,
+                            page: 1
+                        }, function(err, json){
                             var roomData = [];
                             if(json && json['rows']){
                                 _.each(json['rows'], function(v, k, arr){
