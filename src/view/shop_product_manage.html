@@ -109,7 +109,6 @@
         function loadProductPage(){
             var user = android.current_user();
             U.api.shop.product.search({page: 1, seller_id: user['id']}, function(err, json){
-                alert(JSON.stringify(arguments));
                 new Vue({
                     el: '#product-div',
                     data: {
