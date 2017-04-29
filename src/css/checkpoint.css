@@ -114,8 +114,8 @@ body {
 @font-face {
   font-family: 'iconfont';
   /* project id 158059 */
-  src: url('http://at.alicdn.com/t/font_rn8htr0tce3cv7vi.eot');
-  src: url('http://at.alicdn.com/t/font_rn8htr0tce3cv7vi.eot?#iefix') format('embedded-opentype'), url('http://at.alicdn.com/t/font_rn8htr0tce3cv7vi.woff') format('woff'), url('http://at.alicdn.com/t/font_rn8htr0tce3cv7vi.ttf') format('truetype'), url('http://at.alicdn.com/t/font_rn8htr0tce3cv7vi.svg#iconfont') format('svg');
+  src: url('../public/font/icon.eot');
+  src: url('../public/font/icon.eot') format('embedded-opentype'), url('../public/font/icon.woff') format('woff'), url('../public/font/icon.ttf') format('truetype'), url('../public/font/icon.svg') format('svg');
 }
 .iconfont {
   font-family: "iconfont" !important;
