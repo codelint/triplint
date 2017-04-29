@@ -15,6 +15,10 @@
         #group_a{
             margin-left: 4px;
         }
+        input[name="file"]{
+            position: fixed;
+            opacity: 0;
+        }
     </style>
 </head>
 <body>
@@ -27,7 +31,7 @@
     <div class="box">
         <div class="img-box">
             <div class="img">
-                <form class="hide" id="oss-upload-form" autocomplete="off" action="http://yue.oss-cn-hangzhou.aliyuncs.com/" method="post" enctype="multipart/form-data" target="hidden_frame">
+                <form id="oss-upload-form" autocomplete="off" action="http://yue.oss-cn-hangzhou.aliyuncs.com/" method="post" enctype="multipart/form-data" target="hidden_frame">
                     <iframe name='hidden_frame' id="hidden_frame" style='display: none'></iframe>
                     <input type="hidden" name="OSSAccessKeyId" value=""/>
                     <input type="hidden" name="policy" value=""/>
@@ -116,10 +120,13 @@
 
     function adjust_file_input_pos() {
         var $file = $('input[name="file"]');
-        var $preview = $('img.temp_picture');
+        var $preview = $('img.temp_picture').attr('src') ? $('img.temp_picture') : $('div.upload-img');
 
+        $file.css('position', 'fixed');
         $file.css('width', $preview.css('width'));
         $file.css('height', $preview.css('height'));
+        $file.css('left', $preview.offset().left);
+        $file.css('top', $preview.offset().top);
         $file.css('z-index', 1);
         $file.css('opacity', 0);
     }
@@ -318,9 +325,9 @@
 
         $('input[name="file"]').change(upload_file).change(parse_file);
         // 上传图片
-        $(".upload-img").click(function () {
-            $('input[name="file"]').trigger("click");
-        });
+//        $(".upload-img").click(function () {
+//            $('input[name="file"]').trigger("click");
+//        });
 
         $('.commit').click(function () {
             var dateFormat = new DateFormat('yyyy-MM-dd HH:mm');
