@@ -1,10 +1,10 @@
 @font-face {
   font-family: 'iconfont';  /* project id："158059" */
-  src: url('http://at.alicdn.com/t/font_910v1plfu3ex9a4i.eot');
-  src: url('http://at.alicdn.com/t/font_910v1plfu3ex9a4i.eot?#iefix') format('embedded-opentype'),
-  url('http://at.alicdn.com/t/font_910v1plfu3ex9a4i.woff') format('woff'),
-  url('http://at.alicdn.com/t/font_910v1plfu3ex9a4i.ttf') format('truetype'),
-  url('http://at.alicdn.com/t/font_910v1plfu3ex9a4i.svg#iconfont') format('svg');
+  src: url('../font/icon.eot');
+  src: url('../font/icon.eot') format('embedded-opentype'),
+  url('../font/icon.woff') format('woff'),
+  url('../font/icon.ttf') format('truetype'),
+  url('../font/icon.svg') format('svg');
 }
 
 .iconfont {
