@@ -35,7 +35,7 @@
                     <div class="weui-cells">
                         <div class="weui-cell weui-cell_access" v-for="(item,i) in items">
                             <div class="weui-cell__hd" style="position: relative;margin-right: 10px;">
-                                <img src="images/pic_160.png" style="width: 50px;display: block">
+                                <img :src="U.api.oss.rid2url(item['images'] || 'http://', 'style/resize_128x128')" style="width: 50px;display: block">
                                 <!--<span class="weui-badge" style="position: absolute;top: -.4em;right: -.4em;">8</span>-->
                             </div>
                             <div class="weui-cell__bd">
