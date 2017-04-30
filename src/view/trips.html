@@ -64,7 +64,7 @@
                 <div :id="'checkpoint-div-'+item.id">
                     <div v-if="item.dayshow">
                         <p v-cloak class="day-marker">
-                            <i class="circle circle-first"></i>
+                            <i class="circle circle-first" v-on:click="reverse()"></i>
                             第{{ item.day }}天 {{ (new Date(item.create_time*1000).getMonth() + 1) }}月{{ (new
                             Date(item.create_time*1000).getDate()) }}日
                         </p>

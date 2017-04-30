@@ -187,6 +187,14 @@ jQuery(function($){
                                     }
                                 });
                             }
+                        },
+                        'reverse': function(){
+                            sort = sort == 'desc' ? 'asc' : 'desc';
+                            if(location.href.indexOf('sort=') < 0){
+                                location.href = location.href + (location.href.indexOf('?') > 0 ? '&' : '?') + 'sort=' + sort
+                            }else{
+                                location.href = location.href.replace( /sort=[a-z]*/, 'sort=' + sort);
+                            }
                         }
                     }
                 });
