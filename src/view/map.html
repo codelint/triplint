@@ -37,6 +37,23 @@
 
         }
 
+        #camera-pos-div{
+            position: relative;
+        }
+
+        input[name="file"]{
+            position: absolute;
+            left: 0;
+            top: 0;
+            width:100%;
+            height:100%;
+            opacity: 0;
+        }
+
+        #search-area div.weui-cell__ft{
+            z-index: 999;
+        }
+
     </style>
     <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=o9CPvMuqXebMhwZvsbYmHW2P">
     </script>
@@ -52,11 +69,11 @@
     <div class="weui-cell__bd">
         <input name="keyword" class="weui-input auto-fill" type="text" placeholder="输入关键字">
     </div>
-    <div>
+    <div id="camera-pos-div">
         <i class="iconfont icon-camera">
         </i>
         <input type="file" name="file" class="form-control" id="fileInput" accept="image/*;capture=camera"
-               placeholder="选择文件" style="position: fixed"/>
+               placeholder="选择文件"/>
     </div>
     <div class="weui-cell__ft">
         <a id="search-btn" href="javascript:;" class="weui-vcode-btn map-btn">搜索</a>
@@ -70,13 +87,6 @@
 <script type="text/javascript">
     jQuery(function($){
         var $file = $('input[name="file"]');
-        var $icon = $('i.icon-camera');
-        $file.css('left', $icon.offset().left);
-        $file.css('top', $icon.offset().top);
-        $file.css('width', $icon.css('width'));
-        $file.css('height', $icon.css('height'));
-        $file.css('z-index', 1);
-        $file.css('opacity', 0);
 
         function parse_file(e){
             if(!e.target || !e.target.files.length || !e.target.files[0]){
