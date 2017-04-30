@@ -19,6 +19,12 @@
         #order-div {
             display: none;
         }
+
+        .weui-mask{
+            visibility: visible!important;
+            display: none;
+        }
+
     </style>
 </head>
 <body>
@@ -33,19 +39,39 @@
                 </div>
                 <div class="weui-tab__panel">
                     <div class="weui-cells">
-                        <div class="weui-cell weui-cell_access" v-for="(item,i) in items">
+                        <div class="weui-cell weui-cell_access" v-for="(item,i) in items" v-on:click="productAction(item)">
                             <div class="weui-cell__hd" style="position: relative;margin-right: 10px;">
-                                <img :src="U.api.oss.rid2url(item['images'] || 'http://', 'style/resize_128x128')" style="width: 50px;display: block">
+                                <img :src="U.api.oss.rid2url(item['images'] || 'http://', 'style/resize_128x128')"
+                                     style="width: 50px;display: block">
                                 <!--<span class="weui-badge" style="position: absolute;top: -.4em;right: -.4em;">8</span>-->
                             </div>
                             <div class="weui-cell__bd">
                                 <p>{{ item['name'] }}</p>
 
-                                <p style="font-size: 13px;color: #888888;">库存：{{item['stock']}}，价格：{{item['price']}}元，状态：{{item['online'] > 0 ? '上架' : '下架'}}</p>
+                                <p style="font-size: 13px;color: #888888;">
+                                    库存：{{item['stock']}}，价格：{{item['price']}}元，状态：{{item['online'] > 0 ? '上架' :
+                                    '下架'}}</p>
                             </div>
                             <div class="weui-cell__ft">
                                 详细信息
                             </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="product-action-select-div">
+                    <div class="weui-mask" style="opacity: 1;"></div>
+                    <div class="weui-actionsheet">
+                        <div class="weui-actionsheet__title">
+                            <p class="weui-actionsheet__title-text">操作列表。</p>
+                        </div>
+                        <div class="weui-actionsheet__menu">
+                            <div class="weui-actionsheet__cell">上架</div>
+                            <div class="weui-actionsheet__cell">下架</div>
+                            <div class="weui-actionsheet__cell">修改</div>
+                            <div class="weui-actionsheet__cell">查看</div>
+                        </div>
+                        <div class="weui-actionsheet__action">
+                            <div class="weui-actionsheet__cell" id="iosActionsheetCancel">取消</div>
                         </div>
                     </div>
                 </div>
@@ -113,6 +139,17 @@
                     el: '#product-div',
                     data: {
                         items: json['rows']
+                    },
+                    methods:{
+                        productAction: function(item){
+                            var $menu = $('#product-action-select-div');
+                            $menu.find('.weui-actionsheet__title-text').text(item.name);
+                            $menu.find('.weui-actionsheet').addClass('weui-actionsheet_toggle');
+                            $menu.find('.weui-mask').click(function(){
+                                $(this).fadeOut(200);
+                                $menu.find('.weui-actionsheet').removeClass('weui-actionsheet_toggle');
+                            }).fadeIn(200);
+                        }
                     }
                 })
             });
