@@ -26,7 +26,6 @@
         }
 
         .edit-item{
-            display: none;
         }
 
     </style>
@@ -42,9 +41,8 @@
                     </div>
                 </div>
                 <div class="weui-tab__panel">
-                    <div class="weui-cells weui-cells_form" v-for="(item,i) in items" :id="'product-div-' + item['id']">
-                        <div class="weui-cell weui-cell_access"
-                             v-on:click="productAction(item)">
+                    <div class="weui-cells" v-for="(item,i) in items" :id="'product-div-' + item['id']">
+                        <div class="weui-cell weui-cell_access">
                             <div class="weui-cell__hd" style="position: relative;margin-right: 10px;">
                                 <img :src="U.api.oss.rid2url(item['images'] || 'http://', 'style/resize_128x128')"
                                      style="width: 50px;display: block">
@@ -58,31 +56,31 @@
                                     '下架'}}</p>
                             </div>
                             <div class="weui-cell__ft">
-                                修改
+                                <a class="edit-a" href="#" v-on:click="editProduct(item)">修改</a>
                             </div>
                         </div>
-                        <div class="weui-cell">
+                        <div class="weui-cell edit-item">
                             <div class="weui-cell__hd"><label class="weui-label">名称</label></div>
                             <div class="weui-cell__bd">
-                                <input class="weui-input" type="text" placeholder="输入名称"/>
+                                <input class="weui-input" type="text" placeholder="输入名称" :value="item['name']"/>
                             </div>
                         </div>
-                        <div class="weui-cell">
+                        <div class="weui-cell edit-item">
                             <div class="weui-cell__hd"><label class="weui-label">库存</label></div>
                             <div class="weui-cell__bd">
-                                <input class="weui-input" type="number" pattern="[0-9]*" placeholder="输入库存">
+                                <input class="weui-input" type="number" pattern="[0-9]*" placeholder="输入库存" :value="item['stock']">
                             </div>
                         </div>
-                        <div class="weui-cell">
+                        <div class="weui-cell edit-item">
                             <div class="weui-cell__hd"><label class="weui-label">价格</label></div>
                             <div class="weui-cell__bd">
-                                <input class="weui-input" type="number" pattern="[0-9]*" placeholder="设置价格">
+                                <input class="weui-input" type="number" placeholder="设置价格" :value="item['price']">
                             </div>
                         </div>
-                        <div class="weui-cell weui-cell_switch">
+                        <div class="weui-cell weui-cell_switch edit-item">
                             <div class="weui-cell__bd">上架</div>
                             <div class="weui-cell__ft">
-                                <input class="weui-switch" type="checkbox">
+                                <input class="weui-switch" type="checkbox" v-bind:checked="Number(item['online']) > 0.1">
                             </div>
                         </div>
                     </div>
@@ -161,6 +159,7 @@
     var sort = U.ajax.getUrlParam('sort') || 'asc';
 
     jQuery(function($){
+        $('.edit-item').hide();
         function loadProductPage(){
             var user = android.current_user();
             U.api.shop.product.search({page: 1, seller_id: user['id']}, function(err, json){
@@ -170,9 +169,10 @@
                         items: json['rows']
                     },
                     methods: {
-                        productAction: function(item){
-                            $('.edit-item').hide();
+                        editProduct: function(item){
+                            // $('.edit-item').hide();
                             $('#product-div-' + item['id']).find('.edit-item').fadeIn(200);
+
 //                            var $menu = $('#product-action-select-div');
 //                            $menu.find('.weui-actionsheet__title-text').text(item.name);
 //                            $menu.find('.weui-actionsheet').addClass('weui-actionsheet_toggle');
