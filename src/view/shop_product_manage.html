@@ -20,8 +20,12 @@
             display: none;
         }
 
-        .weui-mask{
-            visibility: visible!important;
+        .weui-mask {
+            visibility: visible !important;
+            display: none;
+        }
+
+        .edit-item{
             display: none;
         }
 
@@ -38,8 +42,9 @@
                     </div>
                 </div>
                 <div class="weui-tab__panel">
-                    <div class="weui-cells">
-                        <div class="weui-cell weui-cell_access" v-for="(item,i) in items" v-on:click="productAction(item)">
+                    <div class="weui-cells weui-cells_form" v-for="(item,i) in items" :id="'product-div-' + item['id']">
+                        <div class="weui-cell weui-cell_access"
+                             v-on:click="productAction(item)">
                             <div class="weui-cell__hd" style="position: relative;margin-right: 10px;">
                                 <img :src="U.api.oss.rid2url(item['images'] || 'http://', 'style/resize_128x128')"
                                      style="width: 50px;display: block">
@@ -53,7 +58,31 @@
                                     '下架'}}</p>
                             </div>
                             <div class="weui-cell__ft">
-                                详细信息
+                                修改
+                            </div>
+                        </div>
+                        <div class="weui-cell edit-item">
+                            <div class="weui-cell__hd"><label class="weui-label">名称</label></div>
+                            <div class="weui-cell__bd">
+                                <input class="weui-input" type="text" placeholder="输入名称"/>
+                            </div>
+                        </div>
+                        <div class="weui-cell edit-item">
+                            <div class="weui-cell__hd"><label class="weui-label">库存</label></div>
+                            <div class="weui-cell__bd">
+                                <input class="weui-input" type="number" pattern="[0-9]*" placeholder="输入库存">
+                            </div>
+                        </div>
+                        <div class="weui-cell edit-item">
+                            <div class="weui-cell__hd"><label class="weui-label">价格</label></div>
+                            <div class="weui-cell__bd">
+                                <input class="weui-input" type="number" pattern="[0-9]*" placeholder="设置价格">
+                            </div>
+                        </div>
+                        <div class="weui-cell weui-cell_switch edit-item">
+                            <div class="weui-cell__bd">上架</div>
+                            <div class="weui-cell__ft">
+                                <input class="weui-switch" type="checkbox">
                             </div>
                         </div>
                     </div>
@@ -140,15 +169,17 @@
                     data: {
                         items: json['rows']
                     },
-                    methods:{
+                    methods: {
                         productAction: function(item){
-                            var $menu = $('#product-action-select-div');
-                            $menu.find('.weui-actionsheet__title-text').text(item.name);
-                            $menu.find('.weui-actionsheet').addClass('weui-actionsheet_toggle');
-                            $menu.find('.weui-mask').click(function(){
-                                $(this).fadeOut(200);
-                                $menu.find('.weui-actionsheet').removeClass('weui-actionsheet_toggle');
-                            }).fadeIn(200);
+                            $('.edit-item').hide();
+                            $('#product-div-' + item['id']).find('.edit-item').fadeIn(200);
+//                            var $menu = $('#product-action-select-div');
+//                            $menu.find('.weui-actionsheet__title-text').text(item.name);
+//                            $menu.find('.weui-actionsheet').addClass('weui-actionsheet_toggle');
+//                            $menu.find('.weui-mask').click(function(){
+//                                $(this).fadeOut(200);
+//                                $menu.find('.weui-actionsheet').removeClass('weui-actionsheet_toggle');
+//                            }).fadeIn(200);
                         }
                     }
                 })
