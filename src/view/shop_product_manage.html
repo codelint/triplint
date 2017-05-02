@@ -62,25 +62,25 @@
                         <div class="weui-cell edit-item">
                             <div class="weui-cell__hd"><label class="weui-label">名称</label></div>
                             <div class="weui-cell__bd">
-                                <input class="weui-input" type="text" placeholder="输入名称" :value="item['name']"/>
+                                <input class="field-name weui-input" type="text" placeholder="输入名称" :value="item['name']"/>
                             </div>
                         </div>
                         <div class="weui-cell edit-item">
                             <div class="weui-cell__hd"><label class="weui-label">库存</label></div>
                             <div class="weui-cell__bd">
-                                <input class="weui-input" type="number" pattern="[0-9]*" placeholder="输入库存" :value="item['stock']">
+                                <input class="field-stock weui-input" type="number" pattern="[0-9]*" placeholder="输入库存" :value="item['stock']">
                             </div>
                         </div>
                         <div class="weui-cell edit-item">
                             <div class="weui-cell__hd"><label class="weui-label">价格</label></div>
                             <div class="weui-cell__bd">
-                                <input class="weui-input" type="number" placeholder="设置价格" :value="item['price']">
+                                <input class="field-price weui-input" type="number" placeholder="设置价格" :value="item['price']">
                             </div>
                         </div>
                         <div class="weui-cell weui-cell_switch edit-item">
                             <div class="weui-cell__bd">上架</div>
                             <div class="weui-cell__ft">
-                                <input class="weui-switch" type="checkbox" v-bind:checked="Number(item['online']) > 0.1">
+                                <input class="field-online weui-switch" type="checkbox" v-bind:checked="Number(item['online']) > 0.1">
                             </div>
                         </div>
                     </div>
@@ -171,7 +171,22 @@
                     methods: {
                         editProduct: function(item){
                             // $('.edit-item').hide();
-                            $('#product-div-' + item['id']).find('.edit-item').fadeIn(200);
+                            var $area = $('#product-div-' + item['id']);
+                            var $edit_btn = $area.find('a.edit-a');
+                            if($edit_btn.text() == '修改'){
+                                $area.find('.edit-item').fadeIn(200);
+                                $edit_btn.text('保存');
+                            }else{
+                                $area.find('.edit-item').fadeOut(200);
+                                $edit_btn.text('修改');
+                                var data = {
+                                    name:$area.find('.field-name').val(),
+                                    price:Number($area.find('.field-price').val()),
+                                    stock:Number($area.find('.field-stock').val()),
+                                    online: $area.find('.field-online').prop('checked') ? 1 : 0
+                                };
+                                alert(JSON.stringify(data));
+                            }
 
 //                            var $menu = $('#product-action-select-div');
 //                            $menu.find('.weui-actionsheet__title-text').text(item.name);
