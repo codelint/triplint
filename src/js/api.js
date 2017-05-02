@@ -582,6 +582,13 @@ U.buildApiClient = (function($){
                     'search': function(query, cbf){
                         query['type'] = query['type'] || 1001;
                         client.postJson(_url('product.search'), query, callback_filter(cbf));
+                    },
+                    'modify': function(data, cbf){
+                        if(data['id']){
+                            client.postJson(_url('product.modify'), data, callback_filter(cbf));
+                        }else{
+                            cbf({message: "参数错误"});
+                        }
                     }
                 },
                 'order': {

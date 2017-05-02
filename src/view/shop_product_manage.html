@@ -177,21 +177,26 @@
                                 $area.find('.edit-item').fadeIn(200);
                                 $edit_btn.text('保存');
                             }else{
-                                $area.find('.edit-item').fadeOut(200);
-                                $edit_btn.text('修改');
                                 var data = {
+                                    id: item['id'],
                                     name:$area.find('input.field-name').val(),
                                     price:Number($area.find('input.field-price').val()),
                                     stock:Number($area.find('input.field-stock').val()),
                                     online: $area.find('input.field-online').prop('checked') ? 1 : 0
                                 };
                                 //todo post it
-                                //update it
-                                $area.find('.show-name').text(data['name']);
-                                $area.find('.show-price').text(data['price']);
-                                $area.find('.show-stock').text(data['stock']);
-                                $area.find('.show-online').text(data['online'] ? '上架' : '下架');
-                                alert(JSON.stringify(data));
+                                U.api.shop.product.modify(data, function(err, json){
+                                    if(err){
+                                        alert(err.message);
+                                    }else{
+                                        $area.find('.edit-item').fadeOut(200);
+                                        $edit_btn.text('修改');
+                                        $area.find('.show-name').text(data['name']);
+                                        $area.find('.show-price').text(data['price']);
+                                        $area.find('.show-stock').text(data['stock']);
+                                        $area.find('.show-online').text(data['online'] ? '上架' : '下架');
+                                    }
+                                });
                             }
 
 //                            var $menu = $('#product-action-select-div');
