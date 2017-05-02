@@ -11,9 +11,9 @@ jQuery(function($){
     /**
      * 表单自动保存自动填充
      */
-    (function($){
+    U.ue = (function($){
         function getKeyPrefix(){
-            return location.href + location.search + '#';
+            return location.href + '#';
         }
 
         function backup(elem){
@@ -55,11 +55,24 @@ jQuery(function($){
         for(i = elems.length; i--;){
             restore(elems[i])
         }
-        setInterval(function(){
-            for(var i = elems.length; i--;){
-                backup(elems[i]);
+//        setInterval(function(){
+//            for(var i = elems.length; i--;){
+//                backup(elems[i]);
+//            }
+//        });
+        return {
+            restoreAll: function(){
+                for(i = elems.length; i--;){
+                    restore(elems[i])
+                }
+            },
+            clearAll: clear,
+            backupAll: function(){
+                for(var i = elems.length; i--;){
+                    backup(elems[i]);
+                }
             }
-        });
+        }
     })($);
     /**
      * 根据路径参数自动填写form表单
