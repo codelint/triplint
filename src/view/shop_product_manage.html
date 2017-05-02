@@ -49,11 +49,11 @@
                                 <!--<span class="weui-badge" style="position: absolute;top: -.4em;right: -.4em;">8</span>-->
                             </div>
                             <div class="weui-cell__bd">
-                                <p>{{ item['name'] }}</p>
+                                <p><span class="show-name">{{ item['name'] }}</span></p>
 
                                 <p style="font-size: 13px;color: #888888;">
-                                    库存：{{item['stock']}}，价格：{{item['price']}}元，状态：{{item['online'] > 0 ? '上架' :
-                                    '下架'}}</p>
+                                    库存：<span class="show-stock">{{item['stock']}}</span>，价格：<span class="show-price">{{item['price']}}</span>元，状态：<span class="show-online">{{item['online'] > 0 ? '上架' :
+                                    '下架'}}</span></p>
                             </div>
                             <div class="weui-cell__ft">
                                 <a class="edit-a" href="#" v-on:click="editProduct(item)">修改</a>
@@ -180,11 +180,17 @@
                                 $area.find('.edit-item').fadeOut(200);
                                 $edit_btn.text('修改');
                                 var data = {
-                                    name:$area.find('.field-name').val(),
-                                    price:Number($area.find('.field-price').val()),
-                                    stock:Number($area.find('.field-stock').val()),
-                                    online: $area.find('.field-online').prop('checked') ? 1 : 0
+                                    name:$area.find('input.field-name').val(),
+                                    price:Number($area.find('input.field-price').val()),
+                                    stock:Number($area.find('input.field-stock').val()),
+                                    online: $area.find('input.field-online').prop('checked') ? 1 : 0
                                 };
+                                //todo post it
+                                //update it
+                                $area.find('.show-name').text(data['name']);
+                                $area.find('.show-price').text(data['price']);
+                                $area.find('.show-stock').text(data['stock']);
+                                $area.find('.show-online').text(data['online'] ? '上架' : '下架');
                                 alert(JSON.stringify(data));
                             }
 
