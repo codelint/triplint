@@ -594,6 +594,9 @@ U.buildApiClient = (function($){
                 'order': {
                     'submit': function(data, cbf){
                         client.postJson(_url('order.submit'), data, callback_filter(cbf));
+                    },
+                    'list': function(data, cbf){
+                        client.postJson(_url('order.list'), data, callback_filter(cbf));
                     }
                 }
             },

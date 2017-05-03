@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1, user-scalable=no">
+    <meta charset="UTF-8">
+    <title>订单列表</title>
+    <link rel="stylesheet" href="../public/css/weui.css">
+    <style type="text/css">
+        .container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        i.weui-icon-success.order-icon {
+            font-size: 32px !important;
+        }
+
+        .weui-mask {
+            visibility: visible !important;
+            display: none;
+        }
+
+        div.weui-actionsheet__cell.pay, div.weui-actionsheet__cell.confirm, div.weui-actionsheet__cell.cancel{
+            display: none;
+        }
+
+        .status-0 div.weui-actionsheet__cell.pay, .status-0 div.weui-actionsheet__cell.cancel{
+            display: block;
+        }
+
+        .status-1000 div.weui-actionsheet__cell.cancel{
+
+        }
+
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="weui-tab">
+        <div id="order-div" class="weui-tab__panel">
+            <div class="weui-tab">
+                <div class="weui-navbar">
+                    <div class="weui-navbar__item">
+                        订单列表
+                    </div>
+                </div>
+                <div class="weui-tab__panel">
+                    <div class="weui-cells" v-for="(item,i) in items" :id="'product-div-' + item['id']">
+                        <div class="weui-cell weui-cell_access" v-on:click="orderAction(item)">
+                            <div class="weui-cell__hd" style="position: relative;margin-right: 10px;">
+                                <i class="weui-icon-success order-icon"></i>
+                                <!--<span class="weui-badge" style="position: absolute;top: -.4em;right: -.4em;">8</span>-->
+                            </div>
+                            <div class="weui-cell__bd">
+                                <p><span class="show-name">{{ item['sn'] }}</span></p>
+
+                                <p style="font-size: 13px;color: #888888;">
+                                    金额：<span class="show-price">{{item['order_amount']}}</span>元，状态：<span
+                                        class="show-status">{{item['status'] > 0 ? '上架' :
+                                    '下架'}}</span></p>
+                            </div>
+                            <div class="weui-cell__ft">
+                                操作
+                            </div>
+                        </div>
+                        <div :class="'order-action-select status-' + item['order_status']">
+                            <div class="weui-mask" style="opacity: 1;z-index: 500"></div>
+                            <div class="weui-actionsheet" style="z-index: 999">
+                                <div class="weui-actionsheet__title">
+                                    <p class="weui-actionsheet__title-text">操作列表。</p>
+                                </div>
+                                <div class="weui-actionsheet__menu">
+                                    <div class="weui-actionsheet__cell pay" v-on:click="pay(item)">支付</div>
+                                    <div class="weui-actionsheet__cell confirm">确认订单</div>
+                                    <div class="weui-actionsheet__cell cancel">取消订单</div>
+                                    <div class="weui-actionsheet__cell detail">详情(暂不支持)</div>
+                                </div>
+                                <div class="weui-actionsheet__action">
+                                    <div class="weui-actionsheet__cell" id="iosActionsheetCancel" v-on:click="closeSelect">取消</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="weui-tabbar">
+            <a href="javascript:;" class="weui-tabbar__item">
+                        <span style="display: inline-block;position: relative;">
+                            <img src="./images/icon_tabbar.png" alt="" class="weui-tabbar__icon">
+                            <!--<span class="weui-badge" style="position: absolute;top: -2px;right: -13px;">0</span>-->
+                        </span>
+
+                <p class="weui-tabbar__label">产品</p>
+            </a>
+            <a href="javascript:;" class="weui-tabbar__item weui-bar__item_on">
+                        <span style="display: inline-block;position: relative;">
+                            <img src="./images/icon_tabbar.png" alt="" class="weui-tabbar__icon">
+                            <!--<span class="weui-badge weui-badge_dot" style="position: absolute;top: 0;right: -6px;"></span>-->
+                        </span>
+
+                <p class="weui-tabbar__label">订单</p>
+            </a>
+        </div>
+    </div>
+</div>
+
+</body>
+<script type="text/javascript" src="../public/js/jquery-2.1.4.js"></script>
+<script type="text/javascript" src="../public/js/vue.min.js"></script>
+<script type="text/javascript" src="../public/jquery-weui/1.0/jquery-weui.min.js"></script>
+
+<script type="text/javascript" src="../js/android.js"></script>
+<script type="text/javascript" src="../public/js/md5.js"></script>
+<script type="text/javascript" src="../public/js/underscore.js"></script>
+<script type="text/javascript" src="../js/api.js"></script>
+<script type="text/javascript" src="../js/common/ue.js"></script>
+
+<script type="text/javascript">
+    var page_size = 10;
+    var group_id = U.ajax.getUrlParam("uid");
+    var sort = U.ajax.getUrlParam('sort') || 'asc';
+
+    jQuery(function($){
+        $('.edit-item').hide();
+        function loadProductPage(){
+            var user = android.current_user();
+            U.api.shop.order.list({page: 1, seller_id: user['id']}, function(err, json){
+                if(err){
+                    android.alert(err.message);
+                }
+                new Vue({
+                    el: '#order-div',
+                    data: {
+                        items: json ? json['rows'] : []
+                    },
+                    methods: {
+                        orderAction: function(item){
+                            var self = this;
+                            var $actionList = $('#order-div').find('.order-action-select');
+                            $actionList.find('.weui-actionsheet').addClass('weui-actionsheet_toggle');
+                            $actionList.find('.weui-mask').fadeIn(200).click(function(){
+                                self.closeSelect();
+                            });
+                            $actionList.find('.weui-actionsheet__title-text').text(item['sn'])
+                        },
+                        closeSelect: function(){
+                            var $actionList = $('#order-div').find('.order-action-select');
+                            $actionList.find('.weui-actionsheet').removeClass('weui-actionsheet_toggle');
+                            $actionList.find('.weui-mask').fadeOut(200)
+                        },
+                        pay: function(item){
+                            android.redirect(REST_BASE + '/open/api?method=order.pay&action=redirect&order_sn=' + item['sn'], '跳转至支付')
+                        }
+                    }
+                })
+            });
+        }
+
+        loadProductPage();
+
+        // ui setup
+        $(function(){
+            $('.weui-tabbar__item').on('click', function(){
+                $(this).addClass('weui-bar__item_on').siblings('.weui-bar__item_on').removeClass('weui-bar__item_on');
+            });
+        });
+    });
+</script>
+</html>

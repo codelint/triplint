@@ -86,6 +86,24 @@ android = (function(){
         "open_url": function(url){
             location.href = url;
         },
+        "redirect": function(url, tip){
+            if(typeof jQuery != 'undefined'){
+                var $html = jQuery('<div>' +
+                    '<div class="weui-mask_transparent"></div>' +
+                    '<div class="weui-toast">' +
+                    '<i class="weui-loading weui-icon_toast"></i>' +
+                    '<p class="weui-toast__content">支付中...</p>' +
+                    '</div></div>');
+                $html.find('p').text(tip || '跳转中');
+                $('body').append($html);
+                setTimeout(function(){
+                    $html.remove();
+                }, 150000);
+            }
+            setTimeout(function(){
+                location.href = url;
+            }, 500);
+        },
         // alert 你懂的
         "alert": function(msg, confirm_txt, callback){
             confirm_txt = confirm_txt || '确认';
