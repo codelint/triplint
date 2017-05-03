@@ -51,7 +51,7 @@
                     <div class="weui-cells" v-for="(item,i) in items" :id="'product-div-' + item['id']">
                         <div class="weui-cell weui-cell_access" v-on:click="orderAction(item)">
                             <div class="weui-cell__hd" style="position: relative;margin-right: 10px;">
-                                <i class="weui-icon-success order-icon"></i>
+                                <i :class="'order-icon ' + item['status_icon_class']"></i>
                                 <!--<span class="weui-badge" style="position: absolute;top: -.4em;right: -.4em;">8</span>-->
                             </div>
                             <div class="weui-cell__bd">
@@ -59,8 +59,7 @@
 
                                 <p style="font-size: 13px;color: #888888;">
                                     金额：<span class="show-price">{{item['order_amount']}}</span>元，状态：<span
-                                        class="show-status">{{item['status'] > 0 ? '上架' :
-                                    '下架'}}</span></p>
+                                        class="show-status">{{item['status_name']}}</span></p>
                             </div>
                             <div class="weui-cell__ft">
                                 操作
@@ -88,7 +87,7 @@
             </div>
         </div>
         <div class="weui-tabbar">
-            <a href="javascript:;" class="weui-tabbar__item">
+            <a href="shop_product_manage.html" class="weui-tabbar__item">
                         <span style="display: inline-block;position: relative;">
                             <img src="./images/icon_tabbar.png" alt="" class="weui-tabbar__icon">
                             <!--<span class="weui-badge" style="position: absolute;top: -2px;right: -13px;">0</span>-->
@@ -96,7 +95,7 @@
 
                 <p class="weui-tabbar__label">产品</p>
             </a>
-            <a href="javascript:;" class="weui-tabbar__item weui-bar__item_on">
+            <a href="shop_order_manage.html" class="weui-tabbar__item weui-bar__item_on">
                         <span style="display: inline-block;position: relative;">
                             <img src="./images/icon_tabbar.png" alt="" class="weui-tabbar__icon">
                             <!--<span class="weui-badge weui-badge_dot" style="position: absolute;top: 0;right: -6px;"></span>-->
@@ -126,16 +125,44 @@
 
     jQuery(function($){
         $('.edit-item').hide();
-        function loadProductPage(){
+        function loadOrderData(){
             var user = android.current_user();
             U.api.shop.order.list({page: 1, seller_id: user['id']}, function(err, json){
                 if(err){
                     android.alert(err.message);
                 }
+                var orders = [];
+                var statuses = {
+                    "0": {
+                        "status_icon_class": "weui-icon-waiting",
+                        "status_name": "等待支付"
+                    },
+                    "1000": {
+                        "status_icon_class": "weui_icon_waiting",
+                        "status_name": "等待商家确认"
+                    },
+                    "3000": {
+                        "status_icon_class": "weui_icon_waiting",
+                        "status_name": "等待消费确认"
+                    },
+                    "10000": {
+                        "status_icon_class": "weui_icon_success",
+                        "status_name": "订单完成"
+                    },
+                    "10001": {
+                        "status_icon_class": "weui_icon_cancel",
+                        "status_name": "订单取消"
+                    }
+                };
+                _.each(json['rows'], function(v, k){
+                    v['status_icon_class'] = statuses[v['order_status'] + '']['status_icon_class'] || 'weui-icon-waiting';
+                    v['status_name'] = statuses[v['order_status'] + '']['status_name'] || '未知';
+                    orders.push(v);
+                });
                 new Vue({
                     el: '#order-div',
                     data: {
-                        items: json ? json['rows'] : []
+                        items: orders
                     },
                     methods: {
                         orderAction: function(item){
@@ -160,7 +187,7 @@
             });
         }
 
-        loadProductPage();
+        loadOrderData();
 
         // ui setup
         $(function(){
