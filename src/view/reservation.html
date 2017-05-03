@@ -8,10 +8,7 @@
     <link rel="stylesheet" href="../public/css/swiper-3.3.1.min.css">
     <link rel="stylesheet" href="../css/reservation.min.css">
     <style type="text/css">
-        #book-div{
-            display: none;
-        }
-        .template{
+        [v-cloak], .template, #book-div {
             display: none;
         }
     </style>
@@ -27,7 +24,7 @@
     <!--<div class="right" v-if="status==1" v-on:click="addPostcard">{{ (status==1)?('完成'):('') }}</div>-->
 </div>
 
-<div id="info-div" class="status0 page">
+<div id="info-div" class="status0 page" v-cloak>
     <div class="swiper-container barn">
         <div class="swiper-wrapper">
             <div class="swiper-slide" v-for="(photo,i) in photos">
