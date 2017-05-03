@@ -35,6 +35,10 @@
 
         }
 
+        [v-cloak] {
+        display: none;
+        }
+
     </style>
 </head>
 <body>
@@ -47,7 +51,7 @@
                     <div class="weui-navbar__item paid" v-on:click="loadPaidOrder">待确认</div>
                     <div class="weui-navbar__item misc" v-on:click="loadMiscOrder">其他</div>
                 </div>
-                <div id="order-div" class="weui-tab__panel">
+                <div id="order-div" v-cloak class="weui-tab__panel">
                     <div class="weui-cells" v-for="(item,i) in items" :id="'product-div-' + item['id']">
                         <div class="weui-cell weui-cell_access" v-on:click="orderAction(item)">
                             <div class="weui-cell__hd" style="position: relative;margin-right: 10px;">
