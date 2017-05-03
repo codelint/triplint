@@ -40,14 +40,14 @@
 <body>
 <div class="container">
     <div class="weui-tab">
-        <div id="order-div" class="weui-tab__panel">
+        <div class="weui-tab__panel">
             <div class="weui-tab">
-                <div class="weui-navbar">
-                    <div class="weui-navbar__item weui-bar__item_on prepay">待支付</div>
-                    <div class="weui-navbar__item paid">待确认</div>
-                    <div class="weui-navbar__item misc">其他</div>
+                <div id="nav-bar-div" class="weui-navbar">
+                    <div class="weui-navbar__item weui-bar__item_on prepay" v-on:click="loadPrepayOrder">待支付</div>
+                    <div class="weui-navbar__item paid" v-on:click="loadPaidOrder">待确认</div>
+                    <div class="weui-navbar__item misc" v-on:click="loadMiscOrder">其他</div>
                 </div>
-                <div class="weui-tab__panel">
+                <div id="order-div" class="weui-tab__panel">
                     <div class="weui-cells" v-for="(item,i) in items" :id="'product-div-' + item['id']">
                         <div class="weui-cell weui-cell_access" v-on:click="orderAction(item)">
                             <div class="weui-cell__hd" style="position: relative;margin-right: 10px;">
@@ -69,7 +69,8 @@
                             <div class="weui-mask" style="opacity: 1;z-index: 500"></div>
                             <div class="weui-actionsheet" style="z-index: 999">
                                 <div class="weui-actionsheet__title">
-                                    <p class="weui-actionsheet__title-text">{{ item['sn'] }}({{ item['status_name'] }})</p>
+                                    <p class="weui-actionsheet__title-text">{{ item['sn'] }}({{ item['status_name']
+                                        }})</p>
                                 </div>
                                 <div class="weui-actionsheet__menu">
                                     <div class="weui-actionsheet__cell pay" v-on:click="pay(item)">支付</div>
@@ -110,6 +111,20 @@
     var status = U.ajax.getUrlParam('status') || '0';
 
     jQuery(function($){
+        new Vue({
+            el: '#nav-bar-div',
+            methods: {
+                loadPrepayOrder: function(){
+                    android.redirect('shop_order_manage.html?status=0', '加载中...');
+                },
+                loadPaidOrder: function(){
+                    android.redirect('shop_order_manage.html?status=1000', '加载中...');
+                },
+                loadMiscOrder: function(){
+                    android.redirect('shop_order_manage.html?status=+1000', '加载中...');
+                }
+            }
+        });
         $('.weui-navbar__item').removeClass('weui-bar__item_on');
         switch(status){
             case '0':
@@ -202,7 +217,6 @@
                 }
             })
         });
-
     });
 </script>
 </html>

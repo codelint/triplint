@@ -214,6 +214,7 @@ android = (function(){
         android.is_user = funs['is_user'];
         android.token = getOrSetToken;
         android.alert = funs['alert'];
+        android.redirect = android['redirect'] ? android['redirect'] : funs['redirect'];
 
         if(!android['confirm']){
             android['confirm'] = funs['confirm'];
