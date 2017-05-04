@@ -307,7 +307,14 @@ U.buildApiClient = (function($){
             no_auto_login = !!no_auto_login;
             var callback = (no_auto_login || !auto_login) ? cbf : function(err, json){
                 if(err && err.message.indexOf('未登录') >= 0){
-                    location.href = ROOT_URL + '/view/login.html?success_cbf=' + encodeURIComponent(location.pathname + location.search + location.hash);
+                    var open_id = U.ajax.getUrlParam("open_id");
+                    var sign = U.ajax.getUrlParam("sign");
+                    var timestamp = U.ajax.getUrlParam("timestamp");
+                    var url = ROOT_URL + '/view/login.html?';
+                    if(open_id && sign && timestamp){
+                        url = url + '&sign=' + sign + '&open_id=' + open_id + '&timestamp=' + timestamp;
+                    }
+                    location.href = url + '&success_cbf=' + encodeURIComponent(location.pathname + location.search + location.hash);
                     return;
                 }
                 cbf(err, json);
