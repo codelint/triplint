@@ -13,9 +13,6 @@ jQuery(function($){
 
     function loadBarData(callback){
         var user = android.current_user();
-        if(!user){
-            location.href = ROOT_URL + '/view/login.html?success_cbf=' + encodeURIComponent(location.pathname + location.search + location.hash);
-        }
 
         var setup = function(err, json){
             var arr = [];

@@ -5,7 +5,9 @@ android = (function(){
         user && android.put('user.current', user);
         user = android.get('user.current');
         if(!user){
-            location.href = ROOT_URL + '/view/login.html?success_cbf=' + encodeURIComponent(location.pathname + location.search + location.hash);
+            U.api.user.info(function(){
+                location.href = ROOT_URL + '/view/login.html?success_cbf=' + encodeURIComponent(location.pathname + location.search + location.hash);
+            });
         }
         return user;
     }
