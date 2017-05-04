@@ -47,7 +47,7 @@
 <script type="text/javascript">
     var LoginReg = true;
     jQuery(function ($) {
-        var wechat_id = U.ajax.getUrlParam('wechat_id') || false;
+        var wechat_id = U.ajax.getUrlParam('open_id') || U.ajax.getUrlParam('wechat_id') || false;
         var success_cbf = U.ajax.getUrlParam('success_cbf') || 'index.html';
 
         var old_login_name = android.get('user.login_name');
@@ -64,7 +64,16 @@
         }
 
         if(wechat_id){
-            //todo use wechat_id to login
+            U.api.user.loginWithOpenId({
+                'open_id': wechat_id,
+                'timestamp': U.ajax.getUrlParam('timestamp'),
+                'sign': U.ajax.getUrlParam('sign')
+            }, function(err, json){
+                if(json){
+                    android.put('user.current', json);
+                    android.redirect(decodeURIComponent(success_cbf), '登陆成功跳转');
+                }
+            })
         }
 
         function loginReg() {

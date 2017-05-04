@@ -316,11 +316,11 @@ U.buildApiClient = (function($){
                 if(err){
                     callback(err, json);
                 }else{
-                    if(json && json['error_response']){
+                    if(json && typeof json['error_response'] != 'undefined'){
                         err = json['error_response'];
                     }
 
-                    if(json && json['response']){
+                    if(json && typeof json['response'] != 'undefined'){
                         json = json['response'];
                     }
 
@@ -427,6 +427,20 @@ U.buildApiClient = (function($){
                 },
                 'loginWithToken': function(uid, token, cbf){
                     setup_user_auth({'id': uid, 'token': token}, cbf);
+                },
+                'loginWithOpenId': function(data, cbf){
+                    var login_info = {
+                        'login_name': data['open_id'],
+                        'password': data['sign'],
+                        'wechat_id': data['open_id'],
+                        'device_id': data['timestamp']
+                    };
+                    client.postJson(_url('user.login'), login_info, callback_filter(function(err, user){
+                        if(user && user['id'] && user['api_token']){
+                            setup_user_auth(user);
+                        }
+                        cbf(err, user);
+                    }))
                 },
                 'login': function(mobile, password, wechat_id, cbf){
                     var login_info = {'login_name': mobile, 'password': password};
