@@ -403,7 +403,7 @@
                                         name: v['name'],
                                         price: v['price'],
                                         stock: v['stock'],
-                                        services: ['wifi', '空调', '独卫']
+                                        services: v['summary'].split(',')
                                     })
                                 })
                             }
