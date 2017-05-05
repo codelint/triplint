@@ -63,6 +63,15 @@
             })
         }
 
+//        U.api.user.info(function(err, user){
+//            var redirect_url = decodeURIComponent(success_cbf);
+//            if(!err && user && redirect_url.indexOf('login.html') < 0){
+//                setTimeout(function(){
+//                    android.redirect(decodeURIComponent(success_cbf), '登陆跳转中...');
+//                }, 1)
+//            }
+//        });
+
         if(wechat_id){
             U.api.user.loginWithOpenId({
                 'open_id': wechat_id,

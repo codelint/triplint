@@ -314,7 +314,9 @@ U.buildApiClient = (function($){
                     if(open_id && sign && timestamp){
                         url = url + '&sign=' + sign + '&open_id=' + open_id + '&timestamp=' + timestamp;
                     }
-                    location.href = url + '&success_cbf=' + encodeURIComponent(location.pathname + location.search + location.hash);
+                    if(location.pathname.indexOf('login.html') < 0){
+                        location.href = url + '&success_cbf=' + encodeURIComponent(location.pathname + location.search + location.hash);
+                    }
                     return;
                 }
                 cbf(err, json);
@@ -430,7 +432,12 @@ U.buildApiClient = (function($){
                         uid = uid || android.get('app.id');
                     }
                     uid = uid || 0;
-                    client.postJson(_url('user.info'), {'user_id': uid}, callback_filter(callback));
+                    client.postJson(_url('user.info'), {'user_id': uid}, callback_filter(function(err, user){
+                        if(!uid && !err && user){
+                            setup_user_auth(user);
+                        }
+                        callback(err, user);
+                    }));
                 },
                 'loginWithToken': function(uid, token, cbf){
                     setup_user_auth({'id': uid, 'token': token}, cbf);
