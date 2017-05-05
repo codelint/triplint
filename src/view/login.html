@@ -8,14 +8,15 @@
     <link rel="stylesheet" href="../public/css/weui.css">
     <link rel="stylesheet" href="../css/login.min.css">
     <style type="text/css">
-        .wx-login-btn{
-            margin-top: 16px!important;
+        .wx-login-btn {
+            /*margin-top: 16px!important;*/
         }
     </style>
 </head>
 <body>
 <div class="t-nav">
     <a href="javascript:window.history.back();" class="left on-menu"><i class="iconfont icon-left"></i></a>
+
     <div class="title"></div>
     <div class="right">找回密码</div>
 </div>
@@ -52,7 +53,7 @@
 <script type="text/javascript" src="../js/api.js"></script>
 <script type="text/javascript">
     var LoginReg = true;
-    jQuery(function ($) {
+    jQuery(function($){
         var wechat_id = U.ajax.getUrlParam('open_id') || U.ajax.getUrlParam('wechat_id') || false;
         var success_cbf = U.ajax.getUrlParam('success_cbf') || 'index.html';
 
@@ -91,7 +92,7 @@
             })
         }
 
-        function loginReg() {
+        function loginReg(){
             $(".main").toggleClass("main-reg");
             $(".tool-btns").text((LoginReg = !LoginReg) ? "注册账号" : "已有账号");
             $(".t-nav .right").text((LoginReg) ? "找回密码" : "");
@@ -99,31 +100,20 @@
 
         $('input[name="login_name"]').val('').val(old_login_name);
 
-        if (old_login_pass) {
+        if(old_login_pass){
             $('input[name="login_password"]').val(old_login_pass);
         }
 
-        $('a.wx-login-btn').click(function(){
-            android.alert('暂不支持');
-//            if(success_cbf.startsWith('/')){
-//                success_cbf = 'http://trip.inotseeyou.com' + success_cbf;
-//            }
-//            if(success_cbf.indexOf('http://') != 0){
-//                success_cbf = 'http://trip.inotseeyou.com' + location.pathname.replace(/\/[^\/]*$/, '/') + success_cbf;
-//            }
-//            android.redirect('http://wxysg.inotseeyou.com/wechat/openid?partner_id=100000&uri=' + success_cbf);
-        });
-
-        $('a.login-btn').click(function () {
+        $('a.login-btn').click(function(){
             var phone = $('input[name="login_name"]').val();
             var password = $('input[name="login_password"]').val();
-            if (phone && password) {
+            if(phone && password){
                 android.put('user.login_name', phone);
                 android.put('user.login_password', '');
-                U.api.user.login(phone, password, wechat_id, function (err, json) {
-                    if (err) {
+                U.api.user.login(phone, password, wechat_id, function(err, json){
+                    if(err){
                         android.alert(err['message']);
-                    } else {
+                    }else{
                         android.put('user.login_name', phone);
                         android.put('user.login_password', password);
                         android.put('user.current', json);
@@ -131,12 +121,12 @@
                         // android.alert('用户[' + json['nick'] + ']登录成功');
                     }
                 });
-            } else {
+            }else{
                 android.alert('帐号/密码无效');
             }
         });
 
-        $("a.reg-btn").click(function () {
+        $("a.reg-btn").click(function(){
             var phone = $('input[name="reg_mobile"]').val();
             var nick = $('input[name="reg_nick"]').val();
             var password = $('input[name="reg_password"]').val();
@@ -146,27 +136,38 @@
 
             //todo check the data
 
-            if (nick.length > 1 && phone.length == 11 && (password == passwordVerify) && inviteMobile && inviteCode) {
+            if(nick.length > 1 && phone.length == 11 && (password == passwordVerify) && inviteMobile && inviteCode){
                 android.put('user.login_name', phone);
                 android.put('user.login_password', '');
-                U.api.user.register(phone, nick, password, inviteCode, inviteMobile, function (err, json) {
-                    if (err) {
+                U.api.user.register(phone, nick, password, inviteCode, inviteMobile, function(err, json){
+                    if(err){
                         console.log(err);
                         android.alert(err.message);
-                    } else {
+                    }else{
                         console.log(json);
                         android.put('user.login_name', phone);
                         android.put('user.login_password', password);
                         loginReg();
                     }
                 });
-            } else {
+            }else{
                 android.alert('帐号/密码无效');
             }
         });
 
-        $(".tool-btns").click(function () {
+        $(".tool-btns").click(function(){
             loginReg();
+        });
+
+        $('a.wx-login-btn').click(function(){
+            android.alert('暂不支持');
+            //            if(success_cbf.startsWith('/')){
+            //                success_cbf = 'http://trip.inotseeyou.com' + success_cbf;
+            //            }
+            //            if(success_cbf.indexOf('http://') != 0){
+            //                success_cbf = 'http://trip.inotseeyou.com' + location.pathname.replace(/\/[^\/]*$/, '/') + success_cbf;
+            //            }
+            //            android.redirect('http://wxysg.inotseeyou.com/wechat/openid?partner_id=100000&uri=' + success_cbf);
         });
     });
 </script>
