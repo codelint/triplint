@@ -71,7 +71,7 @@ function script_to_js_src()
         log_info "$tmp_js_file => ${js_dir}/${js_file_name}"
         mv -v "$tmp_js_file"  "${js_dir}/${js_file_name}"
 
-        replace_js_with_combine_js "$html_file" "$start_line" "$end_line" "${js_prefix}/${js_file_name}?version=$(date +%s)"
+        replace_js_with_combine_js "$html_file" "$start_line" "$end_line" "${js_prefix}/${js_file_name}"
         if [ $? -eq 0 ];then
             script_to_js_src "$html_file"
             return 0
