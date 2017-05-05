@@ -105,6 +105,12 @@
 
         $('a.wx-login-btn').click(function(){
             alert('http://wxysg.inotseeyou.com/wechat/openid?partner_id=100000&uri=' + success_cbf);
+            if(success_cbf.startsWith('/')){
+                success_cbf = 'http://trip.inotseeyou.com' + success_cbf;
+            }
+            if(success_cbf.indexOf('http://') != 0){
+                success_cbf = 'http://trip.inotseeyou.com' + location.pathname.replace(/\/[^\/]*$/, '/') + success_cbf;
+            }
             android.redirect('http://wxysg.inotseeyou.com/wechat/openid?partner_id=100000&uri=' + success_cbf);
         });
 
