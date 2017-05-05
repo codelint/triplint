@@ -7,6 +7,11 @@
     <link rel="stylesheet" href="../public/css/font_h5xvumt53vwsif6r.css">
     <link rel="stylesheet" href="../public/css/weui.css">
     <link rel="stylesheet" href="../css/login.min.css">
+    <style type="text/css">
+        .wx-login-btn{
+            margin-top: 16px!important;
+        }
+    </style>
 </head>
 <body>
 <div class="t-nav">
@@ -20,6 +25,7 @@
         <input name="login_name" class="t-input" type="number" pattern="[0-9]*" placeholder="手机号">
         <input name="login_password" class="t-input" type="password" pattern="" placeholder="密码">
         <a href="javascript:;" class="login-btn t-btn">登 录</a>
+        <a href="javascript:;" class="wx-login-btn t-btn">微信登陆</a>
     </div>
     <div class="reg-box">
         <input name="reg_mobile" class="t-input" type="number" pattern="[0-9]*" placeholder="手机号">
@@ -96,6 +102,10 @@
         if (old_login_pass) {
             $('input[name="login_password"]').val(old_login_pass);
         }
+
+        $('a.wx-login-btn').click(function(){
+            android.redirect('http://wxysg.inotseeyou.com/wechat/openid?partner_id=100000&uri=' + success_cbf);
+        });
 
         $('a.login-btn').click(function () {
             var phone = $('input[name="login_name"]').val();
