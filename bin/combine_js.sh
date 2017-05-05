@@ -127,13 +127,13 @@ function combine_js()
     do
         line_num=${line%%:*}
         code_text=${line#*:}
-        src_val=$(echo $code_text | sed 's@.* src="\([^"]*\)".*@\1@')
+        src_val=$(echo $code_text | sed 's@.* src="\([^"]*\)".*@\1@' | sed 's@\([^\?]*\)\?.*$@\1@')
         local_src_file="${html_dir}/${src_val}"
         if [ -f $(echo "$local_src_file" | sed 's@\.js@.min.js@') ];then
             local_src_file=$(echo "$local_src_file" | sed 's@\.js@.min.js@')
         fi
         if [ ! -f "$local_src_file" ];then
-            log_info "[error] file[$local_src_file] not exist"
+            log_info "[error] src file[$local_src_file] not exist"
             return 1;
         fi
         echo "$src_val" | grep '^\.' >/dev/null
@@ -186,7 +186,7 @@ function replace_js_with_combine_js()
         return 1
     fi
 
-    sed -i.orig "${start_line},${end_line}c <script type=\"text/javascript\" src=\"$src_js\?v=1.0\"></script>" $target_file
+    sed -i.orig "${start_line},${end_line}c <script type=\"text/javascript\" src=\"$src_js\"></script>" $target_file
     ret=$?
 
     if [ $ret -eq 0 ];then
@@ -224,6 +224,7 @@ function combine_dist_js()
         ret=$?
         sleep 1
     done
+    sed -i.orig 's@\(<script type="text/javascript" *src="\)\([^?]*gen[^?]*\)\("></script>\)@\1\2?t='$(date +%s)'\3@'  "$html_file"
 }
 
 cmd="$1"
