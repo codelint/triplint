@@ -186,7 +186,7 @@ function replace_js_with_combine_js()
         return 1
     fi
 
-    sed -i.orig "${start_line},${end_line}c <script type=\"text/javascript\" src=\"$src_js\"></script>" $target_file
+    sed -i.orig "${start_line},${end_line}c <script type=\"text/javascript\" src=\"$src_js\?v=1.0\"></script>" $target_file
     ret=$?
 
     if [ $ret -eq 0 ];then
