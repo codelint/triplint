@@ -365,6 +365,12 @@ U.buildApiClient = (function($){
             return client.postJson(_url(method), data, callback_filter(callback));
         }
 
+        function genSimpleApi(method){
+            return function(data, cbf){
+                apiCall(method, data, cbf);
+            }
+        }
+
         return {
             apiUrl: _url,
             config: function(key, value){
@@ -620,11 +626,10 @@ U.buildApiClient = (function($){
                     }
                 },
                 'order': {
-                    'submit': function(data, cbf){
-                        client.postJson(_url('order.submit'), data, callback_filter(cbf));
-                    },
-                    'list': function(data, cbf){
-                        client.postJson(_url('order.list'), data, callback_filter(cbf));
+                    'submit': genSimpleApi('order.submit'),
+                    'list': genSimpleApi('order.list'),
+                    'cancel': function(osn, cbf){
+                        apiCall('order.cancel', {order_sn: osn}, cbf);
                     }
                 }
             },
