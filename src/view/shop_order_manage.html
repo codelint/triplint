@@ -223,10 +223,30 @@
                         $actionList.find('.weui-mask').fadeOut(200)
                     },
                     confirmOrder: function(item){
-                        android.alert('暂不支持确认订单');
+                        U.api.shop.order.confirm(item['sn'], function(err, json){
+                            if(err){
+                                android.alert(err.message);
+                            }else{
+                                if(json['status'] == 'ok'){
+                                    android.redirect(location.href, '确认成功');
+                                }else{
+                                    android.alert(json['message'] || '确认失败');
+                                }
+                            }
+                        });
                     },
                     cancelOrder: function(item){
-                        android.alert('暂不支持取消订单');
+                        U.api.shop.order.cancel(item['sn'], function(err, json){
+                            if(err){
+                                android.alert(err.message);
+                            }else{
+                                if(json['status'] == 'ok'){
+                                    android.redirect(location.href, '取消成功');
+                                }else{
+                                    android.alert(json['message'] || '取消失败');
+                                }
+                            }
+                        });
                     },
                     pay: function(item){
                         android.redirect(REST_BASE + '/open/api?method=order.pay&action=redirect&order_sn=' + item['sn'], '跳转至支付')
