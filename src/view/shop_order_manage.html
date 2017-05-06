@@ -122,19 +122,20 @@
     var sort = U.ajax.getUrlParam('sort') || 'asc';
     var status = U.ajax.getUrlParam('status') || '0';
     var user = android.current_user();
+    var is_seller = U.ajax.getUrlParam('seller_id', false);
 
     jQuery(function($){
         new Vue({
             el: '#nav-bar-div',
             methods: {
                 loadPrepayOrder: function(){
-                    android.redirect('shop_order_manage.html?status=0', '加载中...');
+                    android.redirect('shop_order_manage.html?status=0'+ (is_seller ? '&seller_id=' + is_seller : ''), '加载中...');
                 },
                 loadPaidOrder: function(){
-                    android.redirect('shop_order_manage.html?status=1000', '加载中...');
+                    android.redirect('shop_order_manage.html?status=1000' + (is_seller ? '&seller_id=' + is_seller : ''), '加载中...');
                 },
                 loadMiscOrder: function(){
-                    android.redirect('shop_order_manage.html?status=+1000', '加载中...');
+                    android.redirect('shop_order_manage.html?status=+1000' + (is_seller ? '&seller_id=' + is_seller : ''), '加载中...');
                 }
             }
         });
@@ -179,11 +180,10 @@
 
         function query(data, callback){
             var user = android.current_user();
-            var isSeller = U.ajax.getUrlParam('seller_id', false);
             var cond = {
                 page: data['page'] || 1
             };
-            if(isSeller){
+            if(is_seller){
                 cond['seller_id'] = user['id'];
             }else{
                 cond['buyer_id'] = user['id'];
