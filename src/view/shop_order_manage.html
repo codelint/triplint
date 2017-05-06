@@ -31,8 +31,8 @@
             display: block;
         }
 
-        .status-1000 div.weui-actionsheet__cell.cancel {
-
+        .status-1000.is_seller div.weui-actionsheet__cell.cancel, .status-1000.is_seller div.weui-actionsheet__cell.confirm {
+            display: block;
         }
 
         [v-cloak] {
@@ -69,7 +69,7 @@
                                 操作
                             </div>
                         </div>
-                        <div :class="'order-action-select status-' + item['order_status']">
+                        <div :class="'order-action-select status-' + item['order_status'] + (item['is_seller'] ? ' is_seller' : '')">
                             <div class="weui-mask" style="opacity: 1;z-index: 500"></div>
                             <div class="weui-actionsheet" style="z-index: 999">
                                 <div class="weui-actionsheet__title">
@@ -78,8 +78,8 @@
                                 </div>
                                 <div class="weui-actionsheet__menu">
                                     <div class="weui-actionsheet__cell pay" v-on:click="pay(item)">支付</div>
-                                    <div class="weui-actionsheet__cell confirm">确认订单</div>
-                                    <div class="weui-actionsheet__cell cancel">取消订单</div>
+                                    <div class="weui-actionsheet__cell confirm" v-on:click="confirmOrder(item)">确认订单</div>
+                                    <div class="weui-actionsheet__cell cancel " v-on:click="cancelOrder(item)">取消订单</div>
                                     <div class="weui-actionsheet__cell detail">详情(暂不支持)</div>
                                 </div>
                                 <div class="weui-actionsheet__action">
@@ -113,6 +113,7 @@
     var group_id = U.ajax.getUrlParam("uid");
     var sort = U.ajax.getUrlParam('sort') || 'asc';
     var status = U.ajax.getUrlParam('status') || '0';
+    var user = android.current_user();
 
     jQuery(function($){
         new Vue({
@@ -199,6 +200,7 @@
             _.each(data['rows'], function(v, k){
                 v['status_icon_class'] = statuses[v['order_status'] + '']['status_icon_class'] || 'weui-icon-waiting';
                 v['status_name'] = statuses[v['order_status'] + '']['status_name'] || '未知';
+                v['is_seller'] = v['seller_id'] == user['id'];
                 orders.push(v);
             });
             new Vue({
@@ -219,6 +221,12 @@
                         var $actionList = $('#order-div-' + item['id']).find('.order-action-select');
                         $actionList.find('.weui-actionsheet').removeClass('weui-actionsheet_toggle');
                         $actionList.find('.weui-mask').fadeOut(200)
+                    },
+                    confirmOrder: function(item){
+                        android.alert('暂不支持确认订单');
+                    },
+                    cancelOrder: function(item){
+                        android.alert('暂不支持取消订单');
                     },
                     pay: function(item){
                         android.redirect(REST_BASE + '/open/api?method=order.pay&action=redirect&order_sn=' + item['sn'], '跳转至支付')
