@@ -168,7 +168,7 @@
             var user = android.current_user();
             var cond = {
                 page: data['page'] || 1,
-                seller_id: user['id']
+                buyer_id: user['id']
             };
             if(data['status']){
                 cond['status'] = data['status'];

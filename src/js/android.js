@@ -2,7 +2,10 @@ android = (function(){
     var token = '';
 
     function current_user(user){
-        user && android.put('user.current', user);
+        if(user){
+            android.put('user.current', user);
+            return user;
+        }
         user = android.get('user.current');
         if(!user){
             U.api.user.info(function(){
