@@ -628,6 +628,9 @@ U.buildApiClient = (function($){
                 'order': {
                     'submit': genSimpleApi('order.submit'),
                     'list': genSimpleApi('order.list'),
+                    'confirm': function(osn, cbf){
+                        apiCall('order.confirm', {order_sn: osn}, cbf);
+                    },
                     'refund': function(osn, cbf){
                         apiCall('order.refund', {order_sn: osn}, cbf);
                     },
