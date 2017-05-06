@@ -166,10 +166,15 @@
 
         function query(data, callback){
             var user = android.current_user();
+            var isSeller = U.ajax.getUrlParam('seller_id', false);
             var cond = {
-                page: data['page'] || 1,
-                buyer_id: user['id']
+                page: data['page'] || 1
             };
+            if(isSeller){
+                cond['seller_id'] = user['id'];
+            }else{
+                cond['buyer_id'] = user['id'];
+            }
             if(data['status']){
                 cond['status'] = data['status'];
             }
