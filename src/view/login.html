@@ -26,7 +26,7 @@
         <input name="login_name" class="t-input" type="number" pattern="[0-9]*" placeholder="手机号">
         <input name="login_password" class="t-input" type="password" pattern="" placeholder="密码">
         <a href="javascript:;" class="login-btn t-btn">登 录</a>
-        <a href="javascript:;" class="wx-login-btn t-btn">微信登陆</a>
+        <a href="javascript:;" class="wx-login-btn t-btn no-wechat-ui-hide">微信登陆</a>
     </div>
     <div class="reg-box">
         <input name="reg_mobile" class="t-input" type="number" pattern="[0-9]*" placeholder="手机号">
@@ -51,6 +51,7 @@
 
 <script type="text/javascript" src="../js/android.js"></script>
 <script type="text/javascript" src="../js/api.js"></script>
+<script type="text/javascript" src="../js/common/ue.js"></script>
 <script type="text/javascript">
     var LoginReg = true;
     jQuery(function($){

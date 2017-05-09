@@ -89,5 +89,16 @@ jQuery(function($){
                 }
             }
         }
-    })($)
+    })($);
+    /**
+     * 微信界面增强
+     */
+    (function($){
+        if(window.navigator.userAgent.toLowerCase().match(/micromessenger/i) == 'micromessenger'){
+            $('.no-wechat-ui-hide').show();
+        }else{
+            $('.no-wechat-ui-hide').hide();
+        }
+    })($);
+
 });
