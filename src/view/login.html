@@ -33,8 +33,8 @@
         <input name="reg_nick" class="t-input" type="text" placeholder="应该如何称呼您呢？">
         <input name="reg_password" class="t-input" type="password" placeholder="密码">
         <input name="reg_password_verify" class="t-input" type="password" placeholder="确认密码">
-        <input name="reg_invite_mobile" class="t-input" type="number" pattern="[0-9]*" placeholder="邀请人手机号">
-        <input name="reg_invite_code" class="t-input" type="number" pattern="[0-9]*" placeholder="邀请码">
+        <input name="vmobile" class="t-input auto-fill" type="number" pattern="[0-9]*" placeholder="邀请人手机号">
+        <input name="vcode" class="t-input auto-fill" type="number" pattern="[0-9]*" placeholder="邀请码">
         <a href="javascript:;" class="reg-btn t-btn">注 册</a>
     </div>
 </div>
@@ -71,14 +71,9 @@
             })
         }
 
-//        U.api.user.info(function(err, user){
-//            var redirect_url = decodeURIComponent(success_cbf);
-//            if(!err && user && redirect_url.indexOf('login.html') < 0){
-//                setTimeout(function(){
-//                    android.redirect(decodeURIComponent(success_cbf), '登陆跳转中...');
-//                }, 1)
-//            }
-//        });
+        if(location.hash == '#reg'){
+            loginReg();
+        }
 
         if(wechat_id){
             U.api.user.loginWithOpenId({
@@ -132,8 +127,8 @@
             var nick = $('input[name="reg_nick"]').val();
             var password = $('input[name="reg_password"]').val();
             var passwordVerify = $('input[name="reg_password_verify"]').val();
-            var inviteMobile = $('input[name="reg_invite_mobile"]').val();
-            var inviteCode = $('input[name="reg_invite_code"]').val();
+            var inviteMobile = $('input[name="vmobile"]').val();
+            var inviteCode = $('input[name="vcode"]').val();
 
             //todo check the data
 
