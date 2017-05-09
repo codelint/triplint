@@ -120,8 +120,14 @@
 
         $(".sand").click(function(){
 //            var apiFeedBack = '/open/api?method=feedback.submit';
+            var $btn = $('.sand');
             var message = $('#message-input').val();
+            if($btn.hasClass('disabled') || message == ''){
+                return;
+            }
+            $btn.addClass('disabled');
             U.api.feedback(message, function(err, json){
+                $btn.removeClass('disabled');
                 if(err){
                     alert(err.message);
                     return;
