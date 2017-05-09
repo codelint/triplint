@@ -79,15 +79,12 @@
     </div>
 </div>
 
-
-<script src="../public/js/jquery-2.1.4.js"></script>
-<script src="../public/js/underscore.js"></script>
-<script src="../public/js/vue.min.js"></script>
+<script type="text/javascript" src="../public/js/jquery-2.1.4.js"></script>
+<script type="text/javascript" src="../public/js/underscore.js"></script>
+<script type="text/javascript" src="../public/js/vue.min.js"></script>
 <script type="text/javascript" src="../public/js/md5.js"></script>
-
-<script src="../js/android.js"></script>
-<script src="../js/member.js"></script>
-<script src="../js/api.js"></script>
+<script type="text/javascript" src="../js/android.js"></script>
+<script type="text/javascript" src="../js/api.js"></script>
 <script>
     jQuery(function($){
         var data = android.get('triplint.feedback.data') || {
@@ -111,6 +108,9 @@
             $msg.find('div.msg').html(message['content']);
             $msg.addClass(message['created_by'] == 'system' ? 'system' : 'user');
             $('div.feedback-list').append($msg);
+            setTimeout(function(){
+                $('body').scrollTop($('body')[0].scrollHeight);
+            }, 500);
         }
 
         var len = data.messages.length;
