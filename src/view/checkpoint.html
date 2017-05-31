@@ -58,7 +58,7 @@
                     <div class="photo-mask-right float-left"></div>
                 </div>
             </div>
-            <textarea name="comment" id="" cols="30" rows="10" placeholder="把你的故事记录在这里..."></textarea>
+            <textarea class="cache" name="comment" id="" cols="30" rows="10" placeholder="把你的故事记录在这里..."></textarea>
         </div>
     </div>
 
@@ -78,27 +78,27 @@
         <div class="weui-cell">
             <div class="weui-cell__hd"><label class="weui-label">拍摄时间</label></div>
             <div class="weui-cell__bd">
-                <input name="create_time" class="weui-input" type="text" placeholder="请输入拍摄时间">
+                <input name="create_time" class="weui-input cache" type="text" placeholder="请输入拍摄时间">
             </div>
         </div>
         <div class="weui-cell">
             <div class="weui-cell__hd"><label class="weui-label">海拔</label></div>
             <div class="weui-cell__bd">
-                <input name="altitude" class="weui-input auto-fill" type="number" placeholder="输入海拔" value="0">
+                <input name="altitude" class="weui-input auto-fill cache" type="number" placeholder="输入海拔" value="0">
             </div>
         </div>
         <div class="weui-cell">
             <div class="weui-cell__hd"><label class="weui-label">路标</label></div>
             <div class="weui-cell__bd">
-                <input name="mark" class="weui-input" type="text" placeholder="输入路标，如码农寺" value="">
+                <input name="mark" class="weui-input cache" type="text" placeholder="输入路标，如码农寺" value="">
             </div>
         </div>
         <!--hide s-->
         <div class="weui-cell hide">
             <div class="weui-cell__hd"><label class="weui-label">经纬度</label></div>
             <div class="weui-cell__bd">
-                <input name="longitude" class="weui-input auto-fill" type="number" placeholder="输入经度">
-                <input name="latitude" class="weui-input auto-fill" type="number" placeholder="输入纬度">
+                <input name="longitude" class="weui-input auto-fill cache" type="number" placeholder="输入经度">
+                <input name="latitude" class="weui-input auto-fill cache" type="number" placeholder="输入纬度">
             </div>
         </div>
         <!--hide e-->
@@ -237,37 +237,43 @@
 
     jQuery(function ($) {
         // setup by id
-        (function (id) {
+        (function (id, next) {
             id = Math.round(Number(id));
-            id && $('#oss-upload-form').hide() && U.api.checkpoint.info(id, function (err, cp) {
-                if (err) {
-                    $.alert(err['message'], '确认', function () {
-                        window.location.href = location.href;
-                        return false;
-                    });
-                } else {
-                    setup_geo(cp['longitude'], cp['latitude'], cp['altitude']);
-                    $('input[name="id"]').val(cp['id']);
-                    $('input[name="group_id"]').val(cp['group_id']);
-                    $('input[name="mark"]').val(cp['mark']);
-                    $textarea.val(cp['comment']);
-                    $('input[name="create_time"]').val(new Date(cp['create_time'] * 1000).toString()).trigger('change');
-                    $('img.temp_picture').attr('src', U.api.oss.rid2url(cp['photo'], 'style/wap_upload_preview'));
-                }
-            });
+            if(id && $('#oss-upload-form').hide()){
+                $('.cache[name]').removeClass('cache');
+                U.api.checkpoint.info(id, function(err, cp){
+                    if(err){
+                        $.alert(err['message'], '确认', function(){
+                            window.location.href = location.href;
+                            return false;
+                        });
+                    }else{
+                        setup_geo(cp['longitude'], cp['latitude'], cp['altitude']);
+                        $('input[name="id"]').val(cp['id']);
+                        $('input[name="group_id"]').val(cp['group_id']);
+                        $('input[name="mark"]').val('').val(cp['mark']);
+                        $textarea.val(cp['comment']);
+                        $('input[name="create_time"]').val(new Date(cp['create_time'] * 1000).toString()).trigger('change');
+                        $('img.temp_picture').attr('src', U.api.oss.rid2url(cp['photo'], 'style/wap_upload_preview'));
+                        $('div.upload-img').hide();
+                    }
+                    next(err, cp);
+                });
+            }else{
+                next();
+            }
+        })(U.ajax.getUrlParam('id'), function(err, cp){
+            (function(group_id){
+                group_id && U.api.checkpoint.info(group_id, function (err, cp){
+                    $('#group-div').removeClass('hide');
+                    $('input[name="group_id"]').attr('type', 'hidden');
+                    $('#group_img').attr('src', U.api.oss.rid2url(cp['photo'], 'style/resize_128x128'));
+                    $('#group_a').text(cp['comment']);
+    //                $('#group_a').text(cp['comment']).attr('href', 'trips.html?group_id=' + group_id);
 
-        })(U.ajax.getUrlParam('id'));
-
-        (function(group_id){
-            group_id && U.api.checkpoint.info(group_id, function (err, cp){
-                $('#group-div').removeClass('hide');
-                $('input[name="group_id"]').attr('type', 'hidden');
-                $('#group_img').attr('src', U.api.oss.rid2url(cp['photo'], 'style/resize_128x128'));
-                $('#group_a').text(cp['comment']);
-//                $('#group_a').text(cp['comment']).attr('href', 'trips.html?group_id=' + group_id);
-
-            });
-        })(U.ajax.getUrlParam('group_id'));
+                });
+            })(U.ajax.getUrlParam('group_id') || (cp && cp['group_id']));
+        });
 
         adjust_file_input_pos();
 
