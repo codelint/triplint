@@ -191,7 +191,7 @@
                         $(".upload-img").hide();
                         $.hideLoading();
                         // $.toast("上传成功", "text");
-                        $('img.temp_picture').attr('src', U.api.oss.rid2url(info['rid'], 'style/wap_upload_preview'));
+                        $('img.temp_picture').attr('src', U.api.oss.rid2url(info['rid'], 'style/wap_upload_preview') + '&timestamp=' + (new Date()).getTime());
                         $('input[name="rid"]').val(info['rid']);
                         setTimeout(adjust_file_input_pos, 2000);
                     }
