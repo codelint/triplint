@@ -22,42 +22,42 @@
                 <div class="stamp">
                     <img src="../public/images/stamp.png" alt="">
                 </div>
-                <div class="postcodes">
-                    <span v-for="(item2,i2) in item.postcodes.length">{{item.postcodes.charAt(i2)}}</span>
+                <div class="postcode">
+                    <span v-for="(item2,i2) in item.postcode.length">{{item.postcode.charAt(i2)}}</span>
                 </div>
                 <div class="comment-wrap">
                     <div class="comment">
-                        {{item.comment}}
+                        <span>{{item.address}}</span><span>{{item.consignee}}</span>(收)
                     </div>
                     <div class="clear"></div>
                 </div>
             </div>
         </div>
     </div>
-    <div class="edit" v-if="status==1">
+    <div class="edit">
         <div class="weui-cells weui-cells_form trip-cells_form">
             <div class="weui-cell">
                 <div class="weui-cell__hd"><label class="weui-label">邮编</label></div>
                 <div class="weui-cell__bd">
-                    <input class="weui-input" type="number" pattern="[0-9]*" placeholder="请输入邮编号" v-model="postcard.postcodes">
+                    <input class="weui-input cache" name="postcode" type="number" pattern="[0-9]*" placeholder="请输入邮编号" v-model="postcard.postcode">
                 </div>
             </div>
             <div class="weui-cell">
                 <div class="weui-cell__hd"><label class="weui-label">收件人</label></div>
                 <div class="weui-cell__bd">
-                    <input class="weui-input" type="text" placeholder="请输入收件人" v-model="postcard.addressee">
+                    <input class="weui-input cache" name="consignee" type="text" placeholder="请输入收件人" v-model="postcard.consignee">
                 </div>
             </div>
             <div class="weui-cell">
                 <div class="weui-cell__hd"><label class="weui-label">地址</label></div>
                 <div class="weui-cell__bd">
-                    <input class="weui-input" type="text" placeholder="请输入地址" v-model="postcard.adders">
+                    <input class="weui-input cache" name="address" type="text" placeholder="请输入地址" v-model="postcard.address">
                 </div>
             </div>
             <div class="weui-cell">
                 <div class="weui-cell__hd"><label class="weui-label">留言</label></div>
                 <div class="weui-cell__bd">
-                    <input class="weui-input" type="text" placeholder="请输入留言" v-model="postcard.comment">
+                    <input class="weui-input cache" name="comment" type="text" placeholder="请输入留言" v-model="postcard.comment">
                 </div>
             </div>
         </div>
@@ -70,6 +70,10 @@
 <script type="text/javascript" src="../public/js/jquery-2.1.4.js"></script>
 <script type="text/javascript" src="../public/js/vue.min.js"></script>
 <script type="text/javascript" src="../public/jquery-weui/1.0/jquery-weui.min.js"></script>
+<script type="text/javascript" src="../public/js/underscore.js"></script>
+<script type="text/javascript" src="../js/android.js"></script>
+<script type="text/javascript" src="../js/api.js"></script>
+<script type="text/javascript" src="../js/common/ue.js"></script>
 
 <script>
     Vue.config.devtools = true;
@@ -82,15 +86,28 @@
                 index: 0
             },
             postcard: {
-                postcodes: '',
-                addressee: '',
-                comment: '',
-                adders: ''
+                postcode: $('input[name="postcode"]').val(),
+                consignee:  $('input[name="consignee"]').val(),
+                comment:  $('input[name="comment"]').val(),
+                address:  $('input[name="address"]').val()
             },
-            postcardItems: []
+            postcardItems: [
+            ]
         },
         created: function () {
-
+            var self = this;
+            setTimeout(function(){
+                var postcard = {
+                    postcode: $('input[name="postcode"]').val(),
+                    consignee:  $('input[name="consignee"]').val(),
+                    comment:  $('input[name="comment"]').val(),
+                    address:  $('input[name="address"]').val()
+                };
+                self.postcard = postcard;
+                if(postcard.address && postcard.postcode && postcard.consignee){
+                    self.postcardItems.push(postcard)
+                }
+            }, 1000);
         },
         methods: {
             funcBack: function () {
@@ -98,10 +115,10 @@
             },
             addPostcard: function () {// 申请明信片
                 var temp = this.postcard, edit = this.edit;
-                temp.postcodes = temp.postcodes.toString();
+                temp.postcode = temp.postcode.toString();
 
-                if (temp.comment && temp.addressee && temp.adders) {
-                    if (temp.postcodes.length == 6) {
+                if (temp.comment && temp.consignee && temp.address) {
+                    if (temp.postcode.length == 6) {
                         if (edit.status) {
                             edit.status = false;
                             this.postcardItems[edit.index] = temp;

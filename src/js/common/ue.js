@@ -38,9 +38,9 @@ jQuery(function($){
             }
         }
 
-        var $inputs = $('input');
-        var $texts = $('textarea');
-        var $selects = $('select');
+        var $inputs = $('input.cache');
+        var $texts = $('textarea.cache');
+        var $selects = $('select.cache');
         var elems = [];
 
         for(var i = $inputs.length; i--;){
@@ -55,11 +55,11 @@ jQuery(function($){
         for(i = elems.length; i--;){
             restore(elems[i])
         }
-//        setInterval(function(){
-//            for(var i = elems.length; i--;){
-//                backup(elems[i]);
-//            }
-//        });
+        setInterval(function(){
+            for(var i = elems.length; i--;){
+                backup(elems[i]);
+            }
+        }, 1000);
         return {
             restoreAll: function(){
                 for(i = elems.length; i--;){

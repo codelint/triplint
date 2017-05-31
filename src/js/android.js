@@ -113,7 +113,7 @@ android = (function(){
         "alert": function(msg, confirm_txt, callback){
             confirm_txt = confirm_txt || '确认';
             if(jQuery){
-                var $weui = jQuery('<div class="js_dialog" id="iosDialog2">' +
+                var $weui = jQuery('<div class="js_dialog">' +
                     '<div class="weui-mask"></div>' +
                     '<div class="weui-dialog">' +
                     '<div class="weui-dialog__bd">...</div>' +
