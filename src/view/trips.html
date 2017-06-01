@@ -52,10 +52,15 @@
     <!--<div class="right">退出</div>-->
 
 </div>
-<div class="banner">
+<div class="banner" v-cloak>
     <a class="trip-photo">
         <img :src="(U.api.oss.rid2url(father['photo'], 'style/trips_head'))" alt="banner">
     </a>
+    <div class="summary">
+        <div>
+        {{ new Date(father['create_time']*1000).toString('yyyy年MM月dd日') }} @{{ father['mark'] }}&nbsp;{{ father['children_count'] }} 个片段
+        </div>
+    </div>
 </div>
 <div class="trip" id="trip_items">
     <section class="trip-wps">
@@ -146,6 +151,7 @@
 <script type="text/javascript" src="../public/jquery-weui/0.8.0/swiper.min.js"></script>
 
 <script type="text/javascript" src="../js/android.js"></script>
+<script type="text/javascript" src="../js/common/date.js"></script>
 <script type="text/javascript" src="../js/api.js"></script>
 <script type="text/javascript" src="../js/common/wiki.js"></script>
 <script type="text/javascript" src="../js/trips.js"></script>

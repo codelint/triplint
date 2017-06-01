@@ -65,6 +65,9 @@ body {
 .traveller-on {
   display: none !important;
 }
+[v-cloak] {
+  display: none;
+}
 .t-nav {
   display: -webkit-box;
   display: flex;
@@ -294,10 +297,25 @@ body {
 }
 div.banner {
   margin-top: 50px;
+  position: relative;
 }
 div.banner img {
   width: 100%;
   max-width: 640px;
+  display: block;
+}
+div.banner div.summary {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  background-color: black;
+  opacity: 0.5;
+  color: white;
+  width: 640px;
+  max-width: 640px;
+}
+div.banner div.summary div {
+  padding: 8px;
 }
 .trip {
   padding: 0px 15px 0;

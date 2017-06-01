@@ -32,9 +32,24 @@ html, body {
 
 div.banner {
     margin-top: @navHeight;
+    position: relative;
     img {
         width: 100%;
         max-width: @maxWidth;
+        display: block;
+    }
+    div.summary{
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        background-color: black;
+        opacity: 0.5;
+        color: white;
+        width: @maxWidth;
+        max-width: @maxWidth;
+        div {
+            padding: 8px;
+        }
     }
 }
 

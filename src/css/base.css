@@ -65,3 +65,6 @@ body {
 .traveller-on {
   display: none !important;
 }
+[v-cloak] {
+  display: none;
+}

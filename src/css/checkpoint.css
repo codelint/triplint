@@ -65,6 +65,9 @@ body {
 .traveller-on {
   display: none !important;
 }
+[v-cloak] {
+  display: none;
+}
 .t-nav {
   display: -webkit-box;
   display: flex;
