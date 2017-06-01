@@ -170,7 +170,7 @@
         $.showLoading("正在上传...");
         U.api.oss.upload(1, function (err, json) {
             if (err) {
-                $.alert(err.message);
+               android.alert(err.message);
             } else {
                 var postData = json['data']['post'];
                 var $form = $('#oss-upload-form');
@@ -219,6 +219,7 @@
         EXIF.getData(_file, function () {
             // var _dataTxt = EXIF.pretty(this);
             var json = EXIF.getAllTags(this);
+
             var latitude = json['GPSLatitude'];
             var longitude = json['GPSLongitude'];
             if (latitude && longitude) {
@@ -231,6 +232,9 @@
             if (time && (time = dateFormat.parse(time))) {
                 $('input[name="create_time"]').val(time.toString('yyyy-MM-dd HH:mm'));
                 $('#time-title').text(time.toString());
+            }else if(_file.lastModified){
+                time = new Date(_file.lastModified);
+                $('input[name="create_time"]').val(time.toString('yyyy-MM-dd HH:mm'));
             }
         });
     }
