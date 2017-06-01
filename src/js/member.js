@@ -46,7 +46,7 @@ jQuery(function ($) {
                         'by': checkpoint['user']['nick'],
                         'img': U.api.oss.rid2url(checkpoint['photo'], 'style/resize_1024x768'),
                         'portrait': U.api.oss.rid2url(checkpoint['user']['avatar'], 'style/resize_128x128'),
-                        'place': checkpoint['longitude'] + ',' + checkpoint['latitude']
+                        'place': checkpoint['mark'] || (checkpoint['longitude'] + ',' + checkpoint['latitude'])
                     });
                 }
                 callback(err, arr);
