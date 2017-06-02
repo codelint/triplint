@@ -43,7 +43,7 @@
 </head>
 <body>
 <div class="t-nav">
-    <a href="javascript:window.history.back();" class="left"><i class="iconfont icon-left"></i></a>
+    <a href="javascript:location.href=document.referrer" class="left"><i class="iconfont icon-left"></i></a>
 
     <div class="title">加载中...</div>
     <a id="upload-a" href="upload.html" class="right upload-btn" style="display: none"><i
@@ -61,6 +61,11 @@
         {{ new Date(father['create_time']*1000).toString('yyyy年MM月dd日') }} @{{ father['mark'] }}&nbsp;{{ father['children_count'] }}个片段
         </div>
     </div>
+    <a v-if="father.user_id && father.user_id == android.user()['id']"
+       href="javascript:void(0)" class="edit-btn" v-on:click="edit(father)">
+        <i class="iconfont icon-edit"></i>
+        <!--<span v-cloak>{{ item.like }}</span>-->
+    </a>
 </div>
 <div class="trip" id="trip_items">
     <section class="trip-wps">
@@ -111,7 +116,7 @@
                                     <i v-if="item.user_id && item.user_id == android.user()['id']"
                                        class="icon-btnbg"></i>
                                     <a v-if="item.user_id && item.user_id == android.user()['id']"
-                                       href="javascript:void(0)" class="like-btn" v-on:click="edit(item)">
+                                       href="javascript:void(0)" class="edit-btn" v-on:click="edit(item)">
                                         <i class="iconfont icon-edit"></i>
                                         <!--<span v-cloak>{{ item.like }}</span>-->
                                     </a>

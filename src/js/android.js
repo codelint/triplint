@@ -103,7 +103,7 @@ android = (function(){
                 $('body').append($html);
                 setTimeout(function(){
                     $html.remove();
-                }, 150000);
+                }, 15000);
             }
             setTimeout(function(){
                 location.href = url;

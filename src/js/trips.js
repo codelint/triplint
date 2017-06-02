@@ -131,7 +131,14 @@ jQuery(function($){
                     $('div.title').text(title);
                     new Vue({
                         el: 'div.banner',
-                        data: {father: father}
+                        data: {father: father},
+                        methods: {
+                            edit: function(checkpoint){
+                                // $.toast("后期开放此功能", "text");
+                                android.redirect('checkpoint.html?id=' + checkpoint['id']);
+                                // vm._data.items[index].like = ++(vm._data.items[index].like);
+                            }
+                        }
                     });
                     android.setupShareInfo(title,
                         '自 ' + new Date(father['create_time']*1000) + '起, 已有' + father['children_count'] + '个回忆',
@@ -168,12 +175,14 @@ jQuery(function($){
                         // 喜欢
                         edit: function(checkpoint){
                             // $.toast("后期开放此功能", "text");
-                            location.href = 'checkpoint.html?id=' + checkpoint['id'];
+                            android.redirect('checkpoint.html?id=' + checkpoint['id']);
+                            // location.href = 'checkpoint.html?id=' + checkpoint['id'];
                             // vm._data.items[index].like = ++(vm._data.items[index].like);
                         },
                         // 评论
                         detail: function(checkpoint){
-                            location.href = 'trips.html?group_id=' + checkpoint['id'];
+                            android.redirect('trips.html?group_id=' + checkpoint['id']);
+                            // location.href = 'trips.html?group_id=' + checkpoint['id'];
                             // $.toast("后期开放此功能", "text");
                         },
                         'remove': function(checkpoint){

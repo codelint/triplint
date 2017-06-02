@@ -317,6 +317,19 @@ div.banner div.summary {
 div.banner div.summary div {
   padding: 8px;
 }
+div.banner a.edit-btn {
+  position: absolute;
+  top: 0;
+  right: 0;
+  color: white;
+  background-color: black;
+  padding: 10px 10px 30px 30px;
+  opacity: 0.6;
+  border-bottom-left-radius: 100%;
+}
+div.banner a.edit-btn i {
+  font-size: 2em;
+}
 .trip {
   padding: 0px 15px 0;
 }
@@ -432,10 +445,10 @@ div.banner div.summary div {
   width: 7px;
   height: 27px;
 }
-.trip .trip-wps .photo-ctn .wp-btns .like-btn {
+.trip .trip-wps .photo-ctn .wp-btns .edit-btn {
   padding-right: 4px;
 }
-.trip .trip-wps .photo-ctn .wp-btns .like-btn i {
+.trip .trip-wps .photo-ctn .wp-btns .edit-btn i {
   display: block;
   margin: 0 4px 0 7px;
   float: left;
