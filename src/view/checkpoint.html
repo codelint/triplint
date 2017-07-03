@@ -366,7 +366,7 @@
                 'longitude': Number($('input[name="longitude"]').val()),
                 'latitude': Number($('input[name="latitude"]').val()),
                 'create_time': create_time,
-                'comment': $textarea.val(),
+                'comment': $textarea.val() || '',
                 'mark': $('input[name="mark"]').val()
             };
             U.api.checkpoint.commit(data, function (err, json) {
