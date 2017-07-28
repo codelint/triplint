@@ -249,16 +249,23 @@
                         });
                     },
                     refundOrder: function(item){
-                        android.confirm('确认退款?') && U.api.shop.order.refund(item['sn'], function(err, json){
-                            if(err){
-                                android.alert(err.message);
-                            }else{
-                                if(json['status'] == 'ok'){
-                                    android.redirect(location.href, '退款确认成功');
-                                }else{
-                                    android.alert(json['message'] || '退款确认失败');
-                                }
+                        android.confirm({
+                            'message': '是否已经核实退款？核实退款请按确认'
+                        }, function(yesOrNo){
+                            if(!yesOrNo){
+                                return;
                             }
+                            U.api.shop.order.refund(item['sn'], function(err, json){
+                                if(err){
+                                    android.alert(err.message);
+                                }else{
+                                    if(json['status'] == 'ok'){
+                                        android.redirect(location.href, '退款确认成功');
+                                    }else{
+                                        android.alert(json['message'] || '退款确认失败');
+                                    }
+                                }
+                            });
                         });
                     },
                     cancelOrder: function(item){
