@@ -116,7 +116,7 @@
                 <div class="weui-form-preview__ft">
                     <a class="weui-form-preview__btn weui-form-preview__btn_default"
                        href="javascript:;" v-on:click="cancel">返回</a>
-                    <a class="weui-form-preview__btn weui-form-preview__btn_primary" href="javascript:;" v-on:click="submit">确认</a>
+                    <a class="weui-form-preview__btn weui-form-preview__btn_primary" href="javascript:;" v-on:click="submit">提交</a>
                 </div>
             </div>
         </div>
@@ -142,6 +142,12 @@
                     case 'home':
                         break;
                     case 'preview':
+                        var address = $('input[name="address"]').val();
+                        if(!address){
+                            setTimeout(function(){
+                                pageManager.back();
+                            });
+                        }
                         new Vue({
                             el: '.page.preview',
                             data: {
@@ -149,7 +155,7 @@
                                     postcode: $('input[name="postcode"]').val(),
                                     consignee: $('input[name="consignee"]').val(),
                                     comment: $('input[name="comment"]').val(),
-                                    address: $('input[name="address"]').val()
+                                    address: address
                                 }
                             },
                             created: function(){
