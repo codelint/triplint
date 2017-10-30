@@ -14,8 +14,9 @@ PageManager = function(option){
         'el': option['el'] || '.page_manager_container',
         'pageClass': option['pageClass'],
         'pageIdPrefix': option['pageIdPrefix'] || 'tpl_',
-        'indexName' : option['indexName'] || 'home',
-        'pageAppend': option['pageAppend'] || function(){}
+        'indexName': option['indexName'] || 'home',
+        'pageAppend': option['pageAppend'] || function(){
+        }
     };
 
     var manager = {
@@ -71,6 +72,7 @@ PageManager = function(option){
             location.hash = config.url;
         },
         _go: function(config){
+            var self = this;
             this._pageIndex++;
 
             history.replaceState && history.replaceState({_pageIndex: this._pageIndex}, '', location.href);
@@ -79,13 +81,12 @@ PageManager = function(option){
             var $html = $(html).addClass('slideIn').addClass(config.name);
             $html.on('animationend webkitAnimationEnd', function(){
                 $html.removeClass('slideIn').addClass('js_show');
+                self._pageStack.push({
+                    config: config,
+                    dom: self._pageAppend.call(self, $html, config) || $html
+                });
             });
-            this.$container.append($html);
-            this._pageAppend.call(this, $html, config);
-            this._pageStack.push({
-                config: config,
-                dom: $html
-            });
+            self.$container.append($html);
 
             if(!config.isBind){
                 this._bind(config);
@@ -177,7 +178,8 @@ PageManager = function(option){
             m.push(pages[page]);
         }
 
-        m.setPageAppend(opt['pageAppend'] || function($html){})
+        m.setPageAppend(opt['pageAppend'] || function($html){
+            })
             .setDefault(option['indexName'])
             .init();
     })(manager, option);

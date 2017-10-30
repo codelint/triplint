@@ -38,28 +38,42 @@ jQuery(function($){
             }
         }
 
-        var $inputs = $('input.cache');
-        var $texts = $('textarea.cache');
-        var $selects = $('select.cache');
-        var elems = [];
+        function getElems(){
+            var $inputs = $('input.cache');
+            var $texts = $('textarea.cache');
+            var $selects = $('select.cache');
+            var elems = [];
 
-        for(var i = $inputs.length; i--;){
-            elems.push($inputs[i]);
+            for(var i = $inputs.length; i--;){
+                elems.push($inputs[i]);
+            }
+            for(i = $texts.length; i--;){
+                elems.push($texts[i]);
+            }
+            for(i = $selects.length; i--;){
+                elems.push($selects[i]);
+            }
+            return elems;
         }
-        for(i = $texts.length; i--;){
-            elems.push($texts[i]);
-        }
-        for(i = $selects.length; i--;){
-            elems.push($selects[i]);
-        }
-        for(i = elems.length; i--;){
+
+        var elems = getElems();
+        for(var i = elems.length; i--;){
             restore(elems[i])
         }
+
+        setTimeout(function(){
+            var elems = getElems();
+            for(var i = elems.length; i--;){
+                restore(elems[i])
+            }
+        }, 1000);
+
         setInterval(function(){
+            var elems = getElems();
             for(var i = elems.length; i--;){
                 backup(elems[i]);
             }
-        }, 1000);
+        }, 1001);
         return {
             restoreAll: function(){
                 for(i = elems.length; i--;){
@@ -71,7 +85,8 @@ jQuery(function($){
                 for(var i = elems.length; i--;){
                     backup(elems[i]);
                 }
-            }
+            },
+            getInputs: getElems
         }
     })($);
     /**

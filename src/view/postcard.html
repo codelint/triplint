@@ -5,7 +5,6 @@
     <meta charset="UTF-8">
     <title>明信片</title>
     <link rel="stylesheet" href="../public/jquery-weui/1.0/weui.min.css">
-    <link rel="stylesheet" href="../public/jquery-weui/1.0/jquery-weui.min.css">
     <link rel="stylesheet" href="../css/postcard.min.css">
 
     <style type="text/css">
@@ -82,11 +81,11 @@
     </div>
 </script>
 <script type="text/html" id="tpl_preview">
-    <div class="page">
+    <div class="page preview">
         <div class="page__hd">
             <!--<h1 class="page__title">预览</h1>-->
         </div>
-        <div class="page__bd">
+        <div class="page__bd" >
             <div class="weui-form-preview">
                 <div class="weui-form-preview__hd">
                     <label class="weui-form-preview__label"></label>
@@ -99,26 +98,25 @@
                     </div>
                     <div class="weui-form-preview__item">
                         <label class="weui-form-preview__label">邮编</label>
-                        <span class="weui-form-preview__value">51000</span>
+                        <span class="weui-form-preview__value" v-cloak>{{ postcard.postcode }}</span>
                     </div>
                     <div class="weui-form-preview__item">
                         <label class="weui-form-preview__label">收件人</label>
-                        <span class="weui-form-preview__value">赵广宇</span>
+                        <span class="weui-form-preview__value" v-cloak>{{ postcard.consignee }}</span>
                     </div>
                     <div class="weui-form-preview__item">
                         <label class="weui-form-preview__label">地址</label>
-                        <span class="weui-form-preview__value">广西</span>
+                        <span class="weui-form-preview__value" v-cloak>{{ postcard.address }}</span>
                     </div>
                     <div class="weui-form-preview__item">
                         <label class="weui-form-preview__label">留言</label>
-                        <span class="weui-form-preview__value">很长很长的名字很长很长的名字很长很长的名字很长很长的名字很长很长的名字</span>
+                        <span class="weui-form-preview__value" v-cloak>{{ postcard.comment }}</span>
                     </div>
                 </div>
                 <div class="weui-form-preview__ft">
-                    <a class="weui-form-preview__btn weui-form-preview__btn_default" href="javascript:pageManager.back()">返回</a>
-                    <button type="submit" class="weui-form-preview__btn weui-form-preview__btn_primary"
-                            href="javascript:">确认
-                    </button>
+                    <a class="weui-form-preview__btn weui-form-preview__btn_default"
+                       href="javascript:;" v-on:click="cancel">返回</a>
+                    <a class="weui-form-preview__btn weui-form-preview__btn_primary" href="javascript:;" v-on:click="submit">确认</a>
                 </div>
             </div>
         </div>
@@ -139,82 +137,38 @@
     jQuery(function($){
         window.pageManager = new PageManager({
             el: '#container',
-            pageAppend: function($html,name){
-                alert(name)
+            pageAppend: function($html, page){
+                switch(page.name){
+                    case 'home':
+                        break;
+                    case 'preview':
+                        new Vue({
+                            el: '.page.preview',
+                            data: {
+                                postcard: {
+                                    postcode: $('input[name="postcode"]').val(),
+                                    consignee: $('input[name="consignee"]').val(),
+                                    comment: $('input[name="comment"]').val(),
+                                    address: $('input[name="address"]').val()
+                                }
+                            },
+                            created: function(){
+                            },
+                            methods: {
+                                cancel: function(){
+                                    pageManager.back();
+                                },
+                                submit: function(){// 申请明信片
+                                    android.alert('暂不支持');
+                                }
+                            }
+                        });
+                        return $('.page.preview');
+                }
+                return $html;
             }
         });
     });
 
-    new Vue({
-        el: '.main',
-        data: {
-            status: 0,// 状态【0:显示已有明信片列表，1：添加明信片】
-            edit: {
-                status: false,
-                index: 0
-            },
-            postcard: {
-                postcode: $('input[name="postcode"]').val(),
-                consignee: $('input[name="consignee"]').val(),
-                comment: $('input[name="comment"]').val(),
-                address: $('input[name="address"]').val()
-            },
-            postcardItems: [
-            ]
-        },
-        created: function(){
-            var self = this;
-            setTimeout(function(){
-                var postcard = {
-                    postcode: $('input[name="postcode"]').val(),
-                    consignee: $('input[name="consignee"]').val(),
-                    comment: $('input[name="comment"]').val(),
-                    address: $('input[name="address"]').val()
-                };
-                self.postcard = postcard;
-                if(postcard.address && postcard.postcode && postcard.consignee){
-                    self.postcardItems.push(postcard)
-                }
-            }, 1000);
-        },
-        methods: {
-            funcBack: function(){
-                (this.status == 1) ? this.status = 0 : window.history.back();
-            },
-            addPostcard: function(){// 申请明信片
-                var temp = this.postcard, edit = this.edit;
-                temp.postcode = temp.postcode.toString();
-
-                if(temp.comment && temp.consignee && temp.address){
-                    if(temp.postcode.length == 6){
-                        if(edit.status){
-                            edit.status = false;
-                            this.postcardItems[edit.index] = temp;
-                        }else{
-                            this.postcardItems.push(temp);
-                        }
-
-                        var clearData = {};
-                        $.each(temp, function(v, i){
-                            clearData[v] = '';
-                        });
-                        this.postcard = clearData;
-
-                        this.status = 0;
-                    }else
-                        $.alert('邮编号码不正确哦');
-                }else
-                    $.alert('信息未填写完整哦');
-            },
-            editPostcard: function(item, i){// 编辑现有明信片
-                this.edit = {
-                    status: true,
-                    index: i
-                };
-                this.postcard = item;
-                this.status = 1;
-            }
-        }
-    });
 </script>
 </html>
