@@ -2,14 +2,20 @@
  * Created by jf on 2015/9/11.
  * Modified by bear on 2016/9/7.
  */
-
+/**
+ * @param option.el container elem selector
+ * @param option.pageAppend function($html, {name:'',url:'#hashname', template: '#template_id'})
+ * @returns PageManager
+ * @constructor
+ */
 PageManager = function(option){
     option = option || {};
     option = {
         'el': option['el'] || '.page_manager_container',
         'pageClass': option['pageClass'],
         'pageIdPrefix': option['pageIdPrefix'] || 'tpl_',
-        'indexName' : option['indexName'] || 'home'
+        'indexName' : option['indexName'] || 'home',
+        'pageAppend': option['pageAppend'] || function(){}
     };
 
     var manager = {
@@ -75,7 +81,7 @@ PageManager = function(option){
                 $html.removeClass('slideIn').addClass('js_show');
             });
             this.$container.append($html);
-            this._pageAppend.call(this, $html);
+            this._pageAppend.call(this, $html, config);
             this._pageStack.push({
                 config: config,
                 dom: $html
@@ -156,7 +162,6 @@ PageManager = function(option){
     // 初始化页面管理器，并加载首页
     (function setPageManager(m, opt){
         var pages = {}, tpls = $(option['pageClass'] ? ('script[type="text/html"].' + opt['pageClass']) : 'script[type="text/html"]');
-//        var winH = $(window).height();
 
         for(var i = 0, len = tpls.length; i < len; ++i){
             var tpl = tpls[i], name = tpl.id.replace(new RegExp(opt['pageIdPrefix']), '');
@@ -171,40 +176,34 @@ PageManager = function(option){
         for(var page in pages){
             m.push(pages[page]);
         }
-        m.setPageAppend(function($html){
-//            var $foot = $html.find('.page__ft');
-//            if($foot.length < 1) return;
-//
-//            if($foot.position().top + $foot.height() < winH){
-//                $foot.addClass('j_bottom');
-//            }else{
-//                $foot.removeClass('j_bottom');
-//            }
-        }).setDefault(option['indexName']).init();
+
+        m.setPageAppend(opt['pageAppend'] || function($html){})
+            .setDefault(option['indexName'])
+            .init();
     })(manager, option);
 
     return manager;
 };
 
-$(function(){
-    var pageManager = new PageManager();
-
-    function preload(imgList){
-        imgList = imgList || [];
-        $(window).on("load", function(){
-            for(var i = 0, len = imgList.length; i < len; ++i){
-                new Image().src = imgList[i];
-            }
-        });
-    }
-
-    function init(){
-        preload();
-        window.pageManager = pageManager;
-        window.home = function(){
-            location.hash = '';
-        };
-    }
-
-    init();
-});
+//$(function(){
+//    var pageManager = new PageManager();
+//
+//    function preload(imgList){
+//        imgList = imgList || [];
+//        $(window).on("load", function(){
+//            for(var i = 0, len = imgList.length; i < len; ++i){
+//                new Image().src = imgList[i];
+//            }
+//        });
+//    }
+//
+//    function init(){
+//        preload();
+//        window.pageManager = pageManager;
+//        window.home = function(){
+//            location.hash = '';
+//        };
+//    }
+//
+//    init();
+//});

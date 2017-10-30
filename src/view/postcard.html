@@ -83,7 +83,45 @@
 </script>
 <script type="text/html" id="tpl_preview">
     <div class="page">
-        <h1>hello world</h1>
+        <div class="page__hd">
+            <!--<h1 class="page__title">预览</h1>-->
+        </div>
+        <div class="page__bd">
+            <div class="weui-form-preview">
+                <div class="weui-form-preview__hd">
+                    <label class="weui-form-preview__label"></label>
+                    <em class="weui-form-preview__value">确认信息</em>
+                </div>
+                <div class="weui-form-preview__bd">
+                    <div class="weui-form-preview__item">
+                        <label class="weui-form-preview__label">寄件人</label>
+                        <span class="weui-form-preview__value">弹弓人</span>
+                    </div>
+                    <div class="weui-form-preview__item">
+                        <label class="weui-form-preview__label">邮编</label>
+                        <span class="weui-form-preview__value">51000</span>
+                    </div>
+                    <div class="weui-form-preview__item">
+                        <label class="weui-form-preview__label">收件人</label>
+                        <span class="weui-form-preview__value">赵广宇</span>
+                    </div>
+                    <div class="weui-form-preview__item">
+                        <label class="weui-form-preview__label">地址</label>
+                        <span class="weui-form-preview__value">广西</span>
+                    </div>
+                    <div class="weui-form-preview__item">
+                        <label class="weui-form-preview__label">留言</label>
+                        <span class="weui-form-preview__value">很长很长的名字很长很长的名字很长很长的名字很长很长的名字很长很长的名字</span>
+                    </div>
+                </div>
+                <div class="weui-form-preview__ft">
+                    <a class="weui-form-preview__btn weui-form-preview__btn_default" href="javascript:pageManager.back()">返回</a>
+                    <button type="submit" class="weui-form-preview__btn weui-form-preview__btn_primary"
+                            href="javascript:">确认
+                    </button>
+                </div>
+            </div>
+        </div>
     </div>
 </script>
 </body>
@@ -100,7 +138,10 @@
     Vue.config.devtools = true;
     jQuery(function($){
         window.pageManager = new PageManager({
-            el: '#container'
+            el: '#container',
+            pageAppend: function($html,name){
+                alert(name)
+            }
         });
     });
 
