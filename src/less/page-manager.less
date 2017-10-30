@@ -1,0 +1,39 @@
+@import "variable";
+
+.page {
+    opacity: 0;
+    z-index: 1;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+.page.js_show {
+    opacity: 1;
+}
+
+.page.slideIn {
+    -webkit-animation: a .2s forwards;
+    animation: a .2s forwards
+}
+
+.page.slideOut {
+    -webkit-animation: b .2s forwards;
+    animation: b .2s forwards
+}
+
+#container {
+    position: absolute;
+    top: @navHeight;
+    width: 100%;
+    max-width: @maxWidth;
+    bottom: 0;
+}
+
+.page {
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    background-color: @bgColor;
+}

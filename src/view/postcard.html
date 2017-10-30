@@ -7,65 +7,85 @@
     <link rel="stylesheet" href="../public/jquery-weui/1.0/weui.min.css">
     <link rel="stylesheet" href="../public/jquery-weui/1.0/jquery-weui.min.css">
     <link rel="stylesheet" href="../css/postcard.min.css">
+
+    <style type="text/css">
+        .btn-wrapper {
+            padding: 15px 0;
+            width: 60%;
+            margin: 0 auto;
+        }
+
+        .weui-btn_plain-primary {
+
+            border-color: #49bdca;
+            color: #49bdca;
+        }
+
+    </style>
 </head>
 <body>
 <div class="main">
     <div class="t-nav">
-        <a href="javascript:;" @click="funcBack" class="left"><i class="iconfont icon-left"></i></a>
+        <a href="javascript:;" v-on:click="funcBack" class="left"><i class="iconfont icon-left"></i></a>
+
         <div class="title">明信片</div>
-        <div class="right" v-if="status==1" @click="addPostcard">{{ (status==1)?('完成'):('') }}</div>
+        <div class="right">+</div>
     </div>
 
-    <div class="postcard-items" v-if="status==0 && postcardItems.length>0">
-        <div class="postcard-wrap" v-cloak v-for="(item,i) in postcardItems" @click="editPostcard(item,i)">
-            <div class="postcard">
-                <div class="stamp">
-                    <img src="../public/images/stamp.png" alt="">
-                </div>
-                <div class="postcode">
-                    <span v-for="(item2,i2) in item.postcode.length">{{item.postcode.charAt(i2)}}</span>
-                </div>
-                <div class="comment-wrap">
-                    <div class="comment">
-                        <span>{{item.address}}</span><span>{{item.consignee}}</span>(收)
-                    </div>
-                    <div class="clear"></div>
+    <div id="container" class="edit">
+
+    </div>
+</div>
+<script type="text/html" id="tpl_home">
+    <div class="page">
+        <div class="weui-cells weui-cells_form trip-cells_form">
+            <!--<input type="text" name="traveller_id" value="postcard.sender_id"/>-->
+            <div class="weui-cell">
+                <div class="weui-cell__hd"><label class="weui-label">发送人</label></div>
+                <div class="weui-cell__bd">
+                    <input class="weui-input cache" name="traveller_id" type="text" placeholder="123"
+                           v-model="postcard.traveller_id">
                 </div>
             </div>
-        </div>
-    </div>
-    <div class="edit">
-        <div class="weui-cells weui-cells_form trip-cells_form">
             <div class="weui-cell">
                 <div class="weui-cell__hd"><label class="weui-label">邮编</label></div>
                 <div class="weui-cell__bd">
-                    <input class="weui-input cache" name="postcode" type="number" pattern="[0-9]*" placeholder="请输入邮编号" v-model="postcard.postcode">
+                    <input class="weui-input cache" name="postcode" type="number" pattern="[0-9]*" placeholder="请输入邮编号"
+                           v-model="postcard.postcode">
                 </div>
             </div>
             <div class="weui-cell">
                 <div class="weui-cell__hd"><label class="weui-label">收件人</label></div>
                 <div class="weui-cell__bd">
-                    <input class="weui-input cache" name="consignee" type="text" placeholder="请输入收件人" v-model="postcard.consignee">
+                    <input class="weui-input cache" name="consignee" type="text" placeholder="请输入收件人"
+                           v-model="postcard.consignee">
                 </div>
             </div>
             <div class="weui-cell">
                 <div class="weui-cell__hd"><label class="weui-label">地址</label></div>
                 <div class="weui-cell__bd">
-                    <input class="weui-input cache" name="address" type="text" placeholder="请输入地址" v-model="postcard.address">
+                    <input class="weui-input cache" name="address" type="text" placeholder="请输入详细地址(省/市/区)"
+                           v-model="postcard.address">
                 </div>
             </div>
             <div class="weui-cell">
                 <div class="weui-cell__hd"><label class="weui-label">留言</label></div>
                 <div class="weui-cell__bd">
-                    <input class="weui-input cache" name="comment" type="text" placeholder="请输入留言" v-model="postcard.comment">
+                    <input class="weui-input cache" name="comment" type="text" placeholder="请输入留言"
+                           v-model="postcard.comment">
                 </div>
             </div>
         </div>
+        <div class="btn-wrapper">
+            <a href="javascript:pageManager.go('preview')" class="weui-btn weui-btn_plain-primary">申请</a>
+        </div>
     </div>
-    <div class="add-postcard" v-if="status==0">
-        <i class="iconfont" @click="status=1">&#xe602;</i>
+</script>
+<script type="text/html" id="tpl_preview">
+    <div class="page">
+        <h1>hello world</h1>
     </div>
-</div>
+</script>
 </body>
 <script type="text/javascript" src="../public/js/jquery-2.1.4.js"></script>
 <script type="text/javascript" src="../public/js/vue.min.js"></script>
@@ -73,10 +93,17 @@
 <script type="text/javascript" src="../public/js/underscore.js"></script>
 <script type="text/javascript" src="../js/android.js"></script>
 <script type="text/javascript" src="../js/api.js"></script>
+<script type="text/javascript" src="../js/common/page-manager.js"></script>
 <script type="text/javascript" src="../js/common/ue.js"></script>
 
-<script>
+<script type="text/javascript">
     Vue.config.devtools = true;
+    jQuery(function($){
+        window.pageManager = new PageManager({
+            el: '#container'
+        });
+    });
+
     new Vue({
         el: '.main',
         data: {
@@ -87,21 +114,21 @@
             },
             postcard: {
                 postcode: $('input[name="postcode"]').val(),
-                consignee:  $('input[name="consignee"]').val(),
-                comment:  $('input[name="comment"]').val(),
-                address:  $('input[name="address"]').val()
+                consignee: $('input[name="consignee"]').val(),
+                comment: $('input[name="comment"]').val(),
+                address: $('input[name="address"]').val()
             },
             postcardItems: [
             ]
         },
-        created: function () {
+        created: function(){
             var self = this;
             setTimeout(function(){
                 var postcard = {
                     postcode: $('input[name="postcode"]').val(),
-                    consignee:  $('input[name="consignee"]').val(),
-                    comment:  $('input[name="comment"]').val(),
-                    address:  $('input[name="address"]').val()
+                    consignee: $('input[name="consignee"]').val(),
+                    comment: $('input[name="comment"]').val(),
+                    address: $('input[name="address"]').val()
                 };
                 self.postcard = postcard;
                 if(postcard.address && postcard.postcode && postcard.consignee){
@@ -110,35 +137,35 @@
             }, 1000);
         },
         methods: {
-            funcBack: function () {
+            funcBack: function(){
                 (this.status == 1) ? this.status = 0 : window.history.back();
             },
-            addPostcard: function () {// 申请明信片
+            addPostcard: function(){// 申请明信片
                 var temp = this.postcard, edit = this.edit;
                 temp.postcode = temp.postcode.toString();
 
-                if (temp.comment && temp.consignee && temp.address) {
-                    if (temp.postcode.length == 6) {
-                        if (edit.status) {
+                if(temp.comment && temp.consignee && temp.address){
+                    if(temp.postcode.length == 6){
+                        if(edit.status){
                             edit.status = false;
                             this.postcardItems[edit.index] = temp;
-                        } else {
+                        }else{
                             this.postcardItems.push(temp);
                         }
 
                         var clearData = {};
-                        $.each(temp, function (v, i) {
+                        $.each(temp, function(v, i){
                             clearData[v] = '';
                         });
                         this.postcard = clearData;
 
                         this.status = 0;
-                    } else
+                    }else
                         $.alert('邮编号码不正确哦');
-                } else
+                }else
                     $.alert('信息未填写完整哦');
             },
-            editPostcard: function (item, i) {// 编辑现有明信片
+            editPostcard: function(item, i){// 编辑现有明信片
                 this.edit = {
                     status: true,
                     index: i
