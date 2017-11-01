@@ -85,11 +85,17 @@
         <div class="page__hd">
             <!--<h1 class="page__title">预览</h1>-->
         </div>
-        <div class="page__bd" >
+        <div class="weui-msg">
+            <div class="weui-msg__icon-area"><i class="weui-icon-info-circle weui-icon_msg"></i></div>
+            <div class="weui-msg__text-area">
+                <h2 class="weui-msg__title">确认提交</h2>
+
+                <p class="weui-msg__desc"><a href="javascript:void(0);"></a></p>
+            </div>
             <div class="weui-form-preview">
                 <div class="weui-form-preview__hd">
                     <label class="weui-form-preview__label"></label>
-                    <em class="weui-form-preview__value">确认信息</em>
+                    <em class="weui-form-preview__value"></em>
                 </div>
                 <div class="weui-form-preview__bd">
                     <div class="weui-form-preview__item">
@@ -116,10 +122,12 @@
                 <div class="weui-form-preview__ft">
                     <a class="weui-form-preview__btn weui-form-preview__btn_default"
                        href="javascript:;" v-on:click="cancel">返回</a>
-                    <a class="weui-form-preview__btn weui-form-preview__btn_primary" href="javascript:;" v-on:click="submit">提交</a>
+                    <a class="weui-form-preview__btn weui-form-preview__btn_primary" href="javascript:;"
+                       v-on:click="submit">提交</a>
                 </div>
             </div>
         </div>
+
     </div>
 </script>
 </body>
