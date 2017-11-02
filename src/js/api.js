@@ -545,7 +545,12 @@ U.buildApiClient = (function($){
             },
             'traveller': {
                 'info': function(id, cbf){
-                    return apiCall('traveller.info', {'id': id}, cbf);
+                    return apiCall('traveller.info', {'id': id}, function(err, json){
+                        if(json['avatar']){
+                            json['avatar'] = U.api.oss.rid2url(json['avatar']);
+                        }
+                        cbf(err, json);
+                    });
                 },
                 'apply': function(data, cbf){
                     return apiCall('traveller.apply', data, cbf);

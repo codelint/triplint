@@ -20,6 +20,10 @@
             color: #49bdca;
         }
 
+        img{
+            display: block;
+        }
+
     </style>
 </head>
 <body>
@@ -36,14 +40,15 @@
     </div>
 </div>
 <script type="text/html" id="tpl_home">
-    <div class="page">
+    <div class="page home">
         <div class="weui-cells weui-cells_form trip-cells_form">
             <!--<input type="text" name="traveller_id" value="postcard.sender_id"/>-->
             <div class="weui-cell">
                 <div class="weui-cell__hd"><label class="weui-label">发送人</label></div>
                 <div class="weui-cell__bd">
-                    <input class="weui-input cache" name="traveller_id" type="text" placeholder="123"
-                           v-model="postcard.traveller_id">
+                    <img v-bind:src="traveller.avatar" width="32px" height="32px"/>
+                    <input class="weui-input" name="traveller_id" type="hidden" placeholder="123"
+                           v-model="traveller.id" readonly>
                 </div>
             </div>
             <div class="weui-cell">
@@ -100,7 +105,7 @@
                 <div class="weui-form-preview__bd">
                     <div class="weui-form-preview__item">
                         <label class="weui-form-preview__label">寄件人</label>
-                        <span class="weui-form-preview__value">弹弓人</span>
+                        <span class="weui-form-preview__value"><img style="float: right" v-bind:src="traveller.avatar" width="32px" height="32px"/></span>
                     </div>
                     <div class="weui-form-preview__item">
                         <label class="weui-form-preview__label">邮编</label>
@@ -143,12 +148,27 @@
 <script type="text/javascript">
     Vue.config.devtools = true;
     jQuery(function($){
+        var send_id = U.ajax.getUrlParam('sender_id');
+        var traveller;
+
         window.pageManager = new PageManager({
             el: '#container',
             pageAppend: function($html, page){
                 switch(page.name){
                     case 'home':
-                        break;
+                        send_id && U.api.traveller.info(send_id, function(err, json){
+                            traveller = json;
+                            new Vue({
+                                el: '.page.home',
+                                data: {
+                                    postcard: {
+                                        'traveller_id': U.ajax.getUrlParam('sender_id')
+                                    },
+                                    traveller: json
+                                }
+                            });
+                        });
+                        return $('.page.home');
                     case 'preview':
                         var address = $('input[name="address"]').val();
                         if(!address){
@@ -164,7 +184,8 @@
                                     consignee: $('input[name="consignee"]').val(),
                                     comment: $('input[name="comment"]').val(),
                                     address: address
-                                }
+                                },
+                                traveller: traveller
                             },
                             created: function(){
                             },
