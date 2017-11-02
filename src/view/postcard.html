@@ -173,7 +173,7 @@
                         var address = $('input[name="address"]').val();
                         if(!address){
                             setTimeout(function(){
-                                pageManager.back();
+                                pageManager.go('home');
                             });
                         }
                         new Vue({

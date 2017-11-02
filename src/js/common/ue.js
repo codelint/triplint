@@ -13,7 +13,7 @@ jQuery(function($){
      */
     U.ue = (function($){
         function getKeyPrefix(){
-            return location.href + '#';
+            return location.href + (location.href.endsWith('#') ? '' : '#');
         }
 
         function backup(elem){
