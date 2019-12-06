@@ -9,7 +9,7 @@ jQuery(function ($) {
         } else {
             var currentUser = android.current_user();
             var $avatar = $('img.avatar');
-            $avatar.attr('src', U.api.oss.rid2url(user['avatar'], 'style/resize_128x128&timestamp=' + (new Date()).getTime()));
+            user['avatar'] && $avatar.attr('src', U.api.oss.rid2url(user['avatar'], 'style/resize_128x128&timestamp=' + (new Date()).getTime()));
             $('p.name').text(user['nick']);
             $('p.fanCount').text(user['fanCount'] || 0);
             $('p.followCount').text(user['followCount'] || 0);
