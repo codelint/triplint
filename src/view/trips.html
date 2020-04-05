@@ -75,7 +75,7 @@
                     <div v-if="item.dayshow">
                         <p v-cloak class="day-marker">
                             <i class="circle circle-first" v-on:click="reverse()"></i>
-                            第{{ item.day }}天 {{ (new Date(item.create_time*1000).getMonth() + 1) }}月{{ (new
+                            第{{ item.day }}天 <span v-if="(new Date(item.create_time*1000).getFullYear()) != (new Date()).getFullYear()">{{ (new Date(item.create_time*1000).getFullYear()) }}年</span>{{ (new Date(item.create_time*1000).getMonth() + 1) }}月{{ (new
                             Date(item.create_time*1000).getDate()) }}日
                         </p>
 
